@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.DashBoard">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,38 +15,55 @@
         android:layout_alignParentBottom="true"
         android:background="@color/menuBottom">
 
-        <TextView
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Home"
+            android:onClick="launchClick"
+            android:text="@string/footer_button_home"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
             android:paddingBottom="@dimen/bottom_menu_text_padding"
             android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_home"
-            android:textAllCaps="true" />
-        <TextView
+            android:textAllCaps="true"/>
+
+
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Messenger"
+            android:onClick="launchClick"
+            android:text="@string/footer_button_messenger"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
             android:paddingBottom="@dimen/bottom_menu_text_padding"
             android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_messenger"
-            android:textAllCaps="true" />
-        <TextView
+            android:textAllCaps="true"
+            />
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Options"
+            android:onClick="launchClick"
+            android:text="@string/footer_button_options"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
             android:paddingBottom="@dimen/bottom_menu_text_padding"
             android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_options"
-            android:textAllCaps="true" />
+            android:textAllCaps="true"
+            />
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/footer_button_options"-->
+            <!--android:id="@+id/menu_bottom_options"-->
+            <!--android:layout_gravity="end"-->
+            <!--android:textSize="@dimen/bottom_menu_text_size"-->
+            <!--android:clickable="false" />-->
+
+
     </LinearLayout>
 </RelativeLayout>

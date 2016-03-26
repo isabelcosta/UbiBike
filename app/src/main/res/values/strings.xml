@@ -17,4 +17,14 @@
         completions."
     </string>
     <string name="title_activity_trajectory_maps">Trajectory Map</string>
+    <string name="title_activity_chat">Messenger</string>
+    <string name="new_message">+</string>
+
+    <!-- Footer related -->
+
+    <string name="footer_button_home">Home</string>
+    <string name="footer_button_messenger">Messenger</string>
+    <string name="footer_button_options">Options</string>
+
+
 </resources>

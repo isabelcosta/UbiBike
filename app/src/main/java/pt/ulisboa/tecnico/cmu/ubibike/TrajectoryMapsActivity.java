@@ -1,7 +1,10 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,8 +25,38 @@ public class TrajectoryMapsActivity extends FragmentActivity implements OnMapRea
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+        TextView manufacturerTextView = (TextView)findViewById(R.id.textView);;
+// Now you can set TextView's text using setText() method:
+        String name = getIntent().getStringExtra("username");
+
+        manufacturerTextView.setText(name);
+
+
+
+    }
+    public void launchClick(View v) {
+        Intent intent = null;
+        Boolean execute = true;
+
+        switch(v.getId()) {
+            case R.id.menu_bottom_home:
+                intent = new Intent(TrajectoryMapsActivity.this, LoginActivity.class);
+                break;
+
+            case R.id.menu_bottom_messenger:
+                intent = new Intent(TrajectoryMapsActivity.this, Chat.class);
+                break;
+
+            case R.id.menu_bottom_options:
+//                intent = new Intent(TrajectoryMapsActivity.this, TrajectoryMapsActivity.class);
+                execute = false;
+                break;
+        }
+        if (execute){
+            startActivityForResult(intent, 0);
+        }
+    };
 
     /**
      * Manipulates the map once available.
