@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,9 +14,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class TrajectoryMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private String bikerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +28,9 @@ public class TrajectoryMapsActivity extends FragmentActivity implements OnMapRea
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        TextView manufacturerTextView = (TextView)findViewById(R.id.textView);;
-// Now you can set TextView's text using setText() method:
-        String name = getIntent().getStringExtra("username");
-
-        manufacturerTextView.setText(name);
-
+        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);;
+        bikerName = getIntent().getStringExtra("bikerName");
+        manufacturerTextView.setText(bikerName);
 
 
     }
@@ -46,6 +45,8 @@ public class TrajectoryMapsActivity extends FragmentActivity implements OnMapRea
 
             case R.id.menu_bottom_messenger:
                 intent = new Intent(TrajectoryMapsActivity.this, Chat.class);
+//                intent.putExtra("bikerName", bikersName);
+
                 break;
 
             case R.id.menu_bottom_options:

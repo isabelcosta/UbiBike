@@ -9,7 +9,7 @@
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryList">
 
     <include layout="@layout/dashboard_header"/>
-    <include layout="@layout/dashboard_footer" />
+    <include layout="@layout/content_dashboard_footer" />
 
     <ScrollView
         android:layout_width="match_parent"

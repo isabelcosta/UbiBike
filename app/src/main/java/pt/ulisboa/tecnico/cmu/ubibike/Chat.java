@@ -23,23 +23,23 @@ public class Chat extends AppCompatActivity {
 
     private EditText editTxt;
     private Button btn;
-    private Button btn2;
     private ListView list;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
+    private String bikerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
-        TextView manufacturerTextView = (TextView)findViewById(R.id.textView);;
-// Now you can set TextView's text using setText() method:
-        String name = getIntent().getStringExtra("username");
 
-        manufacturerTextView.setText(name);
+        // HEADER
+                // biker name
+        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
+        bikerName = getIntent().getStringExtra("bikerName");
+        manufacturerTextView.setText(bikerName);
+
 
 
         btn = (Button) findViewById(R.id.button);
@@ -77,6 +77,7 @@ public class Chat extends AppCompatActivity {
         switch(v.getId()) {
             case R.id.menu_bottom_home:
                 intent = new Intent(Chat.this, LoginActivity.class);
+
                 break;
 
             case R.id.menu_bottom_messenger:
@@ -86,6 +87,7 @@ public class Chat extends AppCompatActivity {
 
             case R.id.menu_bottom_options:
                 intent = new Intent(Chat.this, TrajectoryMapsActivity.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
         }
         if (execute){
