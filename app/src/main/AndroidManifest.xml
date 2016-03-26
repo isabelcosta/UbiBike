@@ -57,6 +57,8 @@
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity" />
         </activity>
         <activity android:name=".DashBoard"></activity>
+        <activity android:name=".TrajectoryList" >
+        </activity>
     </application>
 
 </manifest>
