@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,26 +33,31 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
+        //      Change color to current menu
+        Button optionsBtn = (Button) findViewById(R.id.menu_bottom_options);
+        optionsBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
     }
-    public void launchClick(View v) {
+
+     public void launchClick(View v) {
         Intent intent = null;
         Boolean execute = true;
 
         switch(v.getId()) {
             case R.id.menu_bottom_home:
-                intent = new Intent(TrajectoryMapsActivity.this, LoginActivity.class);
+                intent = new Intent(TrajectoryMapsActivity.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_messenger:
                 intent = new Intent(TrajectoryMapsActivity.this, Chat.class);
-//                intent.putExtra("bikerName", bikersName);
+                intent.putExtra("bikerName", bikerName);
 
                 break;
 
             case R.id.menu_bottom_options:
-//                intent = new Intent(TrajectoryMapsActivity.this, TrajectoryMapsActivity.class);
-                execute = false;
+                intent = new Intent(TrajectoryMapsActivity.this, OptionsMenu.class);
+//                execute = false;
                 break;
         }
         if (execute){

@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //TODO NAO SEI ONDE POR!! para que seja apenas executado quando o par(user,pw) for valido
         //todo como está agora, faz bypass do login independentemente do resultado
         //give the username inserted to the next activity
-        Intent intent = new Intent(LoginActivity.this,Chat.class);
+        Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
         intent.putExtra("bikerName",email);
         startActivity(intent);
     }

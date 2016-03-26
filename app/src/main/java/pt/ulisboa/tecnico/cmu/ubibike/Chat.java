@@ -1,21 +1,14 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -63,6 +56,9 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+//      Change color to current menu
+        Button messengerBtn = (Button) findViewById(R.id.menu_bottom_messenger);
+        messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
 
 
@@ -76,8 +72,8 @@ public class Chat extends AppCompatActivity {
 
         switch(v.getId()) {
             case R.id.menu_bottom_home:
-                intent = new Intent(Chat.this, LoginActivity.class);
-
+                intent = new Intent(Chat.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_messenger:
@@ -86,7 +82,7 @@ public class Chat extends AppCompatActivity {
                 break;
 
             case R.id.menu_bottom_options:
-                intent = new Intent(Chat.this, TrajectoryMapsActivity.class);
+                intent = new Intent(Chat.this, OptionsMenu.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
         }
