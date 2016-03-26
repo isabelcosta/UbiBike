@@ -50,6 +50,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
+        <activity android:name=".TrajectoryList" >
+        </activity>
     </application>
 
 </manifest>
