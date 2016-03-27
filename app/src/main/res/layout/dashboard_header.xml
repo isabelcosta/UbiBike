@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="John Travolta"
                 android:paddingTop="10dp"
+                android:textAllCaps="true"
                 android:id="@+id/biker_name"/>
             <TextView
                 android:layout_width="match_parent"

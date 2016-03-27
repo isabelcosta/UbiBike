@@ -56,7 +56,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity" />
         </activity>
-        <activity android:name=".DashBoard"></activity>
+        <activity android:name=".UserDashboard"></activity>
         <activity android:name=".TrajectoryList" >
         </activity>
     </application>

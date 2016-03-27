@@ -60,27 +60,27 @@ public class OptionsMenu extends AppCompatActivity {
 
             // dashboard menu buttons
 
-            case R.id.options_report_bug:
+            //case R.id.options_report_bug:
                 // FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(OptionsMenu.this, TrajectoryMapsActivity.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
+            //    intent = new Intent(OptionsMenu.this, TrajectoryMapsActivity.class);
+            //    intent.putExtra("bikerName",bikerName);
+            //    break;
             //todo criar menu about
-            case R.id.options_about:
+            //case R.id.options_about:
                 // FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(OptionsMenu.this, TrajectoryMapsActivity.class);
-                intent.putExtra("bikerName",bikerName);
+            //    intent = new Intent(OptionsMenu.this, TrajectoryMapsActivity.class);
+            //    intent.putExtra("bikerName",bikerName);
 //                execute = false;
-                break;
+            //    break;
 
             //todo certificar que user fica logout
-            case R.id.options_logout:
+            //case R.id.options_logout:
                 // FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(OptionsMenu.this, LoginActivity.class);
-                intent.putExtra("bikerName",bikerName);
+            //    intent = new Intent(OptionsMenu.this, LoginActivity.class);
+            //    intent.putExtra("bikerName",bikerName);
 //                execute = false;
 
-                break;
+            //    break;
 
         }
         if (execute){

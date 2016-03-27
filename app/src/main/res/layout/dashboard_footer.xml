@@ -6,7 +6,7 @@
 
     android:orientation="vertical"
 
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.DashBoard">
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard">
 
     <LinearLayout
         android:layout_width="match_parent"

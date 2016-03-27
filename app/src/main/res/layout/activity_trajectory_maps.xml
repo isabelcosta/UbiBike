@@ -17,7 +17,7 @@ tools:context="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity">
 
 <include layout="@layout/content_trajectory_maps" />
     <include layout="@layout/dashboard_header"/>
-<include layout="@layout/content_dashboard_footer" />
+<include layout="@layout/dashboard_footer" />
     
 
 </android.support.design.widget.CoordinatorLayout>

@@ -194,9 +194,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //TODO NAO SEI ONDE POR!! para que seja apenas executado quando o par(user,pw) for valido
         //todo como está agora, faz bypass do login independentemente do resultado
         //give the username inserted to the next activity
-        Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
-        intent.putExtra("bikerName",email);
-        startActivity(intent);
+        //Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
+        //intent.putExtra("bikerName",email);
+        //startActivity(intent);
     }
 
     private boolean isEmailValid(String email) {
@@ -306,11 +306,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mUsername;
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+            mUsername = email;
             mPassword = password;
         }
 
@@ -327,7 +327,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+                if (pieces[0].equals(mUsername)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
@@ -343,6 +343,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                //give the username inserted to the next activity
+                Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
+                intent.putExtra("bikerName",mUsername);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
