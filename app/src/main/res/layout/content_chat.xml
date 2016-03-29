@@ -11,14 +11,14 @@
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.Chat"
     android:weightSum="1">
 
-    <LinearLayout
-        android:id="@+id/username_login_form"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/username_login_form"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_gravity="center">-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:orientation="vertical"

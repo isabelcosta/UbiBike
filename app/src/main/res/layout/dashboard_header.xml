@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="411dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:touchscreenBlocksFocus="true"
+        android:transitionGroup="true"
+        android:showDividers="end"
+        android:outlineProvider="none"
+        android:divider="#000000">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingLeft="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:text="New Textz"
+            android:id="@+id/textView">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="John Travolta"
                 android:paddingTop="10dp"
-                android:textAllCaps="true"
-                android:id="@+id/biker_name"/>
+                android:id="@+id/biker_name"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
                 android:text="Status"
                 android:id="@+id/biker_status"/>
+
         </LinearLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:src="@drawable/ubibike_small_grey_logo"
-            android:layout_weight="1" />
+            android:src="@drawable/ubibike_small_logo"
+            android:layout_weight="1"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,14 +59,6 @@
             android:paddingBottom="@dimen/bottom_menu_text_padding"
             android:paddingTop="15dp"
             android:id="@+id/biker_score" />
+
     </LinearLayout>
-    <!--
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Belinha"
-        android:gravity="center"
-        android:textSize="36sp"
-        android:id="@+id/activity_title"/>
-        -->
-</RelativeLayout>
+</LinearLayout>
