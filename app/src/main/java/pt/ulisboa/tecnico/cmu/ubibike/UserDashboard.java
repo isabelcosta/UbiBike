@@ -26,8 +26,28 @@ public class UserDashboard extends AppCompatActivity {
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
-
-
+        Button findBikeBtn = (Button) findViewById(R.id.find_bike);
+        findBikeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //@TODO to initiate FIND A BIKE intent
+            }
+        });
+        Button myTrajBtn = (Button) findViewById(R.id.my_trajectories);
+        myTrajBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserDashboard.this, TrajectoryList.class);
+                intent.putExtra("bikerName", bikerName);
+            }
+        });
+        Button givePointsBtn = (Button) findViewById(R.id.give_points);
+        givePointsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //@TODO to initiate GIVE POINTS intent
+            }
+        });
 
         //      Change color to current menu
         Button messengerBtn = (Button) findViewById(R.id.menu_bottom_home);
@@ -60,7 +80,7 @@ public class UserDashboard extends AppCompatActivity {
 
             // dashboard menu buttons
 
-            //qcase R.id.dashboard_menu_find_me_a_bike:
+            //case R.id.dashboard_menu_find_me_a_bike:
             //    intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
             //    intent.putExtra("bikerName",bikerName);
             //    break;
@@ -81,6 +101,12 @@ public class UserDashboard extends AppCompatActivity {
 
             //    break;
 
+            //Points History
+
+            //case R.id.dashboard_menu_find_me_a_bike:
+            //    intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
+            //    intent.putExtra("bikerName",bikerName);
+            //    break;
         }
         if (execute){
             startActivityForResult(intent, 0);
