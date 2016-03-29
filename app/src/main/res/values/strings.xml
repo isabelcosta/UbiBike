@@ -19,6 +19,7 @@
     <string name="title_activity_trajectory_maps">Trajectory Map</string>
     <string name="title_activity_chat">Messenger</string>
     <string name="new_message">+</string>
+    <string name="save_credentials">Save credentials</string>
 
     <!-- Footer related -->
 

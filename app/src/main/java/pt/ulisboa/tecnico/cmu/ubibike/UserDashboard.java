@@ -54,7 +54,7 @@ public class UserDashboard extends AppCompatActivity {
                 break;
 
             case R.id.menu_bottom_options:
-                intent = new Intent(UserDashboard.this, OptionsMenu.class);
+                intent = new Intent(UserDashboard.this, TrajectoryList.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
@@ -85,5 +85,5 @@ public class UserDashboard extends AppCompatActivity {
         if (execute){
             startActivityForResult(intent, 0);
         }
-    };
+    }
 }
