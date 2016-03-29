@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu">
+    android:background="@color/grey">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_options_menu" />
-    <include layout="@layout/content_dashboard_footer" />
+    <include layout="@layout/dashboard_footer" />
     <include layout="@layout/dashboard_header" />
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

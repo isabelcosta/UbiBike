@@ -6,6 +6,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="menuBottom">#c6bcbc</color>
 
+
     <!-- W2C Colors-->
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FFFF00</color>
@@ -165,4 +166,6 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
+    <color name="grey">#EEEEEE</color>
+
 </resources>

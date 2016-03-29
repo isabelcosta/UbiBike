@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard">
+    android:background="@color/grey">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_user_dashboard" />
-    <include layout="@layout/content_dashboard_footer" />
     <include layout="@layout/dashboard_header" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="150dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_me_a_bike"
+            android:textSize="@dimen/dash_menu"
+            android:padding="@dimen/dash_menu_padding"
+            android:id="@+id/find_bike"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_trajectories"
+            android:textSize="@dimen/dash_menu"
+            android:padding="@dimen/dash_menu_padding"
+            android:id="@+id/my_trajectories"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/give_points"
+            android:textSize="@dimen/dash_menu"
+            android:padding="@dimen/dash_menu_padding"
+            android:id="@+id/give_points"/>
+    </LinearLayout>
+
+    <include layout="@layout/dashboard_footer" />
 </android.support.design.widget.CoordinatorLayout>

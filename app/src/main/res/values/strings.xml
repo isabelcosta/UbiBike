@@ -19,12 +19,14 @@
     <string name="title_activity_trajectory_maps">Trajectory Map</string>
     <string name="title_activity_chat">Messenger</string>
     <string name="new_message">+</string>
+    <string name="save_credentials">Save credentials</string>
 
     <!-- Footer related -->
 
     <string name="footer_button_home">Home</string>
     <string name="footer_button_messenger">Messenger</string>
     <string name="footer_button_options">Options</string>
+
     <string name="title_activity_user_dashboard">UserDashboard</string>
     <string name="dashboard_menu_find_me_a_bike">Find me a Bike</string>
     <string name="dashboard_menu_my_rides">My Rides</string>
@@ -33,6 +35,13 @@
     <string name="options_report_bug">Report Bug</string>
     <string name="options_about">About</string>
     <string name="options_logout">logout</string>
+
+    <string name="title_activity_trajectory">Trajectories List</string>
+
+    <string name="find_me_a_bike">Find me a bike</string>
+    <string name="give_points">Give points</string>
+    <string name="my_trajectories">My trajectories</string>
+
 
 
 </resources>
