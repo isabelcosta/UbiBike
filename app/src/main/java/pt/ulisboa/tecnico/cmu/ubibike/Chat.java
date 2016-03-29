@@ -58,7 +58,7 @@ public class Chat extends AppCompatActivity {
 
 //      Change color to current menu
         Button messengerBtn = (Button) findViewById(R.id.menu_bottom_messenger);
-        messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
 

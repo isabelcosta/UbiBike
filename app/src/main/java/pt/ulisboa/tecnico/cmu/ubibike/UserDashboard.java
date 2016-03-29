@@ -26,14 +26,14 @@ public class UserDashboard extends AppCompatActivity {
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
-        Button findBikeBtn = (Button) findViewById(R.id.find_bike);
+        Button findBikeBtn = (Button) findViewById(R.id.dashboard_menu_find_me_a_bike);
         findBikeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //@TODO to initiate FIND A BIKE intent
             }
         });
-        Button myTrajBtn = (Button) findViewById(R.id.my_trajectories);
+        Button myTrajBtn = (Button) findViewById(R.id.dashboard_menu_my_rides);
         myTrajBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,7 +41,7 @@ public class UserDashboard extends AppCompatActivity {
                 intent.putExtra("bikerName", bikerName);
             }
         });
-        Button givePointsBtn = (Button) findViewById(R.id.give_points);
+        Button givePointsBtn = (Button) findViewById(R.id.dashboard_menu_give_points);
         givePointsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
