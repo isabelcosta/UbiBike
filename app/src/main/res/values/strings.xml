@@ -44,6 +44,7 @@
     <string name="About">About The Project</string>
     <string name="cmov">This project was developed for the CMov course of 2016 @ist</string>
     <string name="title_activity_score_history">Score History</string>
+    <string name="title_activity_create_new_trajectory">CreateNewTrajectory</string>
 
 
 </resources>

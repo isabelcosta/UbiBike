@@ -63,7 +63,7 @@ public class UserDashboard extends AppCompatActivity {
 //            todo criar meu my rides
             case R.id.dashboard_menu_my_rides:
 //                                                     FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
+                intent = new Intent(UserDashboard.this, TrajectoryList.class);
                 intent.putExtra("bikerName",bikerName);
 //                execute = false;
                 break;

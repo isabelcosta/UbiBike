@@ -29,7 +29,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -77,7 +77,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
-
         <activity
             android:name=".OptionsMenu"
             android:label="@string/title_activity_options_menu">
@@ -85,7 +84,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
-
         <activity
             android:name=".AboutMenu"
             android:label="@string/title_activity_about_menu"

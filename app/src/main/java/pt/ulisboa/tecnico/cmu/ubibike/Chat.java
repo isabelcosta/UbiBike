@@ -39,6 +39,8 @@ public class Chat extends AppCompatActivity {
         list = (ListView) findViewById(R.id.listView);
         arrayList = new ArrayList<String>();
 
+
+
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
