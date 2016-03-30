@@ -15,35 +15,62 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="0.47"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp">
 
-        <TextView
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:background="@color/grey"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Test List"
-            android:id="@+id/textView2"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/abc_text_size_display_1_material" />
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/lvChat"
+                android:transcriptMode="alwaysScroll"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_above="@+id/llSend"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <RelativeLayout
+                android:id="@+id/llSend"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:layout_height="wrap_content" >
+                <EditText
+                    android:id="@+id/etMessage1"
+                    android:layout_toLeftOf="@+id/btSend1"
+                    android:layout_alignBottom="@+id/btSend1"
+                    android:background="@color/grey"
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="183dp"
-            android:id="@+id/listView"
-            style="@style/Widget.Design.Snackbar" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="@string/message_hint"
+                    android:inputType="textShortMessage"
+                    android:imeOptions="actionSend"
+                    />
+                <Button
+                    android:id="@+id/btSend1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/send"
+                    android:textSize="18sp" >
+                </Button>
+            </RelativeLayout>
+        </RelativeLayout>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/new_message"
-            android:id="@+id/button"
-            android:layout_gravity="right"
-            style="@style/Base.Widget.AppCompat.Button.Small"
-            android:textSize="20sp"
-            android:clickable="false" />
     </LinearLayout>
 
 </LinearLayout>
