@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu"
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.AboutMenu"
     android:background="@color/grey">
 
     <android.support.design.widget.AppBarLayout
@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_options_menu" />
-    <include layout="@layout/dashboard_footer" />
+    <include layout="@layout/content_about_menu" />
     <include layout="@layout/dashboard_header" />
+    <include layout="@layout/dashboard_footer" />
 </android.support.design.widget.CoordinatorLayout>

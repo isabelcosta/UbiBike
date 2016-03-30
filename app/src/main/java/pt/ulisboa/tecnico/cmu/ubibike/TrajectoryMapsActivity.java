@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -33,9 +32,6 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
-        //      Change color to current menu
-        Button optionsBtn = (Button) findViewById(R.id.menu_bottom_options);
-        optionsBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
     }
 
@@ -57,13 +53,28 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
 
             case R.id.menu_bottom_options:
                 intent = new Intent(TrajectoryMapsActivity.this, OptionsMenu.class);
+                intent.putExtra("bikerName", bikerName);
+
 //                execute = false;
+                break;
+
+            //            Points History
+
+            case R.id.biker_score:
+                intent = new Intent(TrajectoryMapsActivity.this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+//          Ubibike Logo
+            case R.id.ubibikeLogo:
+                intent = new Intent(TrajectoryMapsActivity.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
         }
         if (execute){
             startActivityForResult(intent, 0);
         }
-    };
+    }
 
     /**
      * Manipulates the map once available.

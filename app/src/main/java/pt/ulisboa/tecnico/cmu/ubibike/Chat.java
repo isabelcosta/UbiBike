@@ -50,7 +50,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // this line adds the data of your EditText and puts in your array
-                arrayList.add("Mega LOL");
+                arrayList.add("test");
                 // next thing you have to do is check if your adapter has changed
                 adapter.notifyDataSetChanged();
             }
@@ -59,8 +59,7 @@ public class Chat extends AppCompatActivity {
 //      Change color to current menu
         Button messengerBtn = (Button) findViewById(R.id.menu_bottom_messenger);
         messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-
-
+        messengerBtn.setTextColor(getResources().getColor(R.color.white));
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,10 +84,22 @@ public class Chat extends AppCompatActivity {
                 intent = new Intent(Chat.this, OptionsMenu.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
+
+//            Points History
+
+            case R.id.biker_score:
+                intent = new Intent(Chat.this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+//          Ubibike Logo
+            case R.id.ubibikeLogo:
+                intent = new Intent(Chat.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
         }
         if (execute){
             startActivityForResult(intent, 0);
         }
-    };
+    }
 
 }

@@ -13,42 +13,36 @@
         android:background="@color/menuBottom">
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchClick"
             android:text="@string/footer_button_home"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
-            android:paddingBottom="@dimen/bottom_menu_text_padding"
-            android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_home"
-            android:textAllCaps="true"/>
+            android:textAllCaps="true" />
 
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchClick"
             android:text="@string/footer_button_messenger"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
-            android:paddingBottom="@dimen/bottom_menu_text_padding"
-            android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_messenger"
             android:textAllCaps="true"
             />
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchClick"
             android:text="@string/footer_button_options"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
-            android:paddingBottom="@dimen/bottom_menu_text_padding"
-            android:paddingTop="@dimen/bottom_menu_text_padding"
             android:id="@+id/menu_bottom_options"
             android:textAllCaps="true"
             />

@@ -8,17 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/grey"
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.Chat"
     android:weightSum="1">
-
-    <!--<LinearLayout-->
-        <!--android:id="@+id/username_login_form"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_gravity="center">-->
-
-    <!--</LinearLayout>-->
 
     <LinearLayout
         android:orientation="vertical"
@@ -31,10 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="Test List"
             android:id="@+id/textView2"
-            android:textColor="#ff0004"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/abc_text_size_display_1_material" />
 
         <ListView
             android:layout_width="match_parent"

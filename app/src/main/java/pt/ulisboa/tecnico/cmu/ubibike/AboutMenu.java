@@ -6,52 +6,57 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class ScoreHistory extends AppCompatActivity {
+
+
+
+public class AboutMenu extends AppCompatActivity {
 
     private String bikerName;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_score_history);
+        setContentView(R.layout.activity_about_menu);
 
-        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);;
+
+        // HEADER
+        // biker name
+        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
 
     }
-
     public void launchClick(View v) {
         Intent intent = null;
         Boolean execute = true;
 
         switch(v.getId()) {
             case R.id.menu_bottom_home:
-                intent = new Intent(ScoreHistory.this, UserDashboard.class);
+                intent = new Intent(AboutMenu.this, UserDashboard.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_messenger:
-                intent = new Intent(ScoreHistory.this, Chat.class);
-                intent.putExtra("bikerName", bikerName);
-
+                intent = new Intent(AboutMenu.this, Chat.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_options:
-                intent = new Intent(ScoreHistory.this, OptionsMenu.class);
-//                execute = false;
+                intent = new Intent(AboutMenu.this, OptionsMenu.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
 
-            //            Points History
+//            Points History
 
             case R.id.biker_score:
-                execute = false;
+                intent = new Intent(AboutMenu.this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
                 break;
+
 //          Ubibike Logo
             case R.id.ubibikeLogo:
-                intent = new Intent(ScoreHistory.this, UserDashboard.class);
+                intent = new Intent(AboutMenu.this, UserDashboard.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
         }
@@ -59,4 +64,5 @@ public class ScoreHistory extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
     }
+
 }
