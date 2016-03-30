@@ -47,7 +47,7 @@ public class Chat extends AppCompatActivity {
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
-        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+//        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
 
         // Here, you set the data in your ListView
 //        list.setAdapter(adapter);
@@ -73,7 +73,6 @@ public class Chat extends AppCompatActivity {
                 // this line adds the data of your EditText and puts in your array
                 mMessages.add(m);
                 // next thing you have to do is check if your adapter has changed
-                mAdapter.notifyDataSetChanged();
 
                 m = new Message();
                 m.setBody("Auto text Back");
@@ -81,6 +80,7 @@ public class Chat extends AppCompatActivity {
                 // this line adds the data of your EditText and puts in your array
                 mMessages.add(m);
 
+                mAdapter.notifyDataSetChanged();
                 textMsg.setText(null);
             }
         });
