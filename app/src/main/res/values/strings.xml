@@ -45,5 +45,11 @@
     <string name="cmov">This project was developed for the CMov course of 2016 @ist</string>
     <string name="title_activity_score_history">Score History</string>
 
+    <!-- Chat-->
+    <string name="message_hint">Say anything</string>
+    <string name="send">Send</string>
+    <string name="profile_me">My Profile Pic</string>
+    <string name="profile_other">Other profile pic</string>
+
 
 </resources>
