@@ -24,6 +24,7 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajectory_maps);
         this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

@@ -19,12 +19,9 @@
         android:onClick="launchClick"
         android:text="@string/dashboard_menu_find_me_a_bike"
         android:id="@+id/dashboard_menu_find_me_a_bike"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="150dp"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="false"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
 
     <Button
@@ -33,9 +30,6 @@
         android:onClick="launchClick"
         android:text="@string/dashboard_menu_my_rides"
         android:id="@+id/dashboard_menu_my_rides"
-        android:layout_below="@+id/dashboard_menu_find_me_a_bike"
-        android:layout_alignLeft="@+id/dashboard_menu_find_me_a_bike"
-        android:layout_alignStart="@+id/dashboard_menu_find_me_a_bike"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
@@ -44,11 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchClick"
-        android:text="@string/dashboard_menu_give_points"
-        android:id="@+id/dashboard_menu_give_points"
-        android:layout_below="@+id/dashboard_menu_my_rides"
-        android:layout_alignLeft="@+id/dashboard_menu_my_rides"
-        android:layout_alignStart="@+id/dashboard_menu_my_rides"
+        android:text="@string/dashboard_menu_find_peers"
+        android:id="@+id/dashboard_menu_find_peers"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />

@@ -1,6 +1,10 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 
 
 public class UbiBikeApplication extends Application {
@@ -37,7 +41,38 @@ public class UbiBikeApplication extends Application {
         this._score = _score;
     }
 
+/*
+    public void bottomMenuClickAction(Activity activity){
+        if(!(activity.getClass().isInstance(UserDashboard.class))){
+            Button homeBtn = (Button) activity.findViewById(R.id.menu_bottom_home);
+            homeBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), UserDashboard.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
+        if(!(activity.getClass().isInstance(Chat.class))){
+            Button chatBtn = (Button) activity.findViewById(R.id.menu_bottom_messenger);
+            chatBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        if(!(activity.getClass().isInstance(OptionsMenu.class))){
+            Button optionsBtn = (Button) activity.findViewById(R.id.menu_bottom_options);
+            optionsBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), OptionsMenu.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }*/
 
 
 

@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ public class OptionsMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options_menu);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
 
 
@@ -22,7 +24,6 @@ public class OptionsMenu extends AppCompatActivity {
         // HEADER
         // biker name
         TextView bikersName = (TextView)findViewById(R.id.biker_name);
-        bikerName = getIntent().getStringExtra("bikerName");
         bikersName.setText(bikerName);
 
 
@@ -33,6 +34,8 @@ public class OptionsMenu extends AppCompatActivity {
         optionsBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         optionsBtn.setTextColor(getResources().getColor(R.color.white));
     }
+
+
     public void launchClick(View v) {
         Intent intent = null;
         Boolean execute = true;

@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,12 +33,26 @@ public class TrajectoryList extends AppCompatActivity {
 
         arraylistAdapter = new ArrayAdapter<String>(
                 getApplicationContext(),
-                R.layout.activity_trajectory_list_item,
-                R.id.trajectory_list_view_item,
+                R.layout.activity_trajectory_list_item,     //listView item layout
+                R.id.trajectory_list_view_item,             //listView id
                 trajectoriesArray
         );
 
         trajectoryList.setAdapter(arraylistAdapter);
         //listAdapter.notifyDataSetChanged();
+
+        trajectoryList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long row)
+            {
+                Intent intent = new Intent(TrajectoryList.this, TrajectoryMapsActivity.class);
+                startActivity(intent);
+                //String value = (String)adapter.getItemAtPosition(position);
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
     }
 }

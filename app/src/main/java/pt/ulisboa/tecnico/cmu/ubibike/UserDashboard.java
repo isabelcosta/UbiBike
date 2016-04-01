@@ -56,7 +56,6 @@ public class UserDashboard extends AppCompatActivity {
             // dashboard menu buttons
             case R.id.dashboard_menu_find_me_a_bike:
                 intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
-                intent.putExtra("bikerName",bikerName);
                 break;
 
 //            todo criar meu my rides
@@ -68,11 +67,11 @@ public class UserDashboard extends AppCompatActivity {
                 break;
 
 //            todo criar menu give points
-            case R.id.dashboard_menu_give_points:
+            case R.id.dashboard_menu_find_peers:
 //                                                         FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
+                intent = new Intent(UserDashboard.this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
-                execute = false;
+                execute = true;
 
                 break;
 

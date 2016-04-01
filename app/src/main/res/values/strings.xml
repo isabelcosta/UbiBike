@@ -32,7 +32,7 @@
 
     <string name="dashboard_menu_find_me_a_bike">Find me a Bike</string>
     <string name="dashboard_menu_my_rides">My Rides</string>
-    <string name="dashboard_menu_give_points">Give Points</string>
+    <string name="dashboard_menu_find_peers">Find peers</string>
 
     <string name="title_activity_options_menu">Options</string>
     <string name="options_report_bug">Report Bug</string>
@@ -51,6 +51,7 @@
     <string name="send">Send</string>
     <string name="profile_me">My Profile Pic</string>
     <string name="profile_other">Other profile pic</string>
+    <string name="title_activity_find_peers">FindPeersActivity</string>
 
 
 </resources>
