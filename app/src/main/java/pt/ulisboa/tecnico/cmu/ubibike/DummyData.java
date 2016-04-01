@@ -9,7 +9,10 @@ public final class DummyData {
                     "#4 - 34 min - 10 km",
                     "#5 - 10 min - 4 km",
                     "#6 - 23 min - 6 km",
-                    "#7 - 36 min - 21 km"
+                    "#7 - 36 min - 21 km",
+                    "#8 - 36 min - 21 km",
+                    "#9 - 36 min - 21 km",
+                    "#10 - 36 min - 21 km"
             };
 
     public static String[] getTrajectories() {

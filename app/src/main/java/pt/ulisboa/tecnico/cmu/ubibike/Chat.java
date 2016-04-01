@@ -29,12 +29,12 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
 
         // HEADER
                 // biker name
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
-        bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
 

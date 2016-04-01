@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:onClick="launchClick"
             android:text="115"
+            android:textColor="@color/gray"
             android:layout_weight="1"
             android:textSize="30sp"
             android:id="@+id/biker_score"

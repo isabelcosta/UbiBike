@@ -15,12 +15,11 @@ public class ScoreHistory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_history);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);;
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
-
-
     }
 
     public void launchClick(View v) {
@@ -35,7 +34,6 @@ public class ScoreHistory extends AppCompatActivity {
 
             case R.id.menu_bottom_messenger:
                 intent = new Intent(ScoreHistory.this, Chat.class);
-                intent.putExtra("bikerName", bikerName);
 
                 break;
 
@@ -52,7 +50,6 @@ public class ScoreHistory extends AppCompatActivity {
 //          Ubibike Logo
             case R.id.ubibikeLogo:
                 intent = new Intent(ScoreHistory.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
                 break;
         }
         if (execute){

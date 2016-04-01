@@ -21,7 +21,6 @@ public class TrajectoryList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajectory_list);
 
-
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         String bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);

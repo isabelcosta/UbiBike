@@ -15,12 +15,11 @@ public class UserDashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
-
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
         // HEADER
             // biker name
         TextView bikersName = (TextView)findViewById(R.id.biker_name);
-        bikerName = getIntent().getStringExtra("bikerName");
         bikersName.setText(bikerName);
 
 

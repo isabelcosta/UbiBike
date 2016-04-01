@@ -11,29 +11,29 @@ public class UbiBikeApplication extends Application {
 
     //Getters
 
-    public String get_username() {
+    public String getUsername() {
         return _username;
     }
 
-    public boolean is_status() {
+    public boolean isStatus() {
         return _status;
     }
 
-    public int get_score() {
+    public int getScore() {
         return _score;
     }
 
     //Setters
 
-    public void set_username(String username) {
+    public void setUsername(String username) {
         this._username = username;
     }
 
-    public void set_status(boolean status) {
+    public void setStatus(boolean status) {
         this._status = status;
     }
 
-    public void set_score(int score) {
+    public void setScore(int score) {
         this._score = _score;
     }
 

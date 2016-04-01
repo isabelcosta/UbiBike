@@ -336,6 +336,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+                app.setUsername(mUsername);
+                //app.setScore(); @TODO Get from server the score or not?!
+
+
                 //give the username inserted to the next activity
                 Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
                 intent.putExtra("bikerName",mUsername);
