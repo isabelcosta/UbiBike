@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -73,13 +74,9 @@ public class OptionsMenu extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-//            todo certificar que user fica logout
             case R.id.options_logout:
-//                 FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(OptionsMenu.this, LoginActivity.class);
-                intent.putExtra("bikerName",bikerName);
-//                execute = false;
-
+                execute = false;
+                logout();
                 break;
 
 //            Points History
@@ -97,5 +94,18 @@ public class OptionsMenu extends AppCompatActivity {
         if (execute){
             startActivityForResult(intent, 0);
         }
-    };
+    }
+
+    private void logout() {
+        String spFilename = UbiBikeApplication.SHARED_PREFERENCE_FILENAME;
+        SharedPreferences pref = getApplication().getSharedPreferences(spFilename, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        // Clearing all user data from Shared Preferences
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(OptionsMenu.this, LoginActivity.class);
+        startActivity(intent);
+    }
 }

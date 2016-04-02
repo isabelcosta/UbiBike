@@ -298,7 +298,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -332,7 +332,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
-            // TODO: register the new account here.
+            // TODO: change to false when credentials are saved
             return true;
         }
 
@@ -346,10 +346,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 app.setUsername(mUsername);
                 //app.setScore(); @TODO Get from server the score or not?!
 
-
                 //give the username inserted to the next activity
                 Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
-                intent.putExtra("bikerName", mUsername);
                 startActivity(intent);
                 finish();
             } else {
