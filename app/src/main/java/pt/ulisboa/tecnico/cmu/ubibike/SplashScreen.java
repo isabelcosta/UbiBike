@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 public class SplashScreen extends AppCompatActivity {
@@ -14,6 +15,11 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar != null) {
+            actionBar.hide();
+        }
 
     /* New Handler to start the Menu-Activity
      * and close this Splash-Screen after some seconds.*/
