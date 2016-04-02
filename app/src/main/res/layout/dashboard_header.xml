@@ -39,7 +39,9 @@
             android:layout_weight="1"
             android:scaleType="centerCrop"
             android:onClick="launchClick"
-            android:id="@+id/ubibikeLogo" />
+            android:id="@+id/ubibikeLogo"
+            android:paddingEnd="2dp"
+            android:paddingStart="2dp" />
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
