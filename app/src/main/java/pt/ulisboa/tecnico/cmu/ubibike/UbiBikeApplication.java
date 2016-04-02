@@ -6,12 +6,29 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class UbiBikeApplication extends Application {
 
     private String _username;
     private int _score;
     private boolean _status;
+    /**
+     * A dummy authentication store containing known user names and passwords.
+     * TODO: remove after connecting to a real authentication system.
+     */
+    private ArrayList<String> DUMMY_CREDENTIALS;
+
+    public UbiBikeApplication() {
+        String[] credentialsArray = {
+                "foo@example.com:hello", "bar@example.com:world",
+                "isabel:costa", "pedro:dias", "vicente:rocha"
+        };
+        DUMMY_CREDENTIALS = new ArrayList<>(Arrays.asList(credentialsArray));
+    }
 
     //Getters
 
@@ -27,6 +44,10 @@ public class UbiBikeApplication extends Application {
         return _score;
     }
 
+    public List<String> getDummyCredentials() {
+        return DUMMY_CREDENTIALS;
+    }
+
     //Setters
 
     public void setUsername(String username) {
@@ -39,6 +60,13 @@ public class UbiBikeApplication extends Application {
 
     public void setScore(int score) {
         this._score = _score;
+    }
+
+    public void addCredentials(String credentials) {
+        this.DUMMY_CREDENTIALS.add(credentials);
+    }
+    public List<String> getDummyCredentials(String credentials) {
+        return this.DUMMY_CREDENTIALS;
     }
 
 /*
@@ -73,7 +101,6 @@ public class UbiBikeApplication extends Application {
             });
         }
     }*/
-
 
 
 }

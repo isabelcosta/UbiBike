@@ -101,7 +101,7 @@
         <activity
             android:name=".FindPeersActivity"
             android:label="@string/title_activity_find_peers"
-            android:parentActivityName=".UserDashboard">
+            android:parentActivityName=".UserDashboard" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
@@ -114,6 +114,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:parentActivityName=".LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
     </application>
 

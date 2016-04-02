@@ -10,6 +10,7 @@
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This username is invalid or doesn\'t exist</string>
+    <string name="error_duplicated_username">This username already exists</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -51,33 +52,19 @@
     <string name="send">Send</string>
     <string name="profile_me">My Profile Pic</string>
     <string name="profile_other">Other profile pic</string>
-    <string name="title_activity_find_peers">Ubi Connect</string>
 
-
-    <!--
-        TODO: Before you run your application, you need a Google Maps API key.
-    ​
-        To get one, follow this link, follow the directions and press "Create" at the end:
-    ​
-        https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=C2:C2:AA:CE:AF:16:39:12:3E:24:91:CB:D7:E3:CE:77:20:05:E8:E5%3Bpt.ulisboa.tecnico.cmu.ubibike
-    ​
-        You can also add your credentials to an existing key, using this line:
-        C2:C2:AA:CE:AF:16:39:12:3E:24:91:CB:D7:E3:CE:77:20:05:E8:E5;pt.ulisboa.tecnico.cmu.ubibike
-    ​
-        Alternatively, follow the directions here:
-        https://developers.google.com/maps/documentation/android/start#get-key
-    ​
-        Once you have your key (it starts with "AIza"), replace the "google_maps_key"
-        string in this file.
-        -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        YOUR_KEY_HERE
-    </string>
     <string name="footer_button_ubiconnect">UbiConnect</string>
     <string name="dashboard_menu_my_points">My Points</string>
     <string name="title_activity_give_points_or_chat">GivePointsOrChat</string>
     <string name="ubiconnect_ubichat">Ubi Chat</string>
     <string name="ubiconnect_give_points">Give Points</string>
+    <string name="title_activity_find_peers">FindPeersActivity</string>
+    <string name="title_activity_register">Register</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="error_different_password">Passwords don\'t match</string>
+    <string name="prompt_second_password">Repeat Password</string>
 
 
 </resources>
