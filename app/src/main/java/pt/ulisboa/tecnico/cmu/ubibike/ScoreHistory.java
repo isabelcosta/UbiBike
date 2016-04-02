@@ -18,7 +18,7 @@ public class ScoreHistory extends AppCompatActivity {
         this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);;
-        bikerName = getIntent().getStringExtra("bikerName");
+
         manufacturerTextView.setText(bikerName);
     }
 
@@ -32,8 +32,8 @@ public class ScoreHistory extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(ScoreHistory.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(ScoreHistory.this, FindPeersActivity.class);
 
                 break;
 

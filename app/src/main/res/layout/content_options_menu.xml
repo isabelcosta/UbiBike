@@ -13,6 +13,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="launchClick"
         android:text="@string/options_report_bug"
         android:id="@+id/options_report_bug"
         android:layout_alignParentTop="true"
@@ -27,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/options_about"
+        android:onClick="launchClick"
         android:id="@+id/options_about"
         android:layout_below="@+id/options_report_bug"
         android:layout_alignLeft="@+id/options_report_bug"
@@ -39,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/options_logout"
+        android:onClick="launchClick"
         android:id="@+id/options_logout"
         android:layout_below="@+id/options_about"
         android:layout_alignLeft="@+id/options_about"

@@ -29,7 +29,6 @@
             <ListView
                 android:id="@+id/lvChat"
                 android:transcriptMode="alwaysScroll"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_above="@+id/llSend"

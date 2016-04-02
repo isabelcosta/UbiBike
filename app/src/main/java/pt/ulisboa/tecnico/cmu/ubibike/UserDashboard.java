@@ -38,13 +38,14 @@ public class UserDashboard extends AppCompatActivity {
 
         switch(v.getId()) {
 
-            // footer buttons
+
+// footer buttons
             case R.id.menu_bottom_home:
                 execute = false;
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(UserDashboard.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(UserDashboard.this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
@@ -53,35 +54,31 @@ public class UserDashboard extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            // dashboard menu buttons
+// dashboard menu buttons
             case R.id.dashboard_menu_find_me_a_bike:
                 intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
                 break;
 
-//            todo criar meu my rides
             case R.id.dashboard_menu_my_rides:
-//                                                     FIXME: 26-Mar-16 change Trajectory
                 intent = new Intent(UserDashboard.this, TrajectoryList.class);
                 intent.putExtra("bikerName",bikerName);
-//                execute = false;
                 break;
 
 //            todo criar menu give points
-            case R.id.dashboard_menu_find_peers:
-//                                                         FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(UserDashboard.this, FindPeersActivity.class);
+            case R.id.dashboard_menu_biker_score:
+                intent = new Intent(UserDashboard.this, ScoreHistory.class);
                 intent.putExtra("bikerName",bikerName);
                 execute = true;
 
                 break;
 
-//            Points History
+// Points History
             case R.id.biker_score:
                 intent = new Intent(UserDashboard.this, ScoreHistory.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-//          Ubibike Logo
+// Ubibike Logo
             case R.id.ubibikeLogo:
                 execute = false;
                 break;

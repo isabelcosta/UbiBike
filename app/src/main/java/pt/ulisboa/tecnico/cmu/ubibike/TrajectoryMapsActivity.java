@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,8 +46,8 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(TrajectoryMapsActivity.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(TrajectoryMapsActivity.this, FindPeersActivity.class);
                 intent.putExtra("bikerName", bikerName);
 
                 break;

@@ -1,11 +1,8 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +21,7 @@ public class Chat extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
     private String bikerName;
+    private String person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +35,14 @@ public class Chat extends AppCompatActivity {
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         manufacturerTextView.setText(bikerName);
 
-
+        // person name
+        person = getIntent().getStringExtra("person");
 
         btn = (Button) findViewById(R.id.btSend1);
         list = (ListView) findViewById(R.id.lvChat);
         textMsg = (EditText) findViewById(R.id.etMessage1);
 
         arrayList = new ArrayList<String>();
-
 
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
@@ -77,7 +75,7 @@ public class Chat extends AppCompatActivity {
                 // next thing you have to do is check if your adapter has changed
 
                 m = new Message();
-                m.setBody("Auto text Back");
+                m.setBody(person);
                 m.setUserId("Joao");
                 // this line adds the data of your EditText and puts in your array
                 mMessages.add(m);
@@ -87,10 +85,6 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-//      Change color to current menu
-        Button messengerBtn = (Button) findViewById(R.id.menu_bottom_messenger);
-        messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        messengerBtn.setTextColor(getResources().getColor(R.color.white));
 
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -108,9 +102,8 @@ public class Chat extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-//                intent = new Intent(Chat.this, Chat.class);
-                execute = false;
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(Chat.this, FindPeersActivity.class);
                 break;
 
             case R.id.menu_bottom_options:

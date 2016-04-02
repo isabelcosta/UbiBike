@@ -17,14 +17,18 @@ public class TrajectoryList extends AppCompatActivity {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;
+    private String bikerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajectory_list);
 
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+
+        // HEADER
+        // biker name
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
-        String bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
         trajectoryList = (ListView) findViewById(R.id.trajectory_list_view);
@@ -54,5 +58,43 @@ public class TrajectoryList extends AppCompatActivity {
                 // do what you intend to do on click of listview row
             }
         });
+    }
+
+
+    public void launchClick(View v) {
+        Intent intent = null;
+        Boolean execute = true;
+
+        switch(v.getId()) {
+            case R.id.menu_bottom_home:
+                intent = new Intent(TrajectoryList.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(TrajectoryList.this, FindPeersActivity.class);
+                execute = false;
+                break;
+
+            case R.id.menu_bottom_options:
+                intent = new Intent(TrajectoryList.this, OptionsMenu.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+//            Points History
+
+            case R.id.biker_score:
+                intent = new Intent(TrajectoryList.this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+//          Ubibike Logo
+            case R.id.ubibikeLogo:
+                intent = new Intent(TrajectoryList.this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+        }
+        if (execute){
+            startActivityForResult(intent, 0);
+        }
     }
 }

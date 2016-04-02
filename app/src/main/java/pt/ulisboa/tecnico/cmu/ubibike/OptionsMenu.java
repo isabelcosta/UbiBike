@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -48,8 +47,8 @@ public class OptionsMenu extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(OptionsMenu.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(OptionsMenu.this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 

@@ -38,8 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchClick"
-        android:text="@string/dashboard_menu_find_peers"
-        android:id="@+id/dashboard_menu_find_peers"
+        android:text="@string/dashboard_menu_my_points"
+        android:id="@+id/dashboard_menu_biker_score"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
