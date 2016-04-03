@@ -370,7 +370,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             if (success) {
                 UbiBikeApplication app = ((UbiBikeApplication) getApplication());
                 app.addCredentials(mUsername + ":" + mPassword);
-                app.setUsername(mUsername);
+                app.setUsername(mUsername, false);
 
                 //give the username inserted to the next activity
                 Intent intent = new Intent(RegisterActivity.this, UserDashboard.class);

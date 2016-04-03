@@ -5,24 +5,19 @@ package pt.ulisboa.tecnico.cmu.ubibike.domain;
  */
 public class Trajectory {
 
+    private int id;
     private long duration;
     private long distance;
-    private String time;
+    private String beginingTime;
+    private String endTime;
     private String date;
 
-    public Trajectory(long duration, long distance, String time, String date) {
+    public Trajectory(long duration, long distance, String beginingTime, String endTime, String date) {
         this.duration = duration;
         this.distance = distance;
-        this.time = time;
+        this.beginingTime = beginingTime;
+        this.endTime = endTime;
         this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getDate() {
@@ -34,11 +29,23 @@ public class Trajectory {
     }
 
     public long getDuration() {
+        //@TODO beginnig - end time
         return duration;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setBeginingTime(String beginingTime) {
+        this.beginingTime = beginingTime;
     }
 
     public long getDistance() {

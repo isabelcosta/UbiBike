@@ -25,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -57,6 +58,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+/*        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+        if(((UbiBikeApplication) getApplication()).isUserLoggedIn()) {
+            app.setUsername(null, true);
+            
+            //give the username inserted to the next activity
+            Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
+            startActivity(intent);
+            finish();
+        }*/
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -307,8 +318,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
         private final List<String> mCredentials;
 
-        UserLoginTask(String email, String password, List<String> credentials) {
-            mUsername = email;
+        UserLoginTask(String username, String password, List<String> credentials) {
+            mUsername = username;
             mPassword = password;
             mCredentials = credentials;
         }
@@ -343,7 +354,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 UbiBikeApplication app = ((UbiBikeApplication) getApplication());
-                app.setUsername(mUsername);
+                app.setUsername(mUsername, false);
+
+                CheckBox saveCredentialsBox = (CheckBox) findViewById(R.id.save_credentials);
+                if(saveCredentialsBox.isChecked()) {
+                    app.saveCredentials(mUsername);
+                }
                 //app.setScore(); @TODO Get from server the score or not?!
 
                 //give the username inserted to the next activity

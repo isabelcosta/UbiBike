@@ -76,7 +76,7 @@ public class OptionsMenu extends AppCompatActivity {
 
             case R.id.options_logout:
                 execute = false;
-                logout();
+                ((UbiBikeApplication) getApplication()).logout();
                 break;
 
 //            Points History
@@ -96,16 +96,4 @@ public class OptionsMenu extends AppCompatActivity {
         }
     }
 
-    private void logout() {
-        String spFilename = UbiBikeApplication.SHARED_PREFERENCE_FILENAME;
-        SharedPreferences pref = getApplication().getSharedPreferences(spFilename, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-
-        // Clearing all user data from Shared Preferences
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(OptionsMenu.this, LoginActivity.class);
-        startActivity(intent);
-    }
 }

@@ -26,8 +26,15 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
+                UbiBikeApplication app = (UbiBikeApplication) getApplication();
+                Intent mainIntent;
+                if(app.isUserLoggedIn()) {
+                    mainIntent = new Intent(SplashScreen.this, UserDashboard.class);
+                } else {
+                    mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
+                }
+
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
                 SplashScreen.this.startActivity(mainIntent);
                 SplashScreen.this.finish();
             }
