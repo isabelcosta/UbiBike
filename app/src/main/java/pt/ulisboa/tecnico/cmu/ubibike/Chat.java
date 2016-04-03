@@ -38,6 +38,10 @@ public class Chat extends AppCompatActivity {
         // person name
         person = getIntent().getStringExtra("person");
 
+        TextView chatPerson = (TextView)findViewById(R.id.chat_person);
+        chatPerson.setText(person);
+
+
         btn = (Button) findViewById(R.id.btSend1);
         list = (ListView) findViewById(R.id.lvChat);
         textMsg = (EditText) findViewById(R.id.etMessage1);
@@ -75,8 +79,8 @@ public class Chat extends AppCompatActivity {
                 // next thing you have to do is check if your adapter has changed
 
                 m = new Message();
-                m.setBody(person);
-                m.setUserId("Joao");
+                m.setBody("auto response");
+                        m.setUserId("Joao");
                 // this line adds the data of your EditText and puts in your array
                 mMessages.add(m);
 

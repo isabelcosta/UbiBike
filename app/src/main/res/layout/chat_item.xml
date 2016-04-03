@@ -26,5 +26,5 @@
         android:layout_marginStart="-64dp"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/common_plus_signin_btn_icon_dark_pressed" />
+        android:src="@drawable/common_ic_googleplayservices" />
 </LinearLayout>

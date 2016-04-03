@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,24 +12,19 @@
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.Chat"
     android:weightSum="1">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.47"
-        android:gravity="bottom"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp">
+
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:background="@color/grey"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="408dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="30dp">
             <ListView
                 android:id="@+id/lvChat"
                 android:transcriptMode="alwaysScroll"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentLeft="false"
                 android:layout_alignParentRight="true"
                 android:layout_above="@+id/llSend"
                 android:layout_width="wrap_content"
@@ -68,6 +63,16 @@
             </LinearLayout>
         </RelativeLayout>
 
-    </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/chat_person"
+        android:layout_marginTop="54dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
+
+</RelativeLayout>
