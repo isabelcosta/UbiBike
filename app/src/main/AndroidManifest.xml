@@ -89,9 +89,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu" />
         </activity>
-<<<<<<< HEAD
-        <activity android:name=".FindBike"></activity>
-=======
+        <activity android:name=".FindBike"
+            android:label="@string/title_activity_find_bike"></activity>
         <activity
             android:name=".FindPeersActivity"
             android:label="@string/title_activity_find_peers"
@@ -113,7 +112,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
->>>>>>> 3dea204a45517b8892813512743a215f9b44cb10
     </application>
 
 </manifest>

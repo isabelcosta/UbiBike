@@ -19,6 +19,7 @@
     </string>
     <string name="title_activity_trajectory_maps">Trajectory Map</string>
     <string name="title_activity_chat">Ubi Chat</string>
+    <string name="title_activity_find_bike">Find me a bike</string>
     <string name="new_message">+</string>
     <string name="chat_table_test">+</string>
     <string name="save_credentials">Save credentials</string>
