@@ -29,10 +29,19 @@ public final class DummyData {
                     "Person 10"
             };
 
+    private static String[] points =
+            {       "Won 100 points ride #1",
+                    "Gave 10 points to John",
+                    "Received 25 points from Jose"
+            };
+
     public static String[] getTrajectories() {
             return trajectories;
     }
     public static String[] getPeers() {
         return peers;
+    }
+    public static String[] getPoints() {
+        return points;
     }
 }

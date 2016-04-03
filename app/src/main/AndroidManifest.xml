@@ -57,10 +57,7 @@
         </activity>
         <activity
             android:name=".Chat"
-            android:label="@string/title_activity_chat">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity" />
+            android:label="@string/title_activity_chat">/>
         </activity>
         <activity
             android:name=".UserDashboard"
@@ -79,16 +76,10 @@
         <activity
             android:name=".ScoreHistory"
             android:label="@string/title_activity_score_history">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".OptionsMenu"
             android:label="@string/title_activity_options_menu">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".AboutMenu"
@@ -102,15 +93,11 @@
             android:name=".FindPeersActivity"
             android:label="@string/title_activity_find_peers"
             android:parentActivityName=".UserDashboard" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".GivePointsOrChat"
             android:label="@string/title_activity_give_points_or_chat"
-            android:parentActivityName=".FindPeersActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".FindPeersActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity" />

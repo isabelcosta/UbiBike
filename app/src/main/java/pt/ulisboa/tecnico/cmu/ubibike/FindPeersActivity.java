@@ -36,14 +36,14 @@ public class FindPeersActivity extends AppCompatActivity {
         manufacturerTextView.setText(bikerName);
 
 
-        ListView peersList = (ListView) findViewById(R.id.peers_list_view);
-
-        List<String> allPeersArray = new ArrayList<String>(Arrays.asList(DummyData.getPeers()));
-
         //      Change color to current menu
         Button messengerBtn = (Button) findViewById(R.id.menu_bottom_ubiconnect);
         messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         messengerBtn.setTextColor(getResources().getColor(R.color.white));
+
+        ListView peersList = (ListView) findViewById(R.id.peers_list_view);
+
+        List<String> allPeersArray = new ArrayList<String>(Arrays.asList(DummyData.getPeers()));
 
 
 
