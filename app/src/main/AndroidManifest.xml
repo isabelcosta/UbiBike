@@ -92,6 +92,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu" />
         </activity>
+        <activity android:name=".FindBike"></activity>
     </application>
 
 </manifest>

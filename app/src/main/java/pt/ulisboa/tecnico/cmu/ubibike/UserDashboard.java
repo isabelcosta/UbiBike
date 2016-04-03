@@ -56,7 +56,7 @@ public class UserDashboard extends AppCompatActivity {
 
             // dashboard menu buttons
             case R.id.dashboard_menu_find_me_a_bike:
-                intent = new Intent(UserDashboard.this, TrajectoryMapsActivity.class);
+                intent = new Intent(UserDashboard.this, FindBike.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
