@@ -10,6 +10,7 @@
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This username is invalid or doesn\'t exist</string>
+    <string name="error_duplicated_username">This username already exists</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -17,7 +18,7 @@
         completions."
     </string>
     <string name="title_activity_trajectory_maps">Trajectory Map</string>
-    <string name="title_activity_chat">Messenger</string>
+    <string name="title_activity_chat">Ubi Chat</string>
     <string name="new_message">+</string>
     <string name="chat_table_test">+</string>
     <string name="save_credentials">Save credentials</string>
@@ -32,7 +33,7 @@
 
     <string name="dashboard_menu_find_me_a_bike">Find me a Bike</string>
     <string name="dashboard_menu_my_rides">My Rides</string>
-    <string name="dashboard_menu_give_points">Give Points</string>
+    <string name="dashboard_menu_find_peers">Find peers</string>
 
     <string name="title_activity_options_menu">Options</string>
     <string name="options_report_bug">Report Bug</string>
@@ -44,13 +45,26 @@
     <string name="About">About The Project</string>
     <string name="cmov">This project was developed for the CMov course of 2016 @ist</string>
     <string name="title_activity_score_history">Score History</string>
-    <string name="title_activity_create_new_trajectory">CreateNewTrajectory</string>
+    <string name="title_activity_create_new_trajectory">New Trajectory</string>
 
     <!-- Chat-->
     <string name="message_hint">Say anything</string>
     <string name="send">Send</string>
     <string name="profile_me">My Profile Pic</string>
     <string name="profile_other">Other profile pic</string>
+
+    <string name="footer_button_ubiconnect">UbiConnect</string>
+    <string name="dashboard_menu_my_points">My Points</string>
+    <string name="title_activity_give_points_or_chat">UbiConnect</string>
+    <string name="ubiconnect_ubichat">UbiChat</string>
+    <string name="ubiconnect_give_points">Give Points</string>
+    <string name="title_activity_find_peers">Find Peers</string>
+    <string name="title_activity_register">Register</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="error_different_password">Passwords don\'t match</string>
+    <string name="prompt_second_password">Repeat Password</string>
 
 
 </resources>

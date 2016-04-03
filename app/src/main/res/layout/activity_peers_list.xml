@@ -6,7 +6,7 @@
     android:background="@color/grey"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryList">
+    tools:context="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/trajectory_list_view"
+            android:id="@+id/peers_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

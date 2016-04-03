@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,6 +16,7 @@ public class OptionsMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options_menu);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
 
 
@@ -22,7 +24,6 @@ public class OptionsMenu extends AppCompatActivity {
         // HEADER
         // biker name
         TextView bikersName = (TextView)findViewById(R.id.biker_name);
-        bikerName = getIntent().getStringExtra("bikerName");
         bikersName.setText(bikerName);
 
 
@@ -33,6 +34,8 @@ public class OptionsMenu extends AppCompatActivity {
         optionsBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         optionsBtn.setTextColor(getResources().getColor(R.color.white));
     }
+
+
     public void launchClick(View v) {
         Intent intent = null;
         Boolean execute = true;
@@ -45,8 +48,8 @@ public class OptionsMenu extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(OptionsMenu.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(OptionsMenu.this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
@@ -71,13 +74,9 @@ public class OptionsMenu extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-//            todo certificar que user fica logout
             case R.id.options_logout:
-//                 FIXME: 26-Mar-16 change Trajectory
-                intent = new Intent(OptionsMenu.this, LoginActivity.class);
-                intent.putExtra("bikerName",bikerName);
-//                execute = false;
-
+                execute = false;
+                ((UbiBikeApplication) getApplication()).logout();
                 break;
 
 //            Points History
@@ -95,5 +94,6 @@ public class OptionsMenu extends AppCompatActivity {
         if (execute){
             startActivityForResult(intent, 0);
         }
-    };
+    }
+
 }

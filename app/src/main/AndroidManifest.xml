@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -15,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".UbiBikeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -41,6 +44,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".TrajectoryMapsActivity"
@@ -51,10 +57,7 @@
         </activity>
         <activity
             android:name=".Chat"
-            android:label="@string/title_activity_chat">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity" />
+            android:label="@string/title_activity_chat">/>
         </activity>
         <activity
             android:name=".UserDashboard"
@@ -73,16 +76,10 @@
         <activity
             android:name=".ScoreHistory"
             android:label="@string/title_activity_score_history">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".OptionsMenu"
             android:label="@string/title_activity_options_menu">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".AboutMenu"
@@ -92,7 +89,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu" />
         </activity>
+<<<<<<< HEAD
         <activity android:name=".FindBike"></activity>
+=======
+        <activity
+            android:name=".FindPeersActivity"
+            android:label="@string/title_activity_find_peers"
+            android:parentActivityName=".UserDashboard" >
+        </activity>
+        <activity
+            android:name=".GivePointsOrChat"
+            android:label="@string/title_activity_give_points_or_chat"
+            android:parentActivityName=".FindPeersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:parentActivityName=".LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
+        </activity>
+>>>>>>> 3dea204a45517b8892813512743a215f9b44cb10
     </application>
 
 </manifest>

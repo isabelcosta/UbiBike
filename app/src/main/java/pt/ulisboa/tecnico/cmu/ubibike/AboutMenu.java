@@ -37,8 +37,8 @@ public class AboutMenu extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(AboutMenu.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(AboutMenu.this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 

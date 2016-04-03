@@ -28,11 +28,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="launchClick"
-            android:text="@string/footer_button_messenger"
+            android:text="@string/footer_button_ubiconnect"
             android:layout_weight="1"
             android:textSize="@dimen/bottom_menu_text_size"
             android:gravity="center"
-            android:id="@+id/menu_bottom_messenger"
+            android:id="@+id/menu_bottom_ubiconnect"
             android:textAllCaps="true"
             />
         <Button

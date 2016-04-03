@@ -9,10 +9,39 @@ public final class DummyData {
                     "#4 - 34 min - 10 km",
                     "#5 - 10 min - 4 km",
                     "#6 - 23 min - 6 km",
-                    "#7 - 36 min - 21 km"
+                    "#7 - 36 min - 21 km",
+                    "#8 - 36 min - 21 km",
+                    "#9 - 36 min - 21 km",
+                    "#10 - 36 min - 21 km"
+            };
+
+
+    private static String[] peers =
+            {       "Person 1",
+                    "Person 2",
+                    "Person 3",
+                    "Person 4",
+                    "Person 5",
+                    "Person 6",
+                    "Person 7",
+                    "Person 8",
+                    "Person 9",
+                    "Person 10"
+            };
+
+    private static String[] points =
+            {       "Won 100 points ride #1",
+                    "Gave 10 points to John",
+                    "Received 25 points from Jose"
             };
 
     public static String[] getTrajectories() {
             return trajectories;
+    }
+    public static String[] getPeers() {
+        return peers;
+    }
+    public static String[] getPoints() {
+        return points;
     }
 }

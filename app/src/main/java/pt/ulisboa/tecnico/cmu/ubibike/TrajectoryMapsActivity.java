@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,12 +22,14 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajectory_maps);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);;
+        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
@@ -45,8 +46,8 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-                intent = new Intent(TrajectoryMapsActivity.this, Chat.class);
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(TrajectoryMapsActivity.this, FindPeersActivity.class);
                 intent.putExtra("bikerName", bikerName);
 
                 break;
@@ -62,13 +63,11 @@ public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapRe
 
             case R.id.biker_score:
                 intent = new Intent(TrajectoryMapsActivity.this, ScoreHistory.class);
-                intent.putExtra("bikerName",bikerName);
                 break;
 
 //          Ubibike Logo
             case R.id.ubibikeLogo:
                 intent = new Intent(TrajectoryMapsActivity.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
                 break;
         }
         if (execute){

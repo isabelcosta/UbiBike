@@ -1,11 +1,8 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,19 +21,25 @@ public class Chat extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
     private String bikerName;
+    private String person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
 
         // HEADER
                 // biker name
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
-        bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
+        // person name
+        person = getIntent().getStringExtra("person");
+
+        TextView chatPerson = (TextView)findViewById(R.id.chat_person);
+        chatPerson.setText(person);
 
 
         btn = (Button) findViewById(R.id.btSend1);
@@ -44,7 +47,6 @@ public class Chat extends AppCompatActivity {
         textMsg = (EditText) findViewById(R.id.etMessage1);
 
         arrayList = new ArrayList<String>();
-
 
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
@@ -77,8 +79,8 @@ public class Chat extends AppCompatActivity {
                 // next thing you have to do is check if your adapter has changed
 
                 m = new Message();
-                m.setBody("Auto text Back");
-                m.setUserId("Joao");
+                m.setBody("auto response");
+                        m.setUserId("Joao");
                 // this line adds the data of your EditText and puts in your array
                 mMessages.add(m);
 
@@ -87,10 +89,6 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-//      Change color to current menu
-        Button messengerBtn = (Button) findViewById(R.id.menu_bottom_messenger);
-        messengerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        messengerBtn.setTextColor(getResources().getColor(R.color.white));
 
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -108,9 +106,8 @@ public class Chat extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.menu_bottom_messenger:
-//                intent = new Intent(Chat.this, Chat.class);
-                execute = false;
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(Chat.this, FindPeersActivity.class);
                 break;
 
             case R.id.menu_bottom_options:
