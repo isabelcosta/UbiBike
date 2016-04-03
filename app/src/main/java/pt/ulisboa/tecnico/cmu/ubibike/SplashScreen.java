@@ -27,6 +27,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 UbiBikeApplication app = (UbiBikeApplication) getApplication();
+                app.setUsername(null, true);
                 Intent mainIntent;
                 if(app.isUserLoggedIn()) {
                     mainIntent = new Intent(SplashScreen.this, UserDashboard.class);

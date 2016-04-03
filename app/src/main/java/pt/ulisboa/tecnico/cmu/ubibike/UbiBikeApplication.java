@@ -137,7 +137,19 @@ public class UbiBikeApplication extends Application {
         Boolean isLogged = prefs.getBoolean(SP_IS_USER_LOGGED, false);
         return isLogged;
     }
-
+/*
+    /**
+     * Gets username of logged user from Shared Preferences
+     * @return username
+     */
+/*
+    public String getUsernameFromSP(){
+        // creating an shared Preference file for the information to be stored
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+        String username = prefs.getString(SP_USERNAME, null);
+        return username;
+    }
+*/
 /*
     public void bottomMenuClickAction(Activity activity){
         if(!(activity.getClass().isInstance(UserDashboard.class))){
