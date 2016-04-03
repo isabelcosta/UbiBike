@@ -58,7 +58,7 @@
     <string name="title_activity_give_points_or_chat">GivePointsOrChat</string>
     <string name="ubiconnect_ubichat">Ubi Chat</string>
     <string name="ubiconnect_give_points">Give Points</string>
-    <string name="title_activity_find_peers">FindPeersActivity</string>
+    <string name="title_activity_find_peers">Find Peers</string>
     <string name="title_activity_register">Register</string>
 
     <!-- Strings related to login -->

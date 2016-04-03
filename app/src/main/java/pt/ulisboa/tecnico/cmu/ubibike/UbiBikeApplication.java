@@ -22,9 +22,15 @@ public class UbiBikeApplication extends Application {
      */
     private ArrayList<String> DUMMY_CREDENTIALS;
 
+    /**
+     * Constants
+     */
     // Shared preferences file name
     public static final String SHARED_PREFERENCE_FILENAME = "UbibikeSP";
 
+    /**
+     * Constructor
+     */
     public UbiBikeApplication() {
         String[] credentialsArray = {
                 "foo@example.com:hello", "bar@example.com:world",
