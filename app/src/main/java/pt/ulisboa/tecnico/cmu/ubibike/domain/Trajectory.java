@@ -1,7 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
 /**
- * This class representes a trajectory made by a user
+ * This class represents a trajectory made by a user
  */
 public class Trajectory {
 
