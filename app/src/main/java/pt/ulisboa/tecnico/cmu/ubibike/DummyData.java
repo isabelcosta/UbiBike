@@ -30,7 +30,8 @@ public final class DummyData {
             };
 
     private static String[] points =
-            {       "Won 100 points ride #1",
+            {
+                    "Won 100 points ride #1",
                     "Gave 10 points to John",
                     "Received 25 points from Jose"
             };

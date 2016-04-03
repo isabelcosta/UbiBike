@@ -66,6 +66,7 @@
     <string name="prompt_email">Email</string>
     <string name="error_different_password">Passwords don\'t match</string>
     <string name="prompt_second_password">Repeat Password</string>
+    <string name="title_activity_find_bike_maps">Available Bike Map</string>
 
 
 </resources>

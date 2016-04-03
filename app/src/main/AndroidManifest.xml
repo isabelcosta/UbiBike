@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pt.ulisboa.tecnico.cmu.ubibike">
+    package="pt.ulisboa.tecnico.cmu.ubibike" >
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -22,8 +22,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen">
+        android:theme="@style/AppTheme" >
+        <activity android:name=".SplashScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,47 +50,50 @@
 
         <activity
             android:name=".TrajectoryMapsActivity"
-            android:label="@string/title_activity_trajectory_maps">
+            android:label="@string/title_activity_trajectory_maps" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
         <activity
             android:name=".Chat"
-            android:label="@string/title_activity_chat">/>
+            android:label="@string/title_activity_chat" >
+/>
         </activity>
         <activity
             android:name=".UserDashboard"
-            android:label="@string/title_activity_user_dashboard">
+            android:label="@string/title_activity_user_dashboard" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
         <activity
             android:name=".TrajectoryList"
-            android:label="@string/title_activity_trajectory">
+            android:label="@string/title_activity_trajectory" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
         <activity
             android:name=".ScoreHistory"
-            android:label="@string/title_activity_score_history">
+            android:label="@string/title_activity_score_history" >
         </activity>
         <activity
             android:name=".OptionsMenu"
-            android:label="@string/title_activity_options_menu">
+            android:label="@string/title_activity_options_menu" >
         </activity>
         <activity
             android:name=".AboutMenu"
             android:label="@string/title_activity_about_menu"
-            android:parentActivityName=".OptionsMenu">
+            android:parentActivityName=".OptionsMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu" />
         </activity>
-        <activity android:name=".FindBike"
-            android:label="@string/title_activity_find_bike"></activity>
+        <activity
+            android:name=".FindBike"
+            android:label="@string/title_activity_find_bike" >
+        </activity>
         <activity
             android:name=".FindPeersActivity"
             android:label="@string/title_activity_find_peers"
@@ -99,7 +102,7 @@
         <activity
             android:name=".GivePointsOrChat"
             android:label="@string/title_activity_give_points_or_chat"
-            android:parentActivityName=".FindPeersActivity">
+            android:parentActivityName=".FindPeersActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity" />
@@ -111,6 +114,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".FindBikeMapsActivity"
+            android:label="@string/title_activity_find_bike_maps" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.FindBike" />
         </activity>
     </application>
 

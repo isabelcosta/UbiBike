@@ -1,7 +1,10 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,5 +40,19 @@ public class FindBike extends AppCompatActivity {
 
         availableBikesList.setAdapter(availableBikesAdapter);
         //listAdapter.notifyDataSetChanged();
+
+        availableBikesList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long row)
+            {
+                Intent intent = new Intent(FindBike.this, FindBikeMapsActivity.class);
+                startActivity(intent);
+                //String value = (String)adapter.getItemAtPosition(position);
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
     }
 }
