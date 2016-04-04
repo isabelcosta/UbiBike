@@ -67,9 +67,7 @@ public class OptionsMenu extends AppCompatActivity {
                 execute = false;
                 break;
 
-//            todo criar menu about
             case R.id.options_about:
-//                 FIXME: 26-Mar-16 change Trajectory
                 intent = new Intent(OptionsMenu.this, AboutMenu.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
