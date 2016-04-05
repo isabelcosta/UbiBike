@@ -68,6 +68,7 @@
     <string name="prompt_second_password">Repeat Password</string>
     <string name="title_activity_find_bike_maps">Available Bike Map</string>
     <string name="score_history_refresh_points">Refresh</string>
+    <string name="title_activity_riding">RidingActivity</string>
 
 
 </resources>

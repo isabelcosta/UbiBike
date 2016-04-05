@@ -33,30 +33,30 @@ public class AboutMenu extends AppCompatActivity {
 
         switch(v.getId()) {
             case R.id.menu_bottom_home:
-                intent = new Intent(AboutMenu.this, UserDashboard.class);
+                intent = new Intent(this, UserDashboard.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(AboutMenu.this, FindPeersActivity.class);
+                intent = new Intent(this, FindPeersActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
             case R.id.menu_bottom_options:
-                intent = new Intent(AboutMenu.this, OptionsMenu.class);
+                intent = new Intent(this, OptionsMenu.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
 //            Points History
 
             case R.id.biker_score:
-                intent = new Intent(AboutMenu.this, ScoreHistory.class);
+                intent = new Intent(this, ScoreHistory.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
 //          Ubibike Logo
             case R.id.ubibikeLogo:
-                intent = new Intent(AboutMenu.this, UserDashboard.class);
+                intent = new Intent(this, UserDashboard.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
         }
