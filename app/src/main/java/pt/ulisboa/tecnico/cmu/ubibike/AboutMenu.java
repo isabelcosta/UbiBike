@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
 
 
+public class AboutMenu extends Common {
 
-public class AboutMenu extends AppCompatActivity {
-
-    private String bikerName;
+    protected String bikerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,11 @@ public class AboutMenu extends AppCompatActivity {
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
+
+
+
+
+
 
 
     }

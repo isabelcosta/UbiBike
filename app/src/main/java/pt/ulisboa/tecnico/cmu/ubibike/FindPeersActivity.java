@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindPeersActivity extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class FindPeersActivity extends Common {
 
     private String bikerName;
 

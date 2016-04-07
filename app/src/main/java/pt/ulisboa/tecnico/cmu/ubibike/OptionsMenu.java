@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class OptionsMenu extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class OptionsMenu extends Common {
 
     private String bikerName;
 

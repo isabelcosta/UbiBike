@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Chat extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class Chat extends Common {
 
     private EditText editTxt;
     private Button btn;

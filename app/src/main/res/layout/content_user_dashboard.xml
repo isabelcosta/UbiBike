@@ -43,4 +43,13 @@
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="launchClick"
+        android:text="@string/dashboard_menu_riding"
+        android:id="@+id/dashboard_menu_riding"
+        android:theme="@android:style/ButtonBar"
+        android:textAllCaps="true"
+        android:textSize="@dimen/abc_dialog_padding_top_material" />
 </LinearLayout>

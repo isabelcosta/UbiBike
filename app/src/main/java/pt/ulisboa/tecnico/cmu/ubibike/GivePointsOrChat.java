@@ -9,7 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-public class GivePointsOrChat extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class GivePointsOrChat extends Common {
 
     private String bikerName;
     private String person;

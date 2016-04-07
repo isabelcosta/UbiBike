@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,13 +19,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.cmu.ubibike.AboutMenu;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiBikeApplication;
 
 /**
- * Created by vicente on 05-Apr-16.
+ * Created by vicente on 07-Apr-16.
  */
-public class Common extends AppCompatActivity {
+public class CommonWithButtons extends AboutMenu {
 
     protected String bikerName;
     protected String serverIp = "10.0.3.2";
@@ -43,9 +43,8 @@ public class Common extends AppCompatActivity {
 
 
         // HEADER
-         // biker name
+        // biker name
         bikerName = ((UbiBikeApplication) getApplication()).getUsername();
-
 
 
         // Restore preferences

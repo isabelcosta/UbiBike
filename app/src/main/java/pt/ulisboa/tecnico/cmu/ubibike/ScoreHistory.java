@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,10 +27,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class ScoreHistory extends AboutMenu {
+public class ScoreHistory extends CommonWithButtons {
 
     private String bikerName;
     private List<String> scoreHisArray;
@@ -38,7 +41,7 @@ public class ScoreHistory extends AboutMenu {
     private String serverIp = "10.0.3.2";
     private String bikerScore;
     private Button pointsButton;
-    private Handler handler;
+    private Handler handler = new Handler();
     private String score_history;
     private TextView bikersNameTextView;
     private Socket socket;
@@ -48,16 +51,13 @@ public class ScoreHistory extends AboutMenu {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_history);
 
-        try {
-            socket = new Socket(serverIp, 4444);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         // Initializations
 
         scoreHisArray = new ArrayList<>();
+        scoreHisArray.clear();
+
         scoreAdapter = new ArrayAdapter<>(
                 getApplicationContext(),
                 R.layout.score_history_list_item,
@@ -114,11 +114,8 @@ public class ScoreHistory extends AboutMenu {
 
 
 
-        handler = new Handler();
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 2000);
-
-
-
+        // Get user current points and refresh Views
+        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
 
 
         // Button Press Event Listeners
@@ -126,12 +123,12 @@ public class ScoreHistory extends AboutMenu {
 
             public void onClick(View v) {
 
-                GetPoints getClientsTask = new GetPoints();
-                getClientsTask.execute();
+                AddPoints addPointsTask = new AddPoints();
+                addPointsTask .execute();
 
-                scoreAdapter.notifyDataSetChanged();
-                pointsButton = (Button) findViewById(R.id.biker_score);
-                pointsButton.setText(bikerScore);
+                // Get user current points and refresh Views
+                handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 1000);
+
             }
         });
 
@@ -143,11 +140,22 @@ public class ScoreHistory extends AboutMenu {
         public void run() {
 
             GetPoints getClientsTask = new GetPoints();
-            getClientsTask.execute();
+
+            // task.execute().get() is used to wait for the task to be executed
+            // so we can update the user score and score history
+            try {
+                getClientsTask.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
             scoreAdapter.notifyDataSetChanged();
             pointsButton = (Button) findViewById(R.id.biker_score);
             pointsButton.setText(bikerScore);
+
+
 
         }
     };
@@ -161,8 +169,12 @@ public class ScoreHistory extends AboutMenu {
         protected Void doInBackground(Void... params) {
             try {
 
+                socket = new Socket(serverIp, 4444);
+
                 json = new JSONObject();
-                json.put("type", "get points history");
+                json.put("type", "add points");
+                json.put("client points", "125");
+                json.put("points origin", "Gained 125 points during 11/02/16 ride #1");
                 json.put("client name", bikerName);
 
 
@@ -177,24 +189,8 @@ public class ScoreHistory extends AboutMenu {
                 // Thread will wait till server replies
                 String response = dataInputStream.readUTF();
 
-
-                final JSONObject jsondata;
-                jsondata = new JSONObject(response);
-
-                bikerScore = jsondata.getString("points");
-
-                score_history = jsondata.getString("points history");
-
-                String[] pointsOrigin = score_history.split("\t");
-
-
-                scoreHisArray.clear();
-
-                for(String s : pointsOrigin) {
-                    scoreHisArray.add(s);
-
-                }
-
+//                Toast.makeText(ScoreHistory.this, response,
+//                        Toast.LENGTH_LONG).show();
 
 
 
@@ -257,6 +253,7 @@ public class ScoreHistory extends AboutMenu {
         protected Void doInBackground(Void... params) {
 
             try {
+                socket = new Socket(serverIp, 4444);
 
                 json = new JSONObject();
                 json.put("type", "get points history");
@@ -341,6 +338,7 @@ public class ScoreHistory extends AboutMenu {
                         e.printStackTrace();
                     }
                 }
+
             }
 
             return null;
@@ -358,6 +356,7 @@ public class ScoreHistory extends AboutMenu {
         prefsEditor = myPrefs.edit();
 
         prefsEditor.putString("score_history", score_history);
+        prefsEditor.putString("biker_score", bikerScore);
         prefsEditor.commit();
     }
 

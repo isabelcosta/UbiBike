@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TrajectoryList extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class TrajectoryList extends Common {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;

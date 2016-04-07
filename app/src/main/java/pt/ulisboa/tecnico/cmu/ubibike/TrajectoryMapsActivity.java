@@ -13,7 +13,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class TrajectoryMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class TrajectoryMapsActivity extends Common implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private String bikerName;

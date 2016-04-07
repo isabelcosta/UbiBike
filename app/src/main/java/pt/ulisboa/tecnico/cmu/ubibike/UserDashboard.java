@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class UserDashboard extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class UserDashboard extends Common {
 
     private String bikerName;
 
@@ -65,9 +67,14 @@ public class UserDashboard extends AppCompatActivity {
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-//            todo criar menu give points
             case R.id.dashboard_menu_biker_score:
                 intent = new Intent(UserDashboard.this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
+                execute = true;
+                break;
+
+            case R.id.dashboard_menu_riding:
+                intent = new Intent(UserDashboard.this, RidingActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 execute = true;
 

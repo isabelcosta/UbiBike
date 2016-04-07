@@ -10,4 +10,14 @@
     tools:context="pt.ulisboa.tecnico.cmu.ubibike.RidingActivity"
     tools:showIn="@layout/activity_riding">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Is/Not Riding"
+        android:id="@+id/is_riding"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="113dp"
+        android:textAllCaps="true"/>
 </RelativeLayout>

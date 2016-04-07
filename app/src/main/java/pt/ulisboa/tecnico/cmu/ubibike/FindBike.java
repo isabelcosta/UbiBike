@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindBike extends AppCompatActivity {
+import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+
+public class FindBike extends Common {
 
     private ListView availableBikesList;
     private ArrayAdapter<String> availableBikesAdapter;
