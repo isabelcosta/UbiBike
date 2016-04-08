@@ -1,10 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -12,16 +9,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class Chat extends Common {
+public class Chat extends CommonWithButtons {
 
     private EditText editTxt;
     private Button btn;
     private ListView list;
     private EditText textMsg;
-    private ArrayAdapter<String> adapter;
-    private ArrayList<String> arrayList;
+    private ChatListAdapter mAdapter;
+    private ArrayList<Message> mMessages;
     private String bikerName;
     private String person;
 
@@ -29,6 +26,7 @@ public class Chat extends Common {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
 
@@ -44,27 +42,16 @@ public class Chat extends Common {
         chatPerson.setText(person);
 
 
+        // Views
         btn = (Button) findViewById(R.id.btSend1);
         list = (ListView) findViewById(R.id.lvChat);
         textMsg = (EditText) findViewById(R.id.etMessage1);
 
-        arrayList = new ArrayList<String>();
 
-
-        // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
-        // and the array that contains the data
-//        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-
-        // Here, you set the data in your ListView
-//        list.setAdapter(adapter);
-
-        final ChatListAdapter mAdapter;
-        final ArrayList<Message> mMessages;
         mMessages = new ArrayList<>();
-
         mAdapter = new ChatListAdapter(Chat.this, "Vicente", mMessages);
-        list.setAdapter(mAdapter);
 
+        list.setAdapter(mAdapter);
         list.setBackgroundColor(getResources().getColor(R.color.grey));
 
 
@@ -91,47 +78,44 @@ public class Chat extends Common {
             }
         });
 
-
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
 
-    public void launchClick(View v) {
-        Intent intent = null;
-        Boolean execute = true;
-
-        switch(v.getId()) {
-            case R.id.menu_bottom_home:
-                intent = new Intent(Chat.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(Chat.this, FindPeersActivity.class);
-                break;
-
-            case R.id.menu_bottom_options:
-                intent = new Intent(Chat.this, OptionsMenu.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-//            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(Chat.this, ScoreHistory.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(Chat.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-        }
-        if (execute){
-            startActivityForResult(intent, 0);
-        }
-    }
+//    public void launchClick(View v) {
+//        Intent intent = null;
+//        Boolean execute = true;
+//
+//        switch(v.getId()) {
+//            case R.id.menu_bottom_home:
+//                intent = new Intent(Chat.this, UserDashboard.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//
+//            case R.id.menu_bottom_ubiconnect:
+//                intent = new Intent(Chat.this, FindPeersActivity.class);
+//                break;
+//
+//            case R.id.menu_bottom_options:
+//                intent = new Intent(Chat.this, OptionsMenu.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//
+////            Points History
+//
+//            case R.id.biker_score:
+//                intent = new Intent(Chat.this, ScoreHistory.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+////          Ubibike Logo
+//            case R.id.ubibikeLogo:
+//                intent = new Intent(Chat.this, UserDashboard.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//        }
+//        if (execute){
+//            startActivityForResult(intent, 0);
+//        }
+//    }
 
 }

@@ -1,15 +1,12 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
 
-public class AboutMenu extends Common {
+public class AboutMenu extends CommonWithButtons {
 
     protected String bikerName;
 
@@ -25,49 +22,7 @@ public class AboutMenu extends Common {
         bikerName = getIntent().getStringExtra("bikerName");
         manufacturerTextView.setText(bikerName);
 
-
-
-
-
-
-
     }
-    public void launchClick(View v) {
-        Intent intent = null;
-        Boolean execute = true;
 
-        switch(v.getId()) {
-            case R.id.menu_bottom_home:
-                intent = new Intent(this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(this, FindPeersActivity.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_options:
-                intent = new Intent(this, OptionsMenu.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-//            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(this, ScoreHistory.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-        }
-        if (execute){
-            startActivityForResult(intent, 0);
-        }
-    }
 
 }

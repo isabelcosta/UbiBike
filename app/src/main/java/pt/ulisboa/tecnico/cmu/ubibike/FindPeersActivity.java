@@ -2,12 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class FindPeersActivity extends Common {
+public class FindPeersActivity extends CommonWithButtons {
 
     private String bikerName;
 
@@ -74,43 +69,43 @@ public class FindPeersActivity extends Common {
 
     }
 
-    public void launchClick(View v) {
-        Intent intent = null;
-        Boolean execute = true;
-
-        switch(v.getId()) {
-            case R.id.menu_bottom_home:
-                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(FindPeersActivity.this, FindPeersActivity.class);
-                execute = false;
-
-                break;
-
-            case R.id.menu_bottom_options:
-                intent = new Intent(FindPeersActivity.this, OptionsMenu.class);
-                intent.putExtra("bikerName", bikerName);
-
+//    public void launchClick(View v) {
+//        Intent intent = null;
+//        Boolean execute = true;
+//
+//        switch(v.getId()) {
+//            case R.id.menu_bottom_home:
+//                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//
+//            case R.id.menu_bottom_ubiconnect:
+//                intent = new Intent(FindPeersActivity.this, FindPeersActivity.class);
 //                execute = false;
-                break;
-
-            //            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(FindPeersActivity.this, ScoreHistory.class);
-                break;
-
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
-                break;
-        }
-        if (execute){
-            startActivityForResult(intent, 0);
-        }
-    }
+//
+//                break;
+//
+//            case R.id.menu_bottom_options:
+//                intent = new Intent(FindPeersActivity.this, OptionsMenu.class);
+//                intent.putExtra("bikerName", bikerName);
+//
+////                execute = false;
+//                break;
+//
+//            //            Points History
+//
+//            case R.id.biker_score:
+//                intent = new Intent(FindPeersActivity.this, ScoreHistory.class);
+//                break;
+//
+////          Ubibike Logo
+//            case R.id.ubibikeLogo:
+//                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
+//                break;
+//        }
+//        if (execute){
+//            startActivityForResult(intent, 0);
+//        }
+//    }
 
 }

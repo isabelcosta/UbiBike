@@ -16,8 +16,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
 
 public class RidingActivity extends CommonWithButtons {
 
@@ -74,7 +76,7 @@ public class RidingActivity extends CommonWithButtons {
             @Override
             protected String doInBackground(Void... params) {
                 try {
-                    socket = new Socket(serverIp, 4444);
+                    socket = new Socket(SERVER_IP, SERVER_PORT);
 
                     json = new JSONObject();
                     json.put("type", "is riding");

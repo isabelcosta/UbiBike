@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class TrajectoryList extends Common {
+public class TrajectoryList extends CommonWithButtons {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;
@@ -63,40 +62,40 @@ public class TrajectoryList extends Common {
     }
 
 
-    public void launchClick(View v) {
-        Intent intent = null;
-        Boolean execute = true;
-
-        switch(v.getId()) {
-            case R.id.menu_bottom_home:
-                intent = new Intent(TrajectoryList.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(TrajectoryList.this, FindPeersActivity.class);
-                execute = false;
-                break;
-
-            case R.id.menu_bottom_options:
-                intent = new Intent(TrajectoryList.this, OptionsMenu.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-//            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(TrajectoryList.this, ScoreHistory.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(TrajectoryList.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-        }
-        if (execute){
-            startActivityForResult(intent, 0);
-        }
-    }
+//    public void launchClick(View v) {
+//        Intent intent = null;
+//        Boolean execute = true;
+//
+//        switch(v.getId()) {
+//            case R.id.menu_bottom_home:
+//                intent = new Intent(TrajectoryList.this, UserDashboard.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//
+//            case R.id.menu_bottom_ubiconnect:
+//                intent = new Intent(TrajectoryList.this, FindPeersActivity.class);
+//                execute = false;
+//                break;
+//
+//            case R.id.menu_bottom_options:
+//                intent = new Intent(TrajectoryList.this, OptionsMenu.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//
+////            Points History
+//
+//            case R.id.biker_score:
+//                intent = new Intent(TrajectoryList.this, ScoreHistory.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+////          Ubibike Logo
+//            case R.id.ubibikeLogo:
+//                intent = new Intent(TrajectoryList.this, UserDashboard.class);
+//                intent.putExtra("bikerName",bikerName);
+//                break;
+//        }
+//        if (execute){
+//            startActivityForResult(intent, 0);
+//        }
+//    }
 }

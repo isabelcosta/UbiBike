@@ -2,8 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
 
 /**
  * Created by vicente on 08-Apr-16.
- */
-public class Constants {
+ */public class Constants {
 
     /**
      *
@@ -21,7 +20,7 @@ public class Constants {
      *
      */
 
-        //  request type
+    //  request type
     public static final String REQUEST_TYPE = "type";
 
     public static final String GET_POINTS = "get points";
@@ -34,19 +33,19 @@ public class Constants {
 
 
 
-        // info for the request
+    // info for the request
     public static final String CLIENT_NAME = "client name";
     public static final String POINTS = "points";
     public static final String CLIENT_POINTS = "client points";
     public static final String POINTS_ORIGIN = "points origin";
     public static final String POINTS_HISTORY = "points history";
 
-        // server responses
+    // server responses
     public static final String IS_RIDING_YES = "yes";
     public static final String POINTS_ADDED = "Points added";
 
 
-        // tests
+    // tests
     public static final String ADD_POINTS_TEST_125_ORIGIN = "Gained 125 points during 11/02/16 ride #1";
     public static final String ADD_POINTS_TEST_125 = "125";
 

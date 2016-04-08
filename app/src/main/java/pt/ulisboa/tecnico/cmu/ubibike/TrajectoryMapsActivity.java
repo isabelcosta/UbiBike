@@ -1,9 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,9 +10,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class TrajectoryMapsActivity extends Common implements OnMapReadyCallback {
+public class TrajectoryMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private String bikerName;
@@ -38,44 +35,6 @@ public class TrajectoryMapsActivity extends Common implements OnMapReadyCallback
 
     }
 
-     public void launchClick(View v) {
-        Intent intent = null;
-        Boolean execute = true;
-
-        switch(v.getId()) {
-            case R.id.menu_bottom_home:
-                intent = new Intent(TrajectoryMapsActivity.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(TrajectoryMapsActivity.this, FindPeersActivity.class);
-                intent.putExtra("bikerName", bikerName);
-
-                break;
-
-            case R.id.menu_bottom_options:
-                intent = new Intent(TrajectoryMapsActivity.this, OptionsMenu.class);
-                intent.putExtra("bikerName", bikerName);
-
-//                execute = false;
-                break;
-
-            //            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(TrajectoryMapsActivity.this, ScoreHistory.class);
-                break;
-
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(TrajectoryMapsActivity.this, UserDashboard.class);
-                break;
-        }
-        if (execute){
-            startActivityForResult(intent, 0);
-        }
-    }
 
     /**
      * Manipulates the map once available.

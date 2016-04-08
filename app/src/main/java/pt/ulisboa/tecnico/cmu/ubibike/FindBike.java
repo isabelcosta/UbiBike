@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class FindBike extends Common {
+public class FindBike extends CommonWithButtons {
 
     private ListView availableBikesList;
     private ArrayAdapter<String> availableBikesAdapter;

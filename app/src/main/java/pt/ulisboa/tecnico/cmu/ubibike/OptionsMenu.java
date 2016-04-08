@@ -1,16 +1,14 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class OptionsMenu extends Common {
+public class OptionsMenu extends CommonWithButtons {
 
     private String bikerName;
 
@@ -37,27 +35,12 @@ public class OptionsMenu extends Common {
         optionsBtn.setTextColor(getResources().getColor(R.color.white));
     }
 
-
+    @Override
     public void launchClick(View v) {
         Intent intent = null;
         Boolean execute = true;
 
         switch(v.getId()) {
-
-            // footer buttons
-            case R.id.menu_bottom_home:
-                intent = new Intent(OptionsMenu.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(OptionsMenu.this, FindPeersActivity.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-
-            case R.id.menu_bottom_options:
-                execute = false;
-                break;
 
             // dashboard menu buttons
 
@@ -79,17 +62,9 @@ public class OptionsMenu extends Common {
                 ((UbiBikeApplication) getApplication()).logout();
                 break;
 
-//            Points History
-
-            case R.id.biker_score:
-                intent = new Intent(OptionsMenu.this, ScoreHistory.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
-//          Ubibike Logo
-            case R.id.ubibikeLogo:
-                intent = new Intent(OptionsMenu.this, UserDashboard.class);
-                intent.putExtra("bikerName",bikerName);
-                break;
+            default:
+                super.launchClick(v);
+                return;
         }
         if (execute){
             startActivityForResult(intent, 0);

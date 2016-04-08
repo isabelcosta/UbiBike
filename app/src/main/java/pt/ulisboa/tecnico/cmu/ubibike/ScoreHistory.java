@@ -26,7 +26,24 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125_ORIGIN;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MY_PREFS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY_DEFAULT;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
 
 
 public class ScoreHistory extends CommonWithButtons {
@@ -343,38 +360,4 @@ public class ScoreHistory extends CommonWithButtons {
         prefsEditor.commit();
     }
 
-//    public void launchClick(View v) {
-//        Intent intent = null;
-//        Boolean execute = true;
-//
-//        switch(v.getId()) {
-//            case R.id.menu_bottom_home:
-//                intent = new Intent(ScoreHistory.this, UserDashboard.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-//
-//            case R.id.menu_bottom_ubiconnect:
-//                intent = new Intent(ScoreHistory.this, FindPeersActivity.class);
-//
-//                break;
-//
-//            case R.id.menu_bottom_options:
-//                intent = new Intent(ScoreHistory.this, OptionsMenu.class);
-////                execute = false;
-//                break;
-//
-//            //            Points History
-//
-//            case R.id.biker_score:
-//                execute = false;
-//                break;
-////          Ubibike Logo
-//            case R.id.ubibikeLogo:
-//                intent = new Intent(ScoreHistory.this, UserDashboard.class);
-//                break;
-//        }
-//        if (execute){
-//            startActivityForResult(intent, 0);
-//        }
-//    }
 }

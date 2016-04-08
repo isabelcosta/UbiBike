@@ -1,11 +1,14 @@
 package pt.ulisboa.tecnico.cmu.ubibike.common;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -19,16 +22,27 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.AboutMenu;
+import pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity;
+import pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
+import pt.ulisboa.tecnico.cmu.ubibike.ScoreHistory;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiBikeApplication;
+import pt.ulisboa.tecnico.cmu.ubibike.UserDashboard;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MY_PREFS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
 
 /**
  * Created by vicente on 07-Apr-16.
  */
-public class CommonWithButtons extends AboutMenu {
+public class CommonWithButtons extends AppCompatActivity {
 
     protected String bikerName;
     protected String bikerScore;
@@ -192,6 +206,44 @@ public class CommonWithButtons extends AboutMenu {
 
         prefsEditor.putString(PREF_BIKER_SCORE, bikerScore);
         prefsEditor.commit();
+    }
+
+    public void launchClick(View v) {
+        Intent intent = null;
+        Boolean execute = true;
+
+        switch(v.getId()) {
+            case R.id.menu_bottom_home:
+                intent = new Intent(this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+            case R.id.menu_bottom_ubiconnect:
+                intent = new Intent(this, FindPeersActivity.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+            case R.id.menu_bottom_options:
+                intent = new Intent(this, OptionsMenu.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+//            Points History
+
+            case R.id.biker_score:
+                intent = new Intent(this, ScoreHistory.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+
+//          Ubibike Logo
+            case R.id.ubibikeLogo:
+                intent = new Intent(this, UserDashboard.class);
+                intent.putExtra("bikerName",bikerName);
+                break;
+        }
+        if (execute){
+            startActivityForResult(intent, 0);
+        }
     }
 
 }

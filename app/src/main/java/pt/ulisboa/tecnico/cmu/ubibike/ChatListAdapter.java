@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.List;
 
 /**
