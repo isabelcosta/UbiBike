@@ -1,20 +1,17 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +22,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.common.Common;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+
 
 public class ScoreHistory extends CommonWithButtons {
 
@@ -38,7 +35,6 @@ public class ScoreHistory extends CommonWithButtons {
     private List<String> scoreHisArray;
     private Button refreshButton;
     private ArrayAdapter scoreAdapter;
-    private String serverIp = "10.0.3.2";
     private String bikerScore;
     private Button pointsButton;
     private Handler handler = new Handler();
@@ -77,13 +73,13 @@ public class ScoreHistory extends CommonWithButtons {
         // Restore preferences
 
         SharedPreferences mPrefs;
-        mPrefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        mPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
 
-        score_history = mPrefs.getString("score_history", "empty");
-        bikerScore = mPrefs.getString("biker_score", "0");
+        score_history = mPrefs.getString(PREF_SCORE_HISTORY, PREF_SCORE_HISTORY_DEFAULT);
+        bikerScore = mPrefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
 
 
-        if (!score_history.equals("empty")) {
+        if (!score_history.equals(PREF_SCORE_HISTORY_DEFAULT)) {
 
             String[] pointsOrigin = score_history.split("\t");
 
@@ -169,13 +165,13 @@ public class ScoreHistory extends CommonWithButtons {
         protected Void doInBackground(Void... params) {
             try {
 
-                socket = new Socket(serverIp, 4444);
+                socket = new Socket(SERVER_IP, SERVER_PORT);
 
                 json = new JSONObject();
-                json.put("type", "add points");
-                json.put("client points", "125");
-                json.put("points origin", "Gained 125 points during 11/02/16 ride #1");
-                json.put("client name", bikerName);
+                json.put(REQUEST_TYPE, ADD_POINTS);
+                json.put(CLIENT_POINTS, ADD_POINTS_TEST_125);
+                json.put(POINTS_ORIGIN, ADD_POINTS_TEST_125_ORIGIN);
+                json.put(CLIENT_NAME, bikerName);
 
 
                 dataOutputStream = new DataOutputStream(
@@ -246,18 +242,16 @@ public class ScoreHistory extends CommonWithButtons {
         private DataOutputStream dataOutputStream;
         private DataInputStream dataInputStream;
         private JSONObject json;
-        private boolean success;
-        private String serverMessage;
 
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
-                socket = new Socket(serverIp, 4444);
+                socket = new Socket(SERVER_IP, SERVER_PORT);
 
                 json = new JSONObject();
-                json.put("type", "get points history");
-                json.put("client name", bikerName);
+                json.put(REQUEST_TYPE, GET_POINTS_HISTORY);
+                json.put(CLIENT_NAME, bikerName);
 
 
                 dataOutputStream = new DataOutputStream(
@@ -270,19 +264,12 @@ public class ScoreHistory extends CommonWithButtons {
 
                 // Thread will wait till server replies
                 String response = dataInputStream.readUTF();
-                // FIXME: 04-Apr-16 solve response
-                if (response == null) {
-                    success = false;
-                } else {
-                    success = true;
-                }
 
                 final JSONObject jsondata;
                 jsondata = new JSONObject(response);
 
-                bikerScore = jsondata.getString("points");
-
-                score_history = jsondata.getString("points history");
+                bikerScore = jsondata.getString(POINTS);
+                score_history = jsondata.getString(POINTS_HISTORY);
 
                 String[] pointsOrigin = score_history.split("\t");
 
@@ -295,10 +282,6 @@ public class ScoreHistory extends CommonWithButtons {
                 }
 
 
-                serverMessage = "ok!";
-
-
-//                new BufferedWriter(new OutputStreamWriter(mySocketOutputStream, "UTF-8")));
 
                 socket.close();
 
@@ -351,12 +334,12 @@ public class ScoreHistory extends CommonWithButtons {
         super.onPause();
 
 //Set Preference
-        SharedPreferences myPrefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        SharedPreferences myPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor;
         prefsEditor = myPrefs.edit();
 
-        prefsEditor.putString("score_history", score_history);
-        prefsEditor.putString("biker_score", bikerScore);
+        prefsEditor.putString(PREF_SCORE_HISTORY, score_history);
+        prefsEditor.putString(PREF_BIKER_SCORE, bikerScore);
         prefsEditor.commit();
     }
 

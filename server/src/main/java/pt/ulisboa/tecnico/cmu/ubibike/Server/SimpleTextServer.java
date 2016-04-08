@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static pt.ulisboa.tecnico.cmu.ubibike.Server.Common.Constants.*;
+
+
 /**
  * This is a simple server application. This server receive a string message
  * from the Android mobile phone and show it on the console.
@@ -80,50 +83,49 @@ public class SimpleTextServer {
                 jsondata = new JSONObject(message);
 
                 // get the type of message to know what the client wants
-                String type = jsondata.getString("type");
+                String type = jsondata.getString(REQUEST_TYPE);
                 System.out.println("Type: " + type);
 
 
                 if (type.equals
-                        ("register client"))
+                        (REGISTER_CLIENT))
                 {
                     registerClient(jsondata);
                     dataOutputStream.writeUTF("Cliente adicionado");
                 }
                 else if (type.equals
-                        ("get clients"))
+                        (GET_CLIENTS))
                 {
                     String clients = getClients();
                     dataOutputStream.writeUTF(clients);
                 }
                 else if (type.equals
-                        ("get points history"))
-                {
+                        (GET_POINTS_HISTORY)) {
                     JSONObject json = getPointsHistory(jsondata);
                     dataOutputStream.writeUTF(json.toString());
                 }
                 else if (type.equals
-                        ("greating"))
+                        (GREATING))
                 {
 
-                    String greating = jsondata.getString("greating");
+                    String greating = jsondata.getString(GREATING);
                     System.out.println("Greating " + greating);
 
                     String messageToClient = "Greetings from the Server";
                     dataOutputStream.writeUTF(messageToClient);
                 }
                 else if (type.equals
-                        ("add points"))
+                        (ADD_POINTS))
                 {
                     // call function that adds points to the client
                     addPoints(jsondata);
 
                     // send message to clients confirming that the points were added
-                    String messageToClient = "Points Added";
+                    String messageToClient = POINTS_ADDED;
                     dataOutputStream.writeUTF(messageToClient);
                 }
                 else if (type.equals
-                        ("get points"))
+                        (GET_POINTS))
                 {
                     // call function getPoints to get the client points
                     JSONObject json = getPoints(jsondata);
@@ -131,12 +133,12 @@ public class SimpleTextServer {
                     dataOutputStream.writeUTF(json.toString());
                 }
                 else if (type.equals
-                        ("is riding"))
+                        (IS_RIDING))
                 {
 
                     // todo is always true
                     JSONObject json = new JSONObject();
-                    json.put("is riding", "yes");
+                    json.put(IS_RIDING, IS_RIDING_YES);
                     dataOutputStream.writeUTF(json.toString());
 
                 }
@@ -155,7 +157,7 @@ public class SimpleTextServer {
 
     private static void registerClient(JSONObject jsondata) throws JSONException {
         // get client name from jsondata - "client name"
-        String clientName = jsondata.getString("client name");
+        String clientName = jsondata.getString(CLIENT_NAME);
 
         // create a new UbiClient with clientName
         UbiClient client = new UbiClient(clientName);
@@ -181,7 +183,7 @@ public class SimpleTextServer {
 
     private static JSONObject getPointsHistory(JSONObject jsondata) throws JSONException {
 
-        String clientName = jsondata.getString("client name");
+        String clientName = jsondata.getString(CLIENT_NAME);
         int clientPoints = clientsList.get(clientName).getPoints();
         ArrayList<String> pointsOrigin = clientsList.get(clientName).getPointsHistory();
 
@@ -191,8 +193,7 @@ public class SimpleTextServer {
 
         JSONObject json = new JSONObject();
 
-        json.put("type", "give points");
-        json.put("points", clientPoints);
+        json.put(POINTS, clientPoints);
 
 
         StringBuilder sb = new StringBuilder();
@@ -203,7 +204,7 @@ public class SimpleTextServer {
             sb.append("\t");
         }
 
-        json.put("points history", sb.toString());
+        json.put(POINTS_HISTORY, sb.toString());
 
 
 
@@ -215,11 +216,11 @@ public class SimpleTextServer {
     private static void addPoints(JSONObject jsondata) throws JSONException {
 
         // get client points from jsondata
-        String toAddPoints = jsondata.getString("client points");
+        String toAddPoints = jsondata.getString(CLIENT_POINTS);
         System.out.println("Points " + toAddPoints);
 
         //get client name form jsondata
-        String clientName = jsondata.getString("client name");
+        String clientName = jsondata.getString(CLIENT_NAME);
 
         // get client points from server data
         int currentPoints = clientsList.get(clientName).getPoints();
@@ -231,18 +232,18 @@ public class SimpleTextServer {
         ArrayList<String> pointsOrigin = clientsList.get(clientName).getPointsHistory();
 
         // add new points to the history and update on server
-        pointsOrigin.add(jsondata.getString("points origin"));
+        pointsOrigin.add(jsondata.getString(POINTS_ORIGIN));
         clientsList.get(clientName).setPointsHistory(pointsOrigin);
     }
 
     private static JSONObject getPoints(JSONObject jsondata) throws JSONException {
 
         // get points
-        String clientName = jsondata.getString("client name");
+        String clientName = jsondata.getString(CLIENT_NAME);
         int clientPoints = clientsList.get(clientName).getPoints();
 
         JSONObject json = new JSONObject();
-        json.put("points", clientPoints);
+        json.put(POINTS, clientPoints);
 
         return json;
     }

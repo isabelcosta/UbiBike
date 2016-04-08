@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiBikeApplication;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
 
 /**
  * Created by vicente on 05-Apr-16.
@@ -29,7 +30,6 @@ import pt.ulisboa.tecnico.cmu.ubibike.UbiBikeApplication;
 public class Common extends AppCompatActivity {
 
     protected String bikerName;
-    protected String serverIp = "10.0.3.2";
     protected String bikerScore;
     protected Button pointsButton;
     protected TextView bikersNameTextView;
@@ -51,9 +51,9 @@ public class Common extends AppCompatActivity {
         // Restore preferences
 
         SharedPreferences mPrefs;
-        mPrefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        mPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
 
-        bikerScore = mPrefs.getString("biker_score", "0");
+        bikerScore = mPrefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
 
 
 
@@ -113,11 +113,11 @@ public class Common extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
 
             try {
-                socket = new Socket(serverIp, 4444);
+                socket = new Socket(SERVER_IP, SERVER_PORT);
 
                 json = new JSONObject();
-                json.put("type", "get points");
-                json.put("client name", bikerName);
+                json.put(REQUEST_TYPE, GET_POINTS);
+                json.put(CLIENT_NAME, bikerName);
 
 
                 dataOutputStream = new DataOutputStream(
@@ -135,7 +135,7 @@ public class Common extends AppCompatActivity {
                 final JSONObject jsondata;
                 jsondata = new JSONObject(response);
 
-                bikerScore = jsondata.getString("points");
+                bikerScore = jsondata.getString(POINTS);
 
 
 
@@ -186,11 +186,11 @@ public class Common extends AppCompatActivity {
         super.onPause();
 
 //Set Preference
-        SharedPreferences myPrefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        SharedPreferences myPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor;
         prefsEditor = myPrefs.edit();
 
-        prefsEditor.putString("biker_score", bikerScore);
+        prefsEditor.putString(PREF_BIKER_SCORE, bikerScore);
         prefsEditor.commit();
     }
 
