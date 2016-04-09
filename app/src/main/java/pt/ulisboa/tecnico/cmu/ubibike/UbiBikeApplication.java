@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY_DEFAULT;
+
 
 public class UbiBikeApplication extends Application {
 
@@ -133,6 +138,58 @@ public class UbiBikeApplication extends Application {
         Boolean isLogged = prefs.getBoolean(SP_IS_USER_LOGGED, false);
         return isLogged;
     }
+
+    public void saveBikerScore(String bikerScore) {
+
+        // creating an shared Preference file for the information to be stored
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+
+        // get editor to edit in file
+        editor = prefs.edit();
+
+        // as now we have information in string. Lets stored them with the help of editor
+        editor.putString(PREF_BIKER_SCORE, bikerScore);
+
+        //todo consider using apply()
+        editor.commit();
+    }
+
+
+    public String getBikerScore() {
+
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+
+        String bikerScore = prefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
+
+        return bikerScore;
+    }
+
+    public void saveBikerScoreHistory(String bikerScoreHistory) {
+
+        // creating an shared Preference file for the information to be stored
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+
+        // get editor to edit in file
+        editor = prefs.edit();
+
+        // as now we have information in string. Lets stored them with the help of editor
+        editor.putString(PREF_SCORE_HISTORY, bikerScoreHistory);
+
+        //todo consider using apply()
+        editor.commit();
+    }
+
+
+    public String getBikerScoreHistory() {
+
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+
+        String bikerScoreHistory = prefs.getString(PREF_SCORE_HISTORY, PREF_SCORE_HISTORY_DEFAULT);
+
+        return bikerScoreHistory;
+    }
+
+
 /*
     /**
      * Gets username of logged user from Shared Preferences

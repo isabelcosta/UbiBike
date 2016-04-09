@@ -27,11 +27,20 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
 
 /**
  * A login screen that offers login via email/password.
@@ -335,6 +344,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         private final String mUsername;
         private final String mPassword;
         private final List<String> mCredentials;
+        private Socket socket = null;
+        private JSONObject json;
+
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+
+        private String toastResult;
+
 
         UserRegisterTask(String email, String password, List<String> credentials) {
             mUsername = email;
@@ -353,9 +370,45 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 return false;
             }
 
-            if(mCredentials.contains(mUsername)) {
-                return false;
+            if (!BYPASS_CREDENTIAL_CHECK) {
+                try {
+                    socket = new Socket(SERVER_IP, SERVER_PORT);
+
+                    json = new JSONObject();
+                    json.put(REQUEST_TYPE, REGISTER_CLIENT);
+
+                    json.put(CLIENT_NAME, mUsername);
+                    json.put(CLIENT_PASSWORD, mPassword);
+
+                    dataOutputStream = new DataOutputStream(
+                            socket.getOutputStream());
+
+                    dataInputStream = new DataInputStream(socket.getInputStream());
+
+                    // transfer JSONObject as String to the server
+                    dataOutputStream.writeUTF(json.toString());
+
+                    // Thread will wait till server replies
+                    String response = dataInputStream.readUTF();
+
+                    if(response.equals("ok")){
+                        toastResult = "Connected";
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                toastResult = "Offline mode";
+
             }
+
 
             return true;
         }
@@ -380,6 +433,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 mUsernameView.setError(getString(R.string.error_duplicated_username));
                 mUsernameView.requestFocus();
             }
+
+
+            Toast.makeText(getApplicationContext(),
+                    toastResult, Toast.LENGTH_SHORT).show();
         }
 
         @Override

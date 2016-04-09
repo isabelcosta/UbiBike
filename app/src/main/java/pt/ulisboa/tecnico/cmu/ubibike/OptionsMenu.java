@@ -62,6 +62,10 @@ public class OptionsMenu extends CommonWithButtons {
                 ((UbiBikeApplication) getApplication()).logout();
                 break;
 
+            case R.id.menu_bottom_options:
+                execute = false;
+                break;
+
             default:
                 super.launchClick(v);
                 return;

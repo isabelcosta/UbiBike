@@ -61,8 +61,11 @@ public class UserDashboard extends CommonWithButtons {
                 intent = new Intent(UserDashboard.this, RidingActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 execute = true;
-
                 break;
+            case R.id.ubibikeLogo:
+                execute = false;
+                break;
+
             default:
                 super.launchClick(v);
                 return;

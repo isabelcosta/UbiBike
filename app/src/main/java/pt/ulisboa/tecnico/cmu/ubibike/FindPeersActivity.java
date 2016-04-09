@@ -69,43 +69,24 @@ public class FindPeersActivity extends CommonWithButtons {
 
     }
 
-//    public void launchClick(View v) {
-//        Intent intent = null;
-//        Boolean execute = true;
-//
-//        switch(v.getId()) {
-//            case R.id.menu_bottom_home:
-//                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-//
-//            case R.id.menu_bottom_ubiconnect:
-//                intent = new Intent(FindPeersActivity.this, FindPeersActivity.class);
-//                execute = false;
-//
-//                break;
-//
-//            case R.id.menu_bottom_options:
-//                intent = new Intent(FindPeersActivity.this, OptionsMenu.class);
-//                intent.putExtra("bikerName", bikerName);
-//
-////                execute = false;
-//                break;
-//
-//            //            Points History
-//
-//            case R.id.biker_score:
-//                intent = new Intent(FindPeersActivity.this, ScoreHistory.class);
-//                break;
-//
-////          Ubibike Logo
-//            case R.id.ubibikeLogo:
-//                intent = new Intent(FindPeersActivity.this, UserDashboard.class);
-//                break;
-//        }
-//        if (execute){
-//            startActivityForResult(intent, 0);
-//        }
-//    }
+    @Override
+    public void launchClick(View v) {
 
+        Intent intent = null;
+        Boolean execute;
+
+        switch(v.getId()) {
+
+            case R.id.menu_bottom_ubiconnect:
+                execute = false;
+                break;
+            default:
+                super.launchClick(v);
+                return;
+
+        }
+        if (execute){
+            startActivityForResult(intent, 0);
+        }
+    }
 }

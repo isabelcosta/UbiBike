@@ -64,13 +64,8 @@ public class CommonWithButtons extends AppCompatActivity {
 
         // Restore preferences
 
-        SharedPreferences mPrefs;
-        mPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
-
-        bikerScore = mPrefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
-
-
-
+        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+        bikerScore = app.getBikerScore();
 
 
 
@@ -87,7 +82,8 @@ public class CommonWithButtons extends AppCompatActivity {
 
 
         // Get user current points and refresh Views
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
+        // TODO: 09-Apr-16 make UbiBikeApplication check score periodically
+//        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
 
 
     }
@@ -126,9 +122,14 @@ public class CommonWithButtons extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
 
+
             try {
                 socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
 
+            try {
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, GET_POINTS);
                 json.put(CLIENT_NAME, bikerName);
@@ -200,12 +201,9 @@ public class CommonWithButtons extends AppCompatActivity {
         super.onPause();
 
 //Set Preference
-        SharedPreferences myPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor;
-        prefsEditor = myPrefs.edit();
 
-        prefsEditor.putString(PREF_BIKER_SCORE, bikerScore);
-        prefsEditor.commit();
+        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+        app.saveBikerScore(bikerScore);
     }
 
     public void launchClick(View v) {

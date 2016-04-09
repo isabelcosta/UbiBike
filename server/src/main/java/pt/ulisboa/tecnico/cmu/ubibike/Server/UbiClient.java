@@ -4,17 +4,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UbiClient {
+
+	/**
+	*
+	* 		Atributes
+ 	*
+ 	*
+	* */
+
 	private String _name;
+	private String _password;
+
 	private int _points;
 	private ArrayList<String> _pointsHistory;
+
 	private HashMap<String, String> _trajectories;
+
 	private int _holdingBikeID;
-	
+
+
+	/**
+	 *
+	 *  Contructor
+	 *
+	 * @param name
+	 */
 	public UbiClient(String name) {
 		_name = name;
 		setTrajectories(new HashMap<String, String>());
 	}
-	
+
+
+
+
 	public String getName() {
 		return _name;
 	}
@@ -49,5 +71,12 @@ public class UbiClient {
 	public void setPointsHistory(ArrayList<String> pointsHistory) {
 		_pointsHistory = pointsHistory;
 	}
-	
+
+	public String getPassword() {
+		return _password;
+	}
+
+	public void setPassword(String password) {
+		_password = password;
+	}
 }

@@ -27,6 +27,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
     public static final String ADD_POINTS = "add points";
     public static final String GET_POINTS_HISTORY = "get points history";
     public static final String REGISTER_CLIENT = "register client";
+    public static final String LOGIN_CLIENT = "login client";
     public static final String GET_CLIENTS = "get clients";
     public static final String GREATING = "greating";
     public static final String IS_RIDING = "is riding";
@@ -35,6 +36,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
 
     // info for the request
     public static final String CLIENT_NAME = "client name";
+    public static final String CLIENT_PASSWORD = "client password";
     public static final String POINTS = "points";
     public static final String CLIENT_POINTS = "client points";
     public static final String POINTS_ORIGIN = "points origin";
@@ -48,6 +50,9 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
     // tests
     public static final String ADD_POINTS_TEST_125_ORIGIN = "Gained 125 points during 11/02/16 ride #1";
     public static final String ADD_POINTS_TEST_125 = "125";
+
+    public static final String TEST_CLIENT_USERNAME = "v";
+    public static final String TEST_CLIENT_PASSWORD = "123123";
 
     /**
      *

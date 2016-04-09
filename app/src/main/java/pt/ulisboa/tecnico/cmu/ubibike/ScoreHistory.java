@@ -1,7 +1,7 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,12 +33,9 @@ import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_12
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MY_PREFS;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_HISTORY;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY_DEFAULT;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
@@ -52,10 +49,9 @@ public class ScoreHistory extends CommonWithButtons {
     private List<String> scoreHisArray;
     private Button refreshButton;
     private ArrayAdapter scoreAdapter;
-    private String bikerScore;
     private Button pointsButton;
     private Handler handler = new Handler();
-    private String score_history;
+    private String scoreHistory;
     private TextView bikersNameTextView;
     private Socket socket;
 
@@ -89,16 +85,14 @@ public class ScoreHistory extends CommonWithButtons {
 
         // Restore preferences
 
-        SharedPreferences mPrefs;
-        mPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
+        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
 
-        score_history = mPrefs.getString(PREF_SCORE_HISTORY, PREF_SCORE_HISTORY_DEFAULT);
-        bikerScore = mPrefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
+        scoreHistory = app.getBikerScoreHistory();
 
 
-        if (!score_history.equals(PREF_SCORE_HISTORY_DEFAULT)) {
+        if (!scoreHistory.equals(PREF_SCORE_HISTORY_DEFAULT)) {
 
-            String[] pointsOrigin = score_history.split("\t");
+            String[] pointsOrigin = scoreHistory.split("\t");
 
             for(String s : pointsOrigin) {
                 scoreHisArray.add(s);
@@ -128,7 +122,8 @@ public class ScoreHistory extends CommonWithButtons {
 
 
         // Get user current points and refresh Views
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
+        // TODO: 09-Apr-16 make UbiBikeApplication check score periodically
+//        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
 
 
         // Button Press Event Listeners
@@ -181,8 +176,12 @@ public class ScoreHistory extends CommonWithButtons {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
                 socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
 
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, ADD_POINTS);
@@ -263,8 +262,14 @@ public class ScoreHistory extends CommonWithButtons {
         @Override
         protected Void doInBackground(Void... params) {
 
+
             try {
                 socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
 
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, GET_POINTS_HISTORY);
@@ -286,9 +291,9 @@ public class ScoreHistory extends CommonWithButtons {
                 jsondata = new JSONObject(response);
 
                 bikerScore = jsondata.getString(POINTS);
-                score_history = jsondata.getString(POINTS_HISTORY);
+                scoreHistory = jsondata.getString(POINTS_HISTORY);
 
-                String[] pointsOrigin = score_history.split("\t");
+                String[] pointsOrigin = scoreHistory.split("\t");
 
 
                 scoreHisArray.clear();
@@ -350,14 +355,30 @@ public class ScoreHistory extends CommonWithButtons {
     protected void onPause(){
         super.onPause();
 
-//Set Preference
-        SharedPreferences myPrefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor;
-        prefsEditor = myPrefs.edit();
+        //Set Preferences
+        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+        app.saveBikerScoreHistory(scoreHistory);
+    }
 
-        prefsEditor.putString(PREF_SCORE_HISTORY, score_history);
-        prefsEditor.putString(PREF_BIKER_SCORE, bikerScore);
-        prefsEditor.commit();
+    @Override
+    public void launchClick(View v) {
+
+        Intent intent = null;
+        Boolean execute;
+
+        switch(v.getId()) {
+
+           case R.id.biker_score:
+                execute = false;
+                break;
+            default:
+                super.launchClick(v);
+                return;
+
+        }
+        if (execute){
+            startActivityForResult(intent, 0);
+        }
     }
 
 }

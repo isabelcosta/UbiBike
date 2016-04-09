@@ -77,6 +77,13 @@ public class RidingActivity extends CommonWithButtons {
             protected String doInBackground(Void... params) {
                 try {
                     socket = new Socket(SERVER_IP, SERVER_PORT);
+                } catch (IOException e) {
+
+                    toastResult = bikerName + " is not riding";
+                    return "no";
+                }
+
+                try {
 
                     json = new JSONObject();
                     json.put("type", "is riding");

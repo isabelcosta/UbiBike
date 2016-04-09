@@ -42,25 +42,13 @@ public class SimpleTextServer {
         }
 
         System.out.println("Server started. Listening to the port 4444");
-        UbiClient client1 = new UbiClient("v");
-        client1.setPoints(100);
-        ArrayList<String> pointsHistory = new ArrayList<>();
-        if (client1.getPointsHistory() == null) {
-            client1.setPointsHistory(pointsHistory);
-        } else {
-            pointsHistory = client1.getPointsHistory();
-        }
 
-        pointsHistory.add("received 50 points from michael");
-        pointsHistory.add("received 50 points from john");
-
-        client1.setPointsHistory(pointsHistory);
-
-        clientsList.put("v", client1);
+        // create client "v" for testing purposes
+        createTestClient();
 
         while (true) {
             try {
-				/*
+				/**
 				 * client Socket and DataStreams
 				 * */
 
@@ -71,7 +59,7 @@ public class SimpleTextServer {
 
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         clientSocket.getOutputStream()); // use to send messages TO the CLIENT
-                /*
+                /**
                  *  -----------------------------------
                  * */
 
@@ -90,8 +78,24 @@ public class SimpleTextServer {
                 if (type.equals
                         (REGISTER_CLIENT))
                 {
-                    registerClient(jsondata);
-                    dataOutputStream.writeUTF("Cliente adicionado");
+                    boolean canRegister = registerClient(jsondata);
+
+                    if (canRegister) {
+                        dataOutputStream.writeUTF("ok");
+                    } else {
+                        dataOutputStream.writeUTF("username already exists..");
+                    }
+                }
+                else if (type.equals
+                        (LOGIN_CLIENT))
+                {
+                    boolean canLogin = loginClient(jsondata);
+
+                    if (canLogin) {
+                        dataOutputStream.writeUTF("ok");
+                    } else {
+                        dataOutputStream.writeUTF("Pair username/password doesn't match..");
+                    }
                 }
                 else if (type.equals
                         (GET_CLIENTS))
@@ -143,6 +147,7 @@ public class SimpleTextServer {
 
                 }
 
+
                 clientSocket.close();
 
             } catch (IOException ex) {
@@ -155,12 +160,21 @@ public class SimpleTextServer {
 
     }
 
-    private static void registerClient(JSONObject jsondata) throws JSONException {
+    private static boolean registerClient(JSONObject jsondata) throws JSONException {
+
         // get client name from jsondata - "client name"
         String clientName = jsondata.getString(CLIENT_NAME);
+        String clientPassword = jsondata.getString(CLIENT_PASSWORD);
+
+        if (clientsList.containsKey(clientName)) {
+            return false;
+        }
 
         // create a new UbiClient with clientName
         UbiClient client = new UbiClient(clientName);
+
+        // set user password
+        client.setPassword(clientPassword);
 
         // set starting point to 100
         // TODO - FIXME - just for testing purposes
@@ -168,6 +182,29 @@ public class SimpleTextServer {
 
         // add the client to the HashMap<String,UbiClient> clientsList
         clientsList.put(clientName,client);
+
+        return true;
+
+
+    }
+
+    private static boolean loginClient(JSONObject jsondata) throws JSONException {
+
+        // get client name from jsondata - "client name"
+        String clientName = jsondata.getString(CLIENT_NAME);
+        String clientPassword = jsondata.getString(CLIENT_PASSWORD);
+
+        if (!clientsList.containsKey(clientName)) {
+            return false;
+        }
+
+        if (clientsList.get(clientName).getPassword() == null) {
+            return false;
+        }
+
+        return clientsList.get(clientName).getPassword()
+                    .equals(clientPassword);
+
 
     }
 
@@ -240,12 +277,31 @@ public class SimpleTextServer {
 
         // get points
         String clientName = jsondata.getString(CLIENT_NAME);
+
         int clientPoints = clientsList.get(clientName).getPoints();
 
         JSONObject json = new JSONObject();
         json.put(POINTS, clientPoints);
 
         return json;
+    }
+
+    public static void createTestClient () {
+        UbiClient client1 = new UbiClient(TEST_CLIENT_USERNAME);
+        client1.setPoints(100);
+        ArrayList<String> pointsHistory = new ArrayList<>();
+        if (client1.getPointsHistory() == null) {
+            client1.setPointsHistory(pointsHistory);
+        } else {
+            pointsHistory = client1.getPointsHistory();
+        }
+
+        pointsHistory.add("received 50 points from michael");
+        pointsHistory.add("received 50 points from john");
+
+        client1.setPointsHistory(pointsHistory);
+        client1.setPassword(TEST_CLIENT_PASSWORD);
+        clientsList.put(TEST_CLIENT_USERNAME, client1);
     }
 
 }

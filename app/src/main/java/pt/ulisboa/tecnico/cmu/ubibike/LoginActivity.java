@@ -28,12 +28,21 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
 /**
  * A login screen that offers login via email/password.
  */
@@ -197,6 +206,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
+
             mAuthTask = new UserLoginTask(
                     username,
                     password, (
@@ -317,10 +328,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mUsername;
         private final String mPassword;
         private final List<String> mCredentials;
+        private Socket socket = null;
+        private JSONObject json;
+
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+
+        private String toastResult;
 
         UserLoginTask(String username, String password, List<String> credentials) {
             mUsername = username;
             mPassword = password;
+            // todo mCredentials is being ignored, remove from UserLoginTask
             mCredentials = credentials;
         }
 
@@ -335,16 +354,55 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : mCredentials) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            if (!BYPASS_CREDENTIAL_CHECK) {
+                try {
+                    socket = new Socket(SERVER_IP, SERVER_PORT);
+                    json = new JSONObject();
+                    json.put(REQUEST_TYPE, LOGIN_CLIENT);
+                    json.put(CLIENT_NAME, mUsername);
+                    json.put(CLIENT_PASSWORD, mPassword);
+
+                    dataOutputStream = new DataOutputStream(
+                            socket.getOutputStream());
+
+                    dataInputStream = new DataInputStream(socket.getInputStream());
+
+                    // transfer JSONObject as String to the server
+                    dataOutputStream.writeUTF(json.toString());
+
+                    // Thread will wait till server replies
+                    String response = dataInputStream.readUTF();
+
+                    if(response.equals("ok")){
+                        if(mUsername.equals(TEST_CLIENT_USERNAME)) {
+                            toastResult = "TEST CLIENT MODE";
+                        }
+                        toastResult = "Connected";
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+                if(mUsername.equals(TEST_CLIENT_USERNAME)) {
+                    toastResult = "TEST CLIENT MODE";
+                }else {
+                    toastResult = "Offline mode";
+                }
+
             }
+
 
             // TODO: change to false when credentials are saved
             return true;
+
+
         }
 
         @Override
@@ -370,6 +428,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
+
+            Toast.makeText(getApplicationContext(),
+                    toastResult, Toast.LENGTH_SHORT).show();
         }
 
         @Override
