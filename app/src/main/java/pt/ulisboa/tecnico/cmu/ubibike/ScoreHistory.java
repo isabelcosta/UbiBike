@@ -358,6 +358,7 @@ public class ScoreHistory extends CommonWithButtons {
         //Set Preferences
         UbiBikeApplication app = ((UbiBikeApplication) getApplication());
         app.saveBikerScoreHistory(scoreHistory);
+        app.saveBikerScore(bikerScore, false);
     }
 
     @Override

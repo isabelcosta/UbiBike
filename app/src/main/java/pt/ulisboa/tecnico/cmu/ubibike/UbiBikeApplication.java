@@ -18,7 +18,7 @@ import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY
 public class UbiBikeApplication extends Application {
 
     private String _username;
-    private int _score;
+    private String _bikerScore;
     private boolean _status;
     private SharedPreferences prefs;
     private Editor editor;
@@ -58,9 +58,6 @@ public class UbiBikeApplication extends Application {
         return _status;
     }
 
-    public int getScore() {
-        return _score;
-    }
 
     public List<String> getDummyCredentials() {
         return DUMMY_CREDENTIALS;
@@ -82,9 +79,6 @@ public class UbiBikeApplication extends Application {
         this._status = status;
     }
 
-    public void setScore(int score) {
-        this._score = _score;
-    }
 
     public void addCredentials(String credentials) {
         this.DUMMY_CREDENTIALS.add(credentials);
@@ -139,29 +133,42 @@ public class UbiBikeApplication extends Application {
         return isLogged;
     }
 
-    public void saveBikerScore(String bikerScore) {
+    public void saveBikerScore(String bikerScore, boolean fromSharedPreferences) {
 
-        // creating an shared Preference file for the information to be stored
-        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+        if (fromSharedPreferences){
 
-        // get editor to edit in file
-        editor = prefs.edit();
+            // creating an shared Preference file for the information to be stored
+            prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
 
-        // as now we have information in string. Lets stored them with the help of editor
-        editor.putString(PREF_BIKER_SCORE, bikerScore);
+            // get editor to edit in file
+            editor = prefs.edit();
 
-        //todo consider using apply()
-        editor.commit();
+            // as now we have information in string. Lets stored them with the help of editor
+            editor.putString(PREF_BIKER_SCORE, bikerScore);
+
+            //todo consider using apply()
+            editor.commit();
+
+        } else {
+            _bikerScore = bikerScore;
+        }
     }
 
 
-    public String getBikerScore() {
+    public String getBikerScore(boolean fromSharedPreferences) {
 
-        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+        if (fromSharedPreferences){
+
+            prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
 
         String bikerScore = prefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
 
         return bikerScore;
+        }
+        else
+        {
+            return _bikerScore;
+        }
     }
 
     public void saveBikerScoreHistory(String bikerScoreHistory) {

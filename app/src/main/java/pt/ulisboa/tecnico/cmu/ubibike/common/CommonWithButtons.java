@@ -65,7 +65,7 @@ public class CommonWithButtons extends AppCompatActivity {
         // Restore preferences
 
         UbiBikeApplication app = ((UbiBikeApplication) getApplication());
-        bikerScore = app.getBikerScore();
+        bikerScore = app.getBikerScore(true);
 
 
 
@@ -83,7 +83,7 @@ public class CommonWithButtons extends AppCompatActivity {
 
         // Get user current points and refresh Views
         // TODO: 09-Apr-16 make UbiBikeApplication check score periodically
-//        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
+        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
 
 
     }
@@ -91,7 +91,7 @@ public class CommonWithButtons extends AppCompatActivity {
     private Runnable timeTask = new Runnable() {
         public void run() {
 
-            GetPoints getClientsTask = new GetPoints();
+          /*  GetPoints getClientsTask = new GetPoints();
             // task.execute().get() is used to wait for the task to be executed
             // so we can update the user score and score history
             try {
@@ -101,13 +101,17 @@ public class CommonWithButtons extends AppCompatActivity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+*/
+
+            UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+            app.getBikerScore(false);
 
             pointsButton = (Button) findViewById(R.id.biker_score);
             pointsButton.setText(bikerScore);
 
             // every 5 minutes calls the server to check for updates
             // todo perguntar ao prof opiniao sobre isto (se ha maneira/vantagem em ser o server a iniciar a comunicacao
-            handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 300000 );
+//            handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 300000 );
 
 
         }
@@ -203,7 +207,7 @@ public class CommonWithButtons extends AppCompatActivity {
 //Set Preference
 
         UbiBikeApplication app = ((UbiBikeApplication) getApplication());
-        app.saveBikerScore(bikerScore);
+        app.saveBikerScore(bikerScore, true);
     }
 
     public void launchClick(View v) {
