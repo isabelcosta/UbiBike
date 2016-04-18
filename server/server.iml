@@ -28,9 +28,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
     <orderEntry type="library" exported="" name="java-json" level="project" />
     <orderEntry type="library" exported="" name="javax.json-api-1.0" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.6-contrib" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.6-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.6-junit" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.6-sources" level="project" />
+    <orderEntry type="library" exported="" name="jdom-2.0.6" level="project" />
     <orderEntry type="library" exported="" name="server.server" level="project" />
   </component>
 </module>

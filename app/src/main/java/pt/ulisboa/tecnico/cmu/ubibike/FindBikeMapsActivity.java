@@ -11,7 +11,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class FindBikeMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+
+//public class FindBikeMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class FindBikeMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 

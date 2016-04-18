@@ -70,6 +70,8 @@
     <string name="score_history_refresh_points">Refresh</string>
     <string name="title_activity_riding">RidingActivity</string>
     <string name="dashboard_menu_riding">Current Ride</string>
+    <string name="title_activity_maps_activity_adf">Map</string>
+    <string name="title_activity_maps123">Map</string>
 
 
 </resources>

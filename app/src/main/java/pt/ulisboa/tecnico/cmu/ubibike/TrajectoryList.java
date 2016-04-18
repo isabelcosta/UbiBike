@@ -1,24 +1,65 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.cmu.ubibike.Server.MapsCoordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125_ORIGIN;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_STATIONS_LIST;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_BIKE_STATIONS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LATITUDE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LOCATION_MESSAGE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LONGITUDE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_HISTORY;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
 
 public class TrajectoryList extends CommonWithButtons {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;
     private String bikerName;
+    private List<String> trajectoriesArray;
+    private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +70,15 @@ public class TrajectoryList extends CommonWithButtons {
 
         // HEADER
         // biker name
-        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
-        manufacturerTextView.setText(bikerName);
+        TextView bikerNameTextView = (TextView)findViewById(R.id.biker_name);
+        bikerNameTextView.setText(bikerName);
+
 
         trajectoryList = (ListView) findViewById(R.id.trajectory_list_view);
 
-        List<String> trajectoriesArray = new ArrayList<String>(Arrays.asList(DummyData.getTrajectories()));
+        trajectoriesArray = new ArrayList<>();
 
-        arraylistAdapter = new ArrayAdapter<String>(
+        arraylistAdapter = new ArrayAdapter<>(
                 getApplicationContext(),
                 R.layout.activity_trajectory_list_item,     //listView item layout
                 R.id.trajectory_list_view_item,             //listView id
@@ -44,6 +86,10 @@ public class TrajectoryList extends CommonWithButtons {
         );
 
         trajectoryList.setAdapter(arraylistAdapter);
+
+        // refresh the stations list
+        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
+
         //listAdapter.notifyDataSetChanged();
 
         trajectoryList.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -53,6 +99,21 @@ public class TrajectoryList extends CommonWithButtons {
                                     long row)
             {
                 Intent intent = new Intent(TrajectoryList.this, TrajectoryMapsActivity.class);
+
+                String bikeStationLocation = (String) adapter.getItemAtPosition(position);
+
+                String bikeStationLocationParsed = bikeStationLocation.replace(position + "- ","");
+
+                // todo remove log
+                Log.i("bikeStationLocPars", bikeStationLocationParsed);
+
+                String latitude = String.valueOf(bikeStations.get(bikeStationLocationParsed).getLatitude());
+                String longitude = String.valueOf(bikeStations.get(bikeStationLocationParsed).getLongitude());
+
+                intent.putExtra(INTENT_LOCATION_MESSAGE, bikeStationLocation);
+                intent.putExtra(INTENT_LATITUDE, latitude);
+                intent.putExtra(INTENT_LONGITUDE, longitude);
+
                 startActivity(intent);
                 //String value = (String)adapter.getItemAtPosition(position);
                 // assuming string and if you want to get the value on click of list item
@@ -62,40 +123,142 @@ public class TrajectoryList extends CommonWithButtons {
     }
 
 
-//    public void launchClick(View v) {
-//        Intent intent = null;
-//        Boolean execute = true;
-//
-//        switch(v.getId()) {
-//            case R.id.menu_bottom_home:
-//                intent = new Intent(TrajectoryList.this, UserDashboard.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-//
-//            case R.id.menu_bottom_ubiconnect:
-//                intent = new Intent(TrajectoryList.this, FindPeersActivity.class);
-//                execute = false;
-//                break;
-//
-//            case R.id.menu_bottom_options:
-//                intent = new Intent(TrajectoryList.this, OptionsMenu.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-//
-////            Points History
-//
-//            case R.id.biker_score:
-//                intent = new Intent(TrajectoryList.this, ScoreHistory.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-////          Ubibike Logo
-//            case R.id.ubibikeLogo:
-//                intent = new Intent(TrajectoryList.this, UserDashboard.class);
-//                intent.putExtra("bikerName",bikerName);
-//                break;
-//        }
-//        if (execute){
-//            startActivityForResult(intent, 0);
-//        }
-//    }
+    private Runnable timeTask = new Runnable() {
+        public void run() {
+
+            GetBikeStations getBikeStationsTask = new GetBikeStations();
+
+            // task.execute().get() is used to wait for the task to be executed
+            // so we can update the user score and score history
+            try {
+                getBikeStationsTask .execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            arraylistAdapter.notifyDataSetChanged();
+
+
+
+        }
+    };
+
+
+    private class GetBikeStations extends AsyncTask<Void, Void, Void> {
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private JSONObject json;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Socket socket;
+            try {
+                socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
+
+                json = new JSONObject();
+                json.put(REQUEST_TYPE, GET_BIKE_STATIONS);
+
+                dataOutputStream = new DataOutputStream(
+                        socket.getOutputStream());
+
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
+
+                // transfer JSONObject as String to the server
+                dataOutputStream.writeUTF(json.toString());
+
+                // Thread will wait till server replies
+                String response = dataInputStream.readUTF();
+
+
+                final JSONObject jsondata;
+                jsondata = new JSONObject(response);
+
+
+                String stationsListString = jsondata.getString(BIKE_STATIONS_LIST);
+
+                // instanciate SAXBuilder to parse the String to XML
+                SAXBuilder builder = new SAXBuilder();
+                // create a stream to be converted to a JDOM document
+                InputStream stream = new ByteArrayInputStream(stationsListString.getBytes("UTF-8"));
+                // create JDOM document from stream
+                Document stationsList = builder.build(stream);
+
+                // get root node to travel the XML file and get each station attributes
+                Element rootNode = stationsList.getRootElement();
+                List list = rootNode.getChildren("stationsCoordinates");
+
+
+
+                // clear the array before updating it with the stations
+                // to avoid duplicates
+                trajectoriesArray.clear();
+                for (int i = 0; i < list.size(); i++) {
+
+                    Element node = (Element) list.get(i);
+                    String marker = node.getChildText("marker");
+                    trajectoriesArray.add(i + "- " + marker);
+
+                    double latitude = Double.parseDouble(node.getChildText("latitude"));
+                    double longitude = Double.parseDouble(node.getChildText("longitude"));
+
+                    bikeStations.put(marker, new MapsCoordinates(latitude,longitude));
+
+                }
+
+
+                socket.close();
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (JDOMException e) {
+                e.printStackTrace();
+            } finally {
+
+                // close socket
+                if (socket != null) {
+                    try {
+                        Log.i("close", "closing the socket");
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close input stream
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close output stream
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+
+        }
+    }
+
 }

@@ -41,19 +41,19 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.maps.v2.API_KEY" -->
+        <!-- android:value="@string/google_maps_key" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
 
         <activity
             android:name=".TrajectoryMapsActivity"
             android:label="@string/title_activity_trajectory_maps">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryList" />
         </activity>
         <activity
             android:name=".Chat"
@@ -76,10 +76,10 @@
         </activity>
         <activity
             android:name=".ScoreHistory"
-            android:label="@string/title_activity_score_history"></activity>
+            android:label="@string/title_activity_score_history" />
         <activity
             android:name=".OptionsMenu"
-            android:label="@string/title_activity_options_menu"></activity>
+            android:label="@string/title_activity_options_menu" />
         <activity
             android:name=".AboutMenu"
             android:label="@string/title_activity_about_menu"
@@ -90,11 +90,11 @@
         </activity>
         <activity
             android:name=".FindBike"
-            android:label="@string/title_activity_find_bike"></activity>
+            android:label="@string/title_activity_find_bike" />
         <activity
             android:name=".FindPeersActivity"
             android:label="@string/title_activity_find_peers"
-            android:parentActivityName=".UserDashboard"></activity>
+            android:parentActivityName=".UserDashboard" />
         <activity
             android:name=".GivePointsOrChat"
             android:label="@string/title_activity_give_points_or_chat"
@@ -121,12 +121,24 @@
         <activity
             android:name=".RidingActivity"
             android:label="@string/title_activity_riding"
-            android:parentActivityName=".UserDashboard"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".UserDashboard">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
         </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+
     </application>
 
 </manifest>

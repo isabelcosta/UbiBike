@@ -14,13 +14,14 @@
         android:layout_marginBottom="50dp"
         android:layout_marginTop="50dp"
         android:layout_weight="0.47"
-        android:gravity="bottom"
+        android:gravity="top"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/trajectory_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 

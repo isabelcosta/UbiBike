@@ -100,11 +100,10 @@ public class CommonWithButtons extends AppCompatActivity {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
-            }
-*/
+            }*/
 
-            UbiBikeApplication app = ((UbiBikeApplication) getApplication());
-            app.getBikerScore(false);
+//            UbiBikeApplication app = ((UbiBikeApplication) getApplication());
+//            bikerScore = app.getBikerScore(false);
 
             pointsButton = (Button) findViewById(R.id.biker_score);
             pointsButton.setText(bikerScore);

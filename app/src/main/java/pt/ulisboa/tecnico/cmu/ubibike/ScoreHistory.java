@@ -132,7 +132,13 @@ public class ScoreHistory extends CommonWithButtons {
             public void onClick(View v) {
 
                 AddPoints addPointsTask = new AddPoints();
-                addPointsTask .execute();
+                try {
+                    addPointsTask.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
 
                 // Get user current points and refresh Views
                 handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 1000);
@@ -279,7 +285,8 @@ public class ScoreHistory extends CommonWithButtons {
                 dataOutputStream = new DataOutputStream(
                         socket.getOutputStream());
 
-                dataInputStream = new DataInputStream(socket.getInputStream());
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
 
                 // transfer JSONObject as String to the server
                 dataOutputStream.writeUTF(json.toString());

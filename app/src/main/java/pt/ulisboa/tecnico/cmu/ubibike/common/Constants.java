@@ -10,8 +10,11 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
      *
      */
 
-    public static final int SERVER_PORT = 4444;
+    public static final int SERVER_PORT = 4432;
+                                // genymotion
     public static final String SERVER_IP = "10.0.3.2";
+                                // AVD
+//    public static final String SERVER_IP = "10.0.2.2";
 
 
     /**
@@ -31,6 +34,18 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     public static final String GET_CLIENTS = "get clients";
     public static final String GREATING = "greating";
     public static final String IS_RIDING = "is riding";
+    public static final String GET_BIKE_STATIONS = "get bike stations";
+
+
+    // maps
+
+    public static final int MAPS_ZOOM_LEVEL_STATION = 16;
+
+        // maps intents
+        public static final String INTENT_LOCATION_MESSAGE = "locationMessage";
+        public static final String INTENT_LATITUDE = "latitude";
+        public static final String INTENT_LONGITUDE = "longitude";
+
 
 
 
@@ -45,6 +60,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     // server responses
     public static final String IS_RIDING_YES = "yes";
     public static final String POINTS_ADDED = "Points added";
+    public static final String BIKE_STATIONS_LIST = "bike stations";
 
 
     // tests

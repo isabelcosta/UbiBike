@@ -1,17 +1,22 @@
 package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
 
 import static pt.ulisboa.tecnico.cmu.ubibike.Server.Common.Constants.*;
 
@@ -25,26 +30,37 @@ public class SimpleTextServer {
 
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
-    private static InputStreamReader inputStreamReader;
-    private static BufferedReader bufferedReader;
     private static String message;
 
     private static HashMap<String, UbiClient> clientsList = new HashMap<>();
-
+    private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
 
 
     public static void main(String[] args) {
         try {
-            serverSocket = new ServerSocket(4444); // Server socket
+            serverSocket = new ServerSocket(SERVER_PORT); // Server socket
 
         } catch (IOException e) {
-            System.out.println("Could not listen on port: 4444");
+            System.out.println("Could not listen on port: " + SERVER_PORT);
         }
 
-        System.out.println("Server started. Listening to the port 4444");
+        System.out.println("Server started. Listening to the port " + SERVER_PORT);
+
+        /**
+         *  TESTING
+         */
 
         // create client "v" for testing purposes
         createTestClient();
+
+        // define bike stations
+        createBikeStations();
+
+        /**
+         *  -------------------------
+         */
+
+
 
         while (true) {
             try {
@@ -62,6 +78,8 @@ public class SimpleTextServer {
                 /**
                  *  -----------------------------------
                  * */
+
+
 
                 // message from the client
                 message = dataInputStream.readUTF();
@@ -131,7 +149,7 @@ public class SimpleTextServer {
                 else if (type.equals
                         (GET_POINTS))
                 {
-                    // call function getPoints to get the client points
+                    // invoke getPoints to get the client points
                     JSONObject json = getPoints(jsondata);
 
                     dataOutputStream.writeUTF(json.toString());
@@ -143,6 +161,15 @@ public class SimpleTextServer {
                     // todo is always true
                     JSONObject json = new JSONObject();
                     json.put(IS_RIDING, IS_RIDING_YES);
+                    dataOutputStream.writeUTF(json.toString());
+
+                }
+                else if (type.equals
+                        (GET_BIKE_STATIONS))
+                {
+                    // invoke getStations() to get the list of stations in XML string on a JSONObject
+                    JSONObject json = getStations();
+
                     dataOutputStream.writeUTF(json.toString());
 
                 }
@@ -159,6 +186,7 @@ public class SimpleTextServer {
         }
 
     }
+
 
     private static boolean registerClient(JSONObject jsondata) throws JSONException {
 
@@ -286,6 +314,57 @@ public class SimpleTextServer {
         return json;
     }
 
+    private static JSONObject getStations () throws JSONException {
+        JSONObject json = new JSONObject();
+
+
+        // create XML representing the bike stations
+        Element bikeStationsXML = new Element("bikeStations");
+        Document doc = new Document(bikeStationsXML);
+//        doc.setRootElement(bikeStationsXML);
+
+
+        int i = 0;
+        // for each station, add latitude, longitude and marker text
+        for (String markerID:
+                bikeStations.keySet()) {
+
+            MapsCoordinates coor = bikeStations.get(markerID);
+
+            Element coordinates = new Element("stationsCoordinates");
+            coordinates.setAttribute(new Attribute("id", String.valueOf(i)));
+
+            coordinates.addContent(new Element("latitude").
+                    setText(String.valueOf(coor.getLatitude())));
+            coordinates.addContent(new Element("longitude")
+                    .setText(String.valueOf(coor.getLongitude())));
+            coordinates.addContent(new Element("marker")
+                    .setText(markerID));
+
+            doc.getRootElement().addContent(coordinates);
+
+            i++;
+
+        }
+
+        // create a string from the xml
+        XMLOutputter xmlOutput = new XMLOutputter();
+        String bikeStationsString = xmlOutput.outputString(doc);
+
+        // put the xml with the bike stations on the json object
+        json.put(BIKE_STATIONS_LIST,bikeStationsString);
+
+        return json;
+    }
+
+
+
+
+
+    /**
+     *  TESTING FUNCTIONS
+     */
+
     public static void createTestClient () {
         UbiClient client1 = new UbiClient(TEST_CLIENT_USERNAME);
         client1.setPoints(100);
@@ -303,5 +382,40 @@ public class SimpleTextServer {
         client1.setPassword(TEST_CLIENT_PASSWORD);
         clientsList.put(TEST_CLIENT_USERNAME, client1);
     }
+
+
+
+    private static void createBikeStations() {
+        // LOCATION -   Lat : Lng
+
+        // Alameda
+            // rua alves redol
+        String locationAR = "Alameda Station";
+
+        double latitudeAR = 38.737104;
+        double longitudeAR = -9.140560;
+
+        bikeStations.put(locationAR, new MapsCoordinates(latitudeAR,longitudeAR));
+
+
+
+
+
+        // Campo Pequeno
+            // avenida antonio serpa
+        String locationAS = "Campo Pequeno Station";
+
+        double latitudeAS = 38.743096;
+        double longitudeAS = -9.148070;
+
+        bikeStations.put(locationAS, new MapsCoordinates(latitudeAS, longitudeAS));
+
+
+
+
+
+    }
+
+
 
 }
