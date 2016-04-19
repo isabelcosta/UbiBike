@@ -1,0 +1,33 @@
+# create two virtual devices (two emulators)
+newdevice A1
+newdevice A2
+
+# lists emulators
+list emus
+
+# assign network addresses to each emulator
+assignaddr e1
+assignaddr e2
+
+# bind emulators to each virtual device
+binddevice A1 e1
+binddevice A2 e2
+
+# verify if nodes are online
+ping
+
+# creates a movement event 
+# moves A1 close to A2
+move A1 (A2)
+
+list neighbors
+
+# propagates the network topology
+commit
+
+# creates a group with A1 as group owner
+creategroup A1 (A2)
+
+list groups
+
+commit

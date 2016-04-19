@@ -29,9 +29,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
     <orderEntry type="library" exported="" name="jdom-2.0.2" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
-    <orderEntry type="library" exported="" name="java-json" level="project" />
-    <orderEntry type="library" exported="" name="javax.json-api-1.0" level="project" />
+    <orderEntry type="library" exported="" name="json-20160212" level="project" />
     <orderEntry type="library" exported="" name="server.server" level="project" />
   </component>
 </module>

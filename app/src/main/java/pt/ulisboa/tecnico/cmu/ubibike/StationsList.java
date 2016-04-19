@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.Server.MapsCoordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_STATIONS_LIST;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_BIKE_STATIONS;
