@@ -382,7 +382,7 @@ public class SimpleTextServer {
         for (Integer bikeID :
                 clientPoints.keySet()) {
             // check if bike is not reserved
-            if (clientPoints.get(bikeID)) {
+            if (!clientPoints.get(bikeID)) {
                 // check if user does not hold a bike reserve
                 if(clientsList.get(clientName).getHoldingBikeID() == NO_BIKE_ID) {
                     // give bike to client
@@ -482,9 +482,11 @@ public class SimpleTextServer {
 
 
         // place 10 bikes at the Picoas Station
-        // todo change to 30
-        for(int i = 21; i <= 30; i++) {
-            stationBikes.put(i, false);
+        // todo change to true
+        if (ACCEPT_BIKE_RESERVE_PICOAS) {
+            for(int i = 21; i <= 30; i++) {
+                stationBikes.put(i, false);
+            }
         }
 
         bikesPerStation.put(picoas, stationBikes);

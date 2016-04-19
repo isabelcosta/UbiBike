@@ -12,9 +12,9 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
 
     public static final int SERVER_PORT = 4432;
                                 // genymotion
-    public static final String SERVER_IP = "10.0.3.2";
+//    public static final String SERVER_IP = "10.0.3.2";
                                 // AVD
-//    public static final String SERVER_IP = "10.0.2.2";
+    public static final String SERVER_IP = "10.0.2.2";
 
 
     /**
@@ -81,6 +81,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     public static final String ADD_POINTS_TEST_125 = "125";
 
     public static final boolean BYPASS_CREDENTIAL_CHECK = true;
+    public static final boolean ACCEPT_BIKE_RESERVE_PICOAS = true;
 
     public static final String TEST_CLIENT_USERNAME = "v";
     public static final String TEST_CLIENT_PASSWORD = "123123";
