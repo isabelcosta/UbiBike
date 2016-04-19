@@ -39,3 +39,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'org.jdom:jdom:2.0.2'
 }
+
+
+dependencies {
+    compile(name:'Termite-WifiP2P-API', ext:'aar')
+}
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+}
