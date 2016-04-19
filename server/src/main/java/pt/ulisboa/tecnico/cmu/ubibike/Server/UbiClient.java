@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import static pt.ulisboa.tecnico.cmu.ubibike.Server.Common.Constants.*;
+
 
 public class UbiClient {
 
@@ -32,6 +34,7 @@ public class UbiClient {
 	public UbiClient(String name) {
 		_name = name;
 		setTrajectories(new HashMap<String, String>());
+		_holdingBikeID = NO_BIKE_ID;
 	}
 
 

@@ -35,6 +35,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     public static final String GREATING = "greating";
     public static final String IS_RIDING = "is riding";
     public static final String GET_BIKE_STATIONS = "get bike stations";
+    public static final String RESERVE_BIKE = "reserve bike";
 
 
     // maps
@@ -56,11 +57,23 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     public static final String CLIENT_POINTS = "client points";
     public static final String POINTS_ORIGIN = "points origin";
     public static final String POINTS_HISTORY = "points history";
+    public static final String STATION_NAME = "station name";
+
 
     // server responses
     public static final String IS_RIDING_YES = "yes";
     public static final String POINTS_ADDED = "Points added";
     public static final String BIKE_STATIONS_LIST = "bike stations";
+
+
+    // reserve bike
+    public static final int NO_BIKE_ID = 999;
+    public static final int BIKE_RESERVED = 1;
+    public static final int BIKE_NOT_RESERVED_HAS_RESERVE = 2;
+    public static final int BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE = 3;
+    public static final String BIKE_RESERVED_TOAST_MSG = "Bike successfully reserved!";
+    public static final String BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG = "You already have a bike reserved!";
+    public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG = "There are currently no bikes available at this station";
 
 
     // tests

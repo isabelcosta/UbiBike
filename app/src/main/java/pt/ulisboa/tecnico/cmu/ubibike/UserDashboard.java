@@ -41,13 +41,13 @@ public class UserDashboard extends CommonWithButtons {
 
         switch(v.getId()) {
 
-            case R.id.dashboard_menu_find_me_a_bike:
-                intent = new Intent(UserDashboard.this, FindBike.class);
+            case R.id.dashboard_menu_rides_history:
+                intent = new Intent(UserDashboard.this, UbiRidesHistory.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
-            case R.id.dashboard_menu_my_rides:
-                intent = new Intent(UserDashboard.this, TrajectoryList.class);
+            case R.id.dashboard_menu_find_bike:
+                intent = new Intent(UserDashboard.this, StationsList.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 
@@ -58,7 +58,7 @@ public class UserDashboard extends CommonWithButtons {
                 break;
 
             case R.id.dashboard_menu_riding:
-                intent = new Intent(UserDashboard.this, RidingActivity.class);
+                intent = new Intent(UserDashboard.this, UbiRideMapsActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 execute = true;
                 break;

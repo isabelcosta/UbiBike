@@ -14,7 +14,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class FindBike extends CommonWithButtons {
+public class UbiRidesHistory extends CommonWithButtons {
 
     private ListView availableBikesList;
     private ArrayAdapter<String> availableBikesAdapter;
@@ -22,7 +22,7 @@ public class FindBike extends CommonWithButtons {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_bike);
+        setContentView(R.layout.activity_ubiride_history);
 
         TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
         String bikerName = getIntent().getStringExtra("bikerName");
@@ -34,7 +34,7 @@ public class FindBike extends CommonWithButtons {
 
         availableBikesAdapter = new ArrayAdapter<String>(
                 getApplicationContext(),
-                R.layout.activity_find_bike_item,
+                R.layout.activity_ubiride_history_item,
                 R.id.find_bike_item,
                 availableBikeArray
         );
@@ -48,7 +48,7 @@ public class FindBike extends CommonWithButtons {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long row)
             {
-                Intent intent = new Intent(FindBike.this, FindBikeMapsActivity.class);
+                Intent intent = new Intent(UbiRidesHistory.this, UbiRidesHistoryMapsActivity.class);
                 startActivity(intent);
                 //String value = (String)adapter.getItemAtPosition(position);
                 // assuming string and if you want to get the value on click of list item

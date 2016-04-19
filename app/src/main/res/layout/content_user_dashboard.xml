@@ -17,22 +17,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchClick"
-        android:text="@string/dashboard_menu_find_me_a_bike"
-        android:id="@+id/dashboard_menu_find_me_a_bike"
+        android:text="@string/dashboard_menu_find_ride"
+        android:id="@+id/dashboard_menu_find_bike"
         android:layout_marginTop="150dp"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchClick"
-        android:text="@string/dashboard_menu_my_rides"
-        android:id="@+id/dashboard_menu_my_rides"
+        android:text="@string/dashboard_menu_rides_history"
+        android:id="@+id/dashboard_menu_rides_history"
         android:theme="@android:style/ButtonBar"
         android:textAllCaps="true"
         android:textSize="@dimen/abc_dialog_padding_top_material" />
+
 
     <Button
         android:layout_width="match_parent"

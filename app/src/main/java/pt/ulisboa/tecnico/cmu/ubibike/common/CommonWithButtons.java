@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.common;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,9 +19,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutionException;
 
-import pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity;
+import pt.ulisboa.tecnico.cmu.ubibike.UbiconnectActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu;
 import pt.ulisboa.tecnico.cmu.ubibike.R;
 import pt.ulisboa.tecnico.cmu.ubibike.ScoreHistory;
@@ -31,10 +29,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.UserDashboard;
 
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MY_PREFS;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
@@ -141,7 +136,8 @@ public class CommonWithButtons extends AppCompatActivity {
                 dataOutputStream = new DataOutputStream(
                         socket.getOutputStream());
 
-                dataInputStream = new DataInputStream(socket.getInputStream());
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
 
                 // transfer JSONObject as String to the server
                 dataOutputStream.writeUTF(json.toString());
@@ -220,7 +216,7 @@ public class CommonWithButtons extends AppCompatActivity {
                 break;
 
             case R.id.menu_bottom_ubiconnect:
-                intent = new Intent(this, FindPeersActivity.class);
+                intent = new Intent(this, UbiconnectActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 break;
 

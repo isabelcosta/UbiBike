@@ -34,6 +34,7 @@ public class SimpleTextServer {
 
     private static HashMap<String, UbiClient> clientsList = new HashMap<>();
     private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
+    private static HashMap<String, HashMap<Integer, Boolean>> bikesPerStation = new HashMap<>();
 
 
     public static void main(String[] args) {
@@ -173,7 +174,16 @@ public class SimpleTextServer {
                     dataOutputStream.writeUTF(json.toString());
 
                 }
+                else if (type.equals
+                        (RESERVE_BIKE))
+                {
+                    // invoke reserveBike() to get try to reserve a bike
+                    int reserve = reserveBike(jsondata);
 
+                    // send reservation result to server
+                    dataOutputStream.writeUTF(String.valueOf(reserve));
+
+                }
 
                 clientSocket.close();
 
@@ -186,6 +196,7 @@ public class SimpleTextServer {
         }
 
     }
+
 
 
     private static boolean registerClient(JSONObject jsondata) throws JSONException {
@@ -303,7 +314,7 @@ public class SimpleTextServer {
 
     private static JSONObject getPoints(JSONObject jsondata) throws JSONException {
 
-        // get points
+        // get client name
         String clientName = jsondata.getString(CLIENT_NAME);
 
         int clientPoints = clientsList.get(clientName).getPoints();
@@ -359,10 +370,38 @@ public class SimpleTextServer {
 
 
 
+    private static int reserveBike(JSONObject jsondata) throws JSONException {
+
+        // get station name
+        String station = jsondata.getString(STATION_NAME);
+        // get client name
+        String clientName = jsondata.getString(CLIENT_NAME);
+
+        HashMap<Integer, Boolean> clientPoints = bikesPerStation.get(station);
+
+        for (Integer bikeID :
+                clientPoints.keySet()) {
+            // check if bike is not reserved
+            if (clientPoints.get(bikeID)) {
+                // check if user does not hold a bike reserve
+                if(clientsList.get(clientName).getHoldingBikeID() == NO_BIKE_ID) {
+                    // give bike to client
+                    clientsList.get(clientName).setHoldingBikeID(bikeID);
+                    // mark bike as reserved
+                    clientPoints.put(bikeID, true);
+                    return BIKE_RESERVED;
+                }
+                return BIKE_NOT_RESERVED_HAS_RESERVE;
+            }
+        }
+
+
+        return BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE;
+    }
 
 
     /**
-     *  TESTING FUNCTIONS
+     *  Populate FUNCTIONS
      */
 
     public static void createTestClient () {
@@ -389,29 +428,66 @@ public class SimpleTextServer {
         // LOCATION -   Lat : Lng
 
         // Alameda
-            // rua alves redol
-        String locationAR = "Alameda Station";
+                // rua alves redol
 
-        double latitudeAR = 38.737104;
-        double longitudeAR = -9.140560;
+        HashMap<Integer, Boolean> stationBikes = new HashMap<>();
+        String alameda = "Alameda Station";
 
-        bikeStations.put(locationAR, new MapsCoordinates(latitudeAR,longitudeAR));
+        double latitudeAlameda = 38.737104;
+        double longitudeAlameda= -9.140560;
 
+        bikeStations.put(alameda, new MapsCoordinates(latitudeAlameda,longitudeAlameda));
 
+        // place 10 bikes at the Alameda Station
+        for(int i = 1; i <= 10; i++) {
+            stationBikes.put(i, false);
+        }
+
+        bikesPerStation.put(alameda, stationBikes);
 
 
 
         // Campo Pequeno
-            // avenida antonio serpa
-        String locationAS = "Campo Pequeno Station";
+                    // avenida antonio serpa
 
-        double latitudeAS = 38.743096;
-        double longitudeAS = -9.148070;
+        stationBikes = new HashMap<>();
+        String campoPequeno = "Campo Pequeno Station";
 
-        bikeStations.put(locationAS, new MapsCoordinates(latitudeAS, longitudeAS));
+        double latitudeCampPeq = 38.743096;
+        double longitudeCampPeq = -9.148070;
+
+        bikeStations.put(campoPequeno, new MapsCoordinates(latitudeCampPeq, longitudeCampPeq));
+
+
+        // place 10 bikes at the Campo Pequeno Station
+        for(int i = 11; i <= 20; i++) {
+            // todo change to false
+            stationBikes.put(i, false);
+        }
+
+        bikesPerStation.put(campoPequeno, stationBikes);
 
 
 
+        // Picoas
+                // rua Tomas Ribeiro
+
+        stationBikes = new HashMap<>();
+        String picoas = "Picoas Station";
+
+        double latitudePicoas = 38.731033;
+        double longitudePicoas = -9.147309;
+
+        bikeStations.put(picoas, new MapsCoordinates(latitudePicoas, longitudePicoas));
+
+
+        // place 10 bikes at the Picoas Station
+        // todo change to 30
+        for(int i = 21; i <= 30; i++) {
+            stationBikes.put(i, false);
+        }
+
+        bikesPerStation.put(picoas, stationBikes);
 
 
     }

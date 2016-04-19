@@ -46,7 +46,7 @@ public class OptionsMenu extends CommonWithButtons {
 
             case R.id.options_report_bug:
 //                 FIXME: 26-Mar-16 change Trajectory
-//                intent = new Intent(OptionsMenu.this, TrajectoryMapsActivity.class);
+//                intent = new Intent(OptionsMenu.this, StationsMapsActivity.class);
 //                intent.putExtra("bikerName",bikerName);
 //
                 execute = false;

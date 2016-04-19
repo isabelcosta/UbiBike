@@ -6,7 +6,7 @@
     android:background="@color/grey"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.FindBikeMapsActivity">
+    tools:context=".UbiRidesHistoryMapsActivity">
 
 
     <include layout="@layout/dashboard_header" />

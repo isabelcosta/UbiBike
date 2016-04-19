@@ -12,41 +12,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LOCATION_MESSAGE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LATITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LONGITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MAPS_ZOOM_LEVEL_STATION;
-
-public class TrajectoryMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
+//public class UbiRidesHistoryMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class UbiRidesHistoryMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private String bikerName;
-    private LatLng location;
-    private double latitude;
-    private double longitude;
-    private String locationMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trajectory_maps);
-        this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+        setContentView(R.layout.activity_ubiride_history_maps);
+
+        String bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+        TextView manufacturerTextView = (TextView)findViewById(R.id.biker_name);
+        manufacturerTextView.setText(bikerName);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        TextView bikerNameTextView = (TextView)findViewById(R.id.biker_name);
-        bikerNameTextView.setText(bikerName);
-
-
-        latitude = Double.parseDouble(getIntent().getStringExtra(INTENT_LATITUDE));
-        longitude = Double.parseDouble(getIntent().getStringExtra(INTENT_LONGITUDE));
-        locationMessage = getIntent().getStringExtra(INTENT_LOCATION_MESSAGE);
-
-
-
     }
 
 
@@ -64,10 +47,8 @@ public class TrajectoryMapsActivity extends CommonWithButtons implements OnMapRe
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        location = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(location).title(locationMessage));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,MAPS_ZOOM_LEVEL_STATION));
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
-
-
 }

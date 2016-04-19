@@ -93,7 +93,7 @@ public class Chat extends CommonWithButtons {
 //                break;
 //
 //            case R.id.menu_bottom_ubiconnect:
-//                intent = new Intent(Chat.this, FindPeersActivity.class);
+//                intent = new Intent(Chat.this, UbiconnectActivity.class);
 //                break;
 //
 //            case R.id.menu_bottom_options:

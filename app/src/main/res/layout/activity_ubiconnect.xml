@@ -6,7 +6,7 @@
     android:background="@color/grey"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity">
+    tools:context=".UbiconnectActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

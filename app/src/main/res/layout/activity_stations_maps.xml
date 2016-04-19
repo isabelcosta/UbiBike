@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryMapsActivity">
+    tools:context=".StationsMapsActivity">
 
 <android.support.design.widget.AppBarLayout
     android:layout_width="match_parent"
@@ -14,7 +14,7 @@
 
 </android.support.design.widget.AppBarLayout>
 
-<include layout="@layout/content_trajectory_maps" />
+<include layout="@layout/content_stations_maps" />
 <include layout="@layout/dashboard_header"/>
 <include layout="@layout/dashboard_footer" />
     

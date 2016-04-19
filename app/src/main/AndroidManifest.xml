@@ -49,11 +49,11 @@
         <!-- android:value="@integer/google_play_services_version" /> -->
 
         <activity
-            android:name=".TrajectoryMapsActivity"
-            android:label="@string/title_activity_trajectory_maps">
+            android:name=".StationsMapsActivity"
+            android:label="@string/title_activity_stations_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.TrajectoryList" />
+                android:value=".StationsList" />
         </activity>
         <activity
             android:name=".Chat"
@@ -68,8 +68,8 @@
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
         <activity
-            android:name=".TrajectoryList"
-            android:label="@string/title_activity_trajectory">
+            android:name=".StationsList"
+            android:label="@string/title_activity_stations_list">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
@@ -89,19 +89,19 @@
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu" />
         </activity>
         <activity
-            android:name=".FindBike"
-            android:label="@string/title_activity_find_bike" />
+            android:name=".UbiRidesHistory"
+            android:label="@string/title_activity_ubirides_history" />
         <activity
-            android:name=".FindPeersActivity"
-            android:label="@string/title_activity_find_peers"
+            android:name=".UbiconnectActivity"
+            android:label="@string/title_activity_ubiconnect"
             android:parentActivityName=".UserDashboard" />
         <activity
             android:name=".GivePointsOrChat"
             android:label="@string/title_activity_give_points_or_chat"
-            android:parentActivityName=".FindPeersActivity">
+            android:parentActivityName=".UbiconnectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.FindPeersActivity" />
+                android:value=".UbiconnectActivity" />
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -112,19 +112,11 @@
                 android:value="pt.ulisboa.tecnico.cmu.ubibike.LoginActivity" />
         </activity>
         <activity
-            android:name=".FindBikeMapsActivity"
-            android:label="@string/title_activity_find_bike_maps">
+            android:name=".UbiRidesHistoryMapsActivity"
+            android:label="@string/title_activity_ubiride_history_maps">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.FindBike" />
-        </activity>
-        <activity
-            android:name=".RidingActivity"
-            android:label="@string/title_activity_riding"
-            android:parentActivityName=".UserDashboard">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
+                android:value=".UbiRidesHistory" />
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -138,7 +130,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
+        <activity
+            android:name=".UbiRideMapsActivity"
+            android:label="@string/title_activity_ubi_ride_maps">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pt.ulisboa.tecnico.cmu.ubibike.UserDashboard" />
+        </activity>
     </application>
 
 </manifest>

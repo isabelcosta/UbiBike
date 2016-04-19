@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,7 +26,6 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -35,24 +33,16 @@ import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.ubibike.Server.MapsCoordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125_ORIGIN;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_STATIONS_LIST;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_BIKE_STATIONS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS_HISTORY;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LATITUDE;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LOCATION_MESSAGE;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LONGITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
 import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
 
-public class TrajectoryList extends CommonWithButtons {
+public class StationsList extends CommonWithButtons {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;
@@ -64,7 +54,7 @@ public class TrajectoryList extends CommonWithButtons {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trajectory_list);
+        setContentView(R.layout.activity_stations_list);
 
         this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
@@ -80,7 +70,7 @@ public class TrajectoryList extends CommonWithButtons {
 
         arraylistAdapter = new ArrayAdapter<>(
                 getApplicationContext(),
-                R.layout.activity_trajectory_list_item,     //listView item layout
+                R.layout.activity_stations_list_item,     //listView item layout
                 R.id.trajectory_list_view_item,             //listView id
                 trajectoriesArray
         );
@@ -98,11 +88,11 @@ public class TrajectoryList extends CommonWithButtons {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long row)
             {
-                Intent intent = new Intent(TrajectoryList.this, TrajectoryMapsActivity.class);
+                Intent intent = new Intent(StationsList.this, StationsMapsActivity.class);
 
                 String bikeStationLocation = (String) adapter.getItemAtPosition(position);
 
-                String bikeStationLocationParsed = bikeStationLocation.replace(position + "- ","");
+                String bikeStationLocationParsed = bikeStationLocation.replace(position+1 + "- ","");
 
                 // todo remove log
                 Log.i("bikeStationLocPars", bikeStationLocationParsed);
@@ -110,7 +100,7 @@ public class TrajectoryList extends CommonWithButtons {
                 String latitude = String.valueOf(bikeStations.get(bikeStationLocationParsed).getLatitude());
                 String longitude = String.valueOf(bikeStations.get(bikeStationLocationParsed).getLongitude());
 
-                intent.putExtra(INTENT_LOCATION_MESSAGE, bikeStationLocation);
+                intent.putExtra(INTENT_LOCATION_MESSAGE, bikeStationLocationParsed);
                 intent.putExtra(INTENT_LATITUDE, latitude);
                 intent.putExtra(INTENT_LONGITUDE, longitude);
 
@@ -204,7 +194,7 @@ public class TrajectoryList extends CommonWithButtons {
 
                     Element node = (Element) list.get(i);
                     String marker = node.getChildText("marker");
-                    trajectoriesArray.add(i + "- " + marker);
+                    trajectoriesArray.add(i+1 + "- " + marker);
 
                     double latitude = Double.parseDouble(node.getChildText("latitude"));
                     double longitude = Double.parseDouble(node.getChildText("longitude"));

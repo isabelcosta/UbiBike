@@ -15,14 +15,14 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class FindPeersActivity extends CommonWithButtons {
+public class UbiconnectActivity extends CommonWithButtons {
 
     private String bikerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_peers_list);
+        setContentView(R.layout.activity_ubiconnect);
         String bikerName = ((UbiBikeApplication) getApplication()).getUsername();
 
         this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
@@ -47,7 +47,7 @@ public class FindPeersActivity extends CommonWithButtons {
         //@TODO create adapter to adapt item view to get green light and peers name
         ArrayAdapter peersAdapter = new ArrayAdapter<String>(
                 getApplicationContext(),
-                R.layout.activity_peers_list_item,
+                R.layout.activity_ubiconnect_item,
                 R.id.peers_list_view_item,
                 allPeersArray
         );
@@ -58,7 +58,7 @@ public class FindPeersActivity extends CommonWithButtons {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                Intent intent = new Intent(FindPeersActivity.this, GivePointsOrChat.class);
+                Intent intent = new Intent(UbiconnectActivity.this, GivePointsOrChat.class);
 
                 String person = (String) parent.getItemAtPosition(position);
 

@@ -17,9 +17,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_trajectory_maps">Trajectory Map</string>
-    <string name="title_activity_chat">Ubi Chat</string>
-    <string name="title_activity_find_bike">Find me a bike</string>
+    <string name="title_activity_stations_map">Station</string>
+    <string name="title_activity_chat">UbiChat</string>
+    <string name="title_activity_ubirides_history">UbiRides History</string>
     <string name="new_message">+</string>
     <string name="chat_table_test">+</string>
     <string name="save_credentials">Save credentials</string>
@@ -32,16 +32,16 @@
 
     <string name="title_activity_user_dashboard">Home</string>
 
-    <string name="dashboard_menu_find_me_a_bike">Find me a Bike</string>
-    <string name="dashboard_menu_my_rides">My Rides</string>
-    <string name="dashboard_menu_find_peers">Find peers</string>
+    <string name="dashboard_menu_find_ride">Find UbiRide</string>
+    <string name="dashboard_menu_rides_history">Rides History</string>
+    <string name="dashboard_menu_find_peers">Ubi Connect</string>
 
     <string name="title_activity_options_menu">Options</string>
     <string name="options_report_bug">Report Bug</string>
     <string name="options_about">About</string>
     <string name="options_logout">Logout</string>
 
-    <string name="title_activity_trajectory">Trajectories List</string>
+    <string name="title_activity_stations_list">UbiStations List</string>
     <string name="title_activity_about_menu">About</string>
     <string name="About">About The Project</string>
     <string name="cmov">This project was developed for the CMov course of 2016 @ist</string>
@@ -55,23 +55,24 @@
     <string name="profile_other">Other profile pic</string>
 
     <string name="footer_button_ubiconnect">UbiConnect</string>
-    <string name="dashboard_menu_my_points">My Points</string>
+    <string name="dashboard_menu_my_points">Points</string>
     <string name="title_activity_give_points_or_chat">UbiConnect</string>
     <string name="ubiconnect_ubichat">UbiChat</string>
-    <string name="ubiconnect_give_points">Give Points</string>
-    <string name="title_activity_find_peers">Find Peers</string>
+    <string name="ubiconnect_give_points">Give UbiPoints</string>
+    <string name="title_activity_ubiconnect">UbiConnect</string>
     <string name="title_activity_register">Register</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="error_different_password">Passwords don\'t match</string>
     <string name="prompt_second_password">Repeat Password</string>
-    <string name="title_activity_find_bike_maps">Available Bike Map</string>
+    <string name="title_activity_ubiride_history_maps">UbiRide Map</string>
     <string name="score_history_refresh_points">Refresh</string>
     <string name="title_activity_riding">RidingActivity</string>
     <string name="dashboard_menu_riding">Current Ride</string>
     <string name="title_activity_maps_activity_adf">Map</string>
     <string name="title_activity_maps123">Map</string>
+    <string name="title_activity_ubi_ride_maps">UbiRide</string>
 
 
 </resources>
