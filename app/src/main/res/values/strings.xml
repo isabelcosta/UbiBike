@@ -73,6 +73,7 @@
     <string name="title_activity_maps_activity_adf">Map</string>
     <string name="title_activity_maps123">Map</string>
     <string name="title_activity_ubi_ride_maps">UbiRide</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
