@@ -58,7 +58,8 @@ public class UserDashboard extends CommonWithButtons {
                 break;
 
             case R.id.dashboard_menu_riding:
-                intent = new Intent(UserDashboard.this, UbiRideMapsActivity.class);
+                //intent = new Intent(UserDashboard.this, UbiRideMapsActivity.class);
+                intent = new Intent(UserDashboard.this, MsgSenderActivity.class);
                 intent.putExtra("bikerName",bikerName);
                 execute = true;
                 break;
