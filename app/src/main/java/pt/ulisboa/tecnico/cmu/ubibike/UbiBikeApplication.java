@@ -45,7 +45,6 @@ public class UbiBikeApplication extends Application {
                 "isabel:costa", "pedro:dias", "vicente:rocha"
         };
         DUMMY_CREDENTIALS = new ArrayList<>(Arrays.asList(credentialsArray));
-
     }
 
     //Getters
@@ -196,6 +195,20 @@ public class UbiBikeApplication extends Application {
         return bikerScoreHistory;
     }
 
+    public void cleanBikerScoreHistory() {
+
+        // creating an shared Preference file for the information to be stored
+        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+
+        // get editor to edit in file
+        editor = prefs.edit();
+
+        // remove the score history
+        editor.remove(PREF_SCORE_HISTORY);
+
+        //todo consider using apply()
+        editor.commit();
+    }
 
 /*
     /**

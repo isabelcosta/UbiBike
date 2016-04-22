@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,11 +11,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,8 +40,9 @@ import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class MsgSenderActivity extends Activity implements
+public class MsgSenderActivity extends CommonWithButtons implements
 		PeerListListener, GroupInfoListener {
 
     public static final String TAG = "msgsender";
@@ -51,6 +57,8 @@ public class MsgSenderActivity extends Activity implements
 	private TextView mTextInput;
 	private TextView mTextOutput;
     private SimWifiP2pBroadcastReceiver mReceiver;
+	private String person;
+
 
 	public SimWifiP2pManager getManager() {
 		return mManager;
@@ -63,11 +71,27 @@ public class MsgSenderActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		this.bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+
+
+
+
 		// initialize the UI
 		setContentView(R.layout.main);
 		guiSetButtonListeners();
 		guiUpdateInitState();
+
+		// HEADER
+			// biker name
+		TextView bikersName = (TextView)findViewById(R.id.biker_name);
+		bikersName.setText(bikerName);
+
+
+		// person name
+		person = getIntent().getStringExtra("person");
+		TextView chatPerson = (TextView)findViewById(R.id.chat_person);
+		chatPerson.setText(person);
 
 		// initialize the WDSim API
 		SimWifiP2pSocketManager.Init(getApplicationContext());
@@ -154,9 +178,18 @@ public class MsgSenderActivity extends Activity implements
         public void onClick(View v) {
 			findViewById(R.id.idSendButton).setEnabled(false);
 			try {
-				mCliSocket.getOutputStream().write( (mTextInput.getText().toString()+"\n").getBytes());
+				String message = mTextInput.getText().toString()+"\n";
+//				JSONObject json = new JSONObject();
+//				// indicate that the user is sending a message (and it is not giving points)
+//				json.put(COMMUNICATION_TYPE_WIFI, SEND_MESSAGE_WIFI);
+//				json.put(MESSAGE_WIFI, message);
+
+
+				mCliSocket.getOutputStream().write( (message).getBytes());
 			} catch (IOException e) {
 				e.printStackTrace();
+//			} catch (JSONException e) {
+//				e.printStackTrace();
 			}
 			mTextInput.setText("");
 			findViewById(R.id.idSendButton).setEnabled(true);
@@ -253,6 +286,7 @@ public class MsgSenderActivity extends Activity implements
 		@Override
 		protected void onPreExecute() {
 			mTextOutput.setText("Connecting...");
+            SystemClock.sleep(2000);
 		}
 
 		@Override
@@ -271,7 +305,8 @@ public class MsgSenderActivity extends Activity implements
 		@Override
 		protected void onPostExecute(String result) {
 			if (result != null) {
-				mTextOutput.setText(result);
+
+				mTextOutput.setText("123"+result);
 				findViewById(R.id.idConnectButton).setEnabled(true);
 			}
 			else {
@@ -284,6 +319,7 @@ public class MsgSenderActivity extends Activity implements
 
 	public class ReceiveCommTask extends AsyncTask<SimWifiP2pSocket, String, Void> {
 		SimWifiP2pSocket s;
+        String receivedMessage = null;
 
 		@Override
 		protected Void doInBackground(SimWifiP2pSocket... params) {
@@ -296,8 +332,10 @@ public class MsgSenderActivity extends Activity implements
 
 				while ((st = sockIn.readLine()) != null) {
 					publishProgress(st);
-				}
-			} catch (IOException e) {
+
+                }
+                Log.i("st 23 ", st);
+            } catch (IOException e) {
 				Log.d("Error reading socket:", e.getMessage());
 			}
 			return null;
@@ -316,12 +354,39 @@ public class MsgSenderActivity extends Activity implements
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			mTextOutput.append(values[0]+"\n");
+            receivedMessage += values;
+
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if (!s.isClosed()) {
+
+            // create the json object from the String
+            JSONObject jsondata = null;
+            String message = null;
+            try {
+                jsondata = new JSONObject(receivedMessage);
+
+                // get the type of message to know what the other user wants
+                String type = jsondata.getString(REQUEST_TYPE);
+                // if the type is a message, display the message on the screen
+                if (type.equals(SEND_MESSAGE_WIFI)) {
+                    message = jsondata.getString(MESSAGE_WIFI);
+                    // if the type is a give points, connect to the server and update my points
+                } else if (type.equals(GIVE_POINTS_WIFI)) {
+                    // TODO: 22-Apr-16 implement this
+                    // get the points received
+                    jsondata.getString(POINTS_WIFI);
+                    // get the user that send the points
+                    jsondata.getString(USER_WIFI);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mTextOutput.setText("78456");
+            mTextOutput.append(message+"QQQDW"+"\n");
+
+            if (!s.isClosed()) {
 				try {
 					s.close();
 				}
@@ -409,8 +474,9 @@ public class MsgSenderActivity extends Activity implements
 		mTextInput.setEnabled(false);
 		
 		mTextOutput = (TextView) findViewById(R.id.editText2);
+        mTextOutput.setBackgroundColor(1);
 		mTextOutput.setEnabled(false);
-		mTextOutput.setText("");
+		mTextOutput.setText("1");
 
 		findViewById(R.id.idConnectButton).setEnabled(false);
 		findViewById(R.id.idDisconnectButton).setEnabled(false);

@@ -38,14 +38,15 @@ public class GivePointsOrChat extends CommonWithButtons {
 
         switch(v.getId()) {
             case R.id.ubiconnect_ubichat:
-                intent = new Intent(GivePointsOrChat.this, Chat.class);
-                intent.putExtra("bikerName",bikerName);
+//                intent = new Intent(GivePointsOrChat.this, Chat.class);
+                intent = new Intent(GivePointsOrChat.this, MsgSenderActivity.class);
+
                 intent.putExtra("person",person);
                 break;
 
             case R.id.ubiconnect_give_points:
+//                intent = new Intent(GivePointsOrChat.this, Chat.class);
                 intent = new Intent(GivePointsOrChat.this, Chat.class);
-                intent.putExtra("bikerName",bikerName);
                 intent.putExtra("person",person);
                 execute = false;
                 break;

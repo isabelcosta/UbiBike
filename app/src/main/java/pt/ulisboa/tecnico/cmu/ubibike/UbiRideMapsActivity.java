@@ -2,11 +2,13 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,5 +54,19 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+
+                CameraUpdate center=CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+                mMap.moveCamera(center);
+                mMap.animateCamera(zoom);
+
+            }
+        });
     }
+
+
 }

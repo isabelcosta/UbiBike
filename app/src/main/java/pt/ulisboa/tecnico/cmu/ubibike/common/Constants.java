@@ -86,6 +86,17 @@ package pt.ulisboa.tecnico.cmu.ubibike.common;
     public static final String TEST_CLIENT_USERNAME = "v";
     public static final String TEST_CLIENT_PASSWORD = "123123";
 
+    // WIFI DIRECT
+
+    public static final String COMMUNICATION_TYPE_WIFI = "communication";
+    public static final String GIVE_POINTS_WIFI = "give points";
+    public static final String SEND_MESSAGE_WIFI = "send message";
+    public static final String MESSAGE_WIFI = "wifi message";
+    public static final String POINTS_WIFI = "wifi points";
+    public static final String USER_WIFI = "user wifi";
+
+
+
     /**
      *
      *  ACTIVITY STATE
