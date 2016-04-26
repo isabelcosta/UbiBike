@@ -35,12 +35,8 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
         }
         final Message message = getItem(position);
         final ViewHolder holder = (ViewHolder)convertView.getTag();
-//        final boolean isMe = message.getUserId().equals(mUserId);
-        Boolean isMe = true;
-        if (position % 2 == 0) {
-            // even
-            isMe = false;
-        }
+        final boolean isMe = message.getUserId().equals(mUserId);
+
         // Show-hide image based on the logged-in user.
         // Display the profile image to the right for our user, left for other users.
         if (isMe) {

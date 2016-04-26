@@ -40,7 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+import static com.ubibike.Constants.*;
+
 
 /**
  * A login screen that offers login via email/password.

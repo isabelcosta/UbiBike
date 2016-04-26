@@ -2,7 +2,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import static pt.ulisboa.tecnico.cmu.ubibike.Server.Common.Constants.*;
+import static com.ubibike.Constants.*;
 
 
 public class UbiClient {

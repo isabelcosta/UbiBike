@@ -33,14 +33,8 @@ import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_STATIONS_LIST;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_BIKE_STATIONS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LATITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LOCATION_MESSAGE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LONGITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
+import static com.ubibike.Constants.*;
+
 
 public class StationsList extends CommonWithButtons {
 

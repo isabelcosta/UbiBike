@@ -27,12 +27,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.ScoreHistory;
 import pt.ulisboa.tecnico.cmu.ubibike.UbiBikeApplication;
 import pt.ulisboa.tecnico.cmu.ubibike.UserDashboard;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
+import static com.ubibike.Constants.*;
 
 /**
  * Created by vicente on 07-Apr-16.
@@ -112,87 +107,87 @@ public class CommonWithButtons extends AppCompatActivity {
     };
 
 
-    private class GetPoints extends AsyncTask<Void, Void, Void> {
-        private DataOutputStream dataOutputStream;
-        private DataInputStream dataInputStream;
-        private JSONObject json;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-
-            try {
-                socket = new Socket(SERVER_IP, SERVER_PORT);
-            } catch (IOException e) {
-                return null;
-            }
-
-            try {
-                json = new JSONObject();
-                json.put(REQUEST_TYPE, GET_POINTS);
-                json.put(CLIENT_NAME, bikerName);
-
-
-                dataOutputStream = new DataOutputStream(
-                        socket.getOutputStream());
-
-                dataInputStream = new DataInputStream(
-                        socket.getInputStream());
-
-                // transfer JSONObject as String to the server
-                dataOutputStream.writeUTF(json.toString());
-
-                // Thread will wait till server replies
-                String response = dataInputStream.readUTF();
-
-
-                final JSONObject jsondata;
-                jsondata = new JSONObject(response);
-
-                bikerScore = jsondata.getString(POINTS);
-
-
-
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-
-                // close socket
-                if (socket != null) {
-                    try {
-                        Log.i("close", "closing the socket");
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // close input stream
-                if (dataInputStream != null) {
-                    try {
-                        dataInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // close output stream
-                if (dataOutputStream != null) {
-                    try {
-                        dataOutputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            return null;
-        }
-    }
+//    private class GetPoints extends AsyncTask<Void, Void, Void> {
+//        private DataOutputStream dataOutputStream;
+//        private DataInputStream dataInputStream;
+//        private JSONObject json;
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//
+//
+//            try {
+//                socket = new Socket(SERVER_IP, SERVER_PORT);
+//            } catch (IOException e) {
+//                return null;
+//            }
+//
+//            try {
+//                json = new JSONObject();
+//                json.put(REQUEST_TYPE, GET_POINTS);
+//                json.put(CLIENT_NAME, bikerName);
+//
+//
+//                dataOutputStream = new DataOutputStream(
+//                        socket.getOutputStream());
+//
+//                dataInputStream = new DataInputStream(
+//                        socket.getInputStream());
+//
+//                // transfer JSONObject as String to the server
+//                dataOutputStream.writeUTF(json.toString());
+//
+//                // Thread will wait till server replies
+//                String response = dataInputStream.readUTF();
+//
+//
+//                final JSONObject jsondata;
+//                jsondata = new JSONObject(response);
+//
+//                bikerScore = jsondata.getString(POINTS);
+//
+//
+//
+//            } catch (UnknownHostException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } finally {
+//
+//                // close socket
+//                if (socket != null) {
+//                    try {
+//                        Log.i("close", "closing the socket");
+//                        socket.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                // close input stream
+//                if (dataInputStream != null) {
+//                    try {
+//                        dataInputStream.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                // close output stream
+//                if (dataOutputStream != null) {
+//                    try {
+//                        dataOutputStream.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            return null;
+//        }
+//    }
 
 
     @Override

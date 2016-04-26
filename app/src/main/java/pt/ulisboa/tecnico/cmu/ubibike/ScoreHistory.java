@@ -27,20 +27,8 @@ import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125_ORIGIN;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.GET_POINTS_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY_DEFAULT;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
+import static com.ubibike.Constants.*;
+
 
 
 public class ScoreHistory extends CommonWithButtons {

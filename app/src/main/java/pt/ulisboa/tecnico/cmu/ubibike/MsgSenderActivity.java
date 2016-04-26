@@ -20,7 +20,8 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.*;
+import static com.ubibike.Constants.*;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;

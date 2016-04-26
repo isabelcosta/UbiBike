@@ -7,12 +7,10 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_BIKER_SCORE_DEFAULT;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.PREF_SCORE_HISTORY_DEFAULT;
+import static com.ubibike.Constants.*;
 
 
 public class UbiBikeApplication extends Application {
@@ -22,6 +20,10 @@ public class UbiBikeApplication extends Application {
     private boolean _status;
     private SharedPreferences prefs;
     private Editor editor;
+
+
+    // <lat, long>
+    private HashMap<String, String> coordinatesPerRide = new HashMap<>();
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -45,6 +47,16 @@ public class UbiBikeApplication extends Application {
                 "isabel:costa", "pedro:dias", "vicente:rocha"
         };
         DUMMY_CREDENTIALS = new ArrayList<>(Arrays.asList(credentialsArray));
+    }
+
+
+
+    public HashMap<String, String> getCoordinatesPerRide() {
+        return coordinatesPerRide;
+    }
+
+    public void setCoordinatesPerRide(HashMap<String, String> coordinatesPerRide) {
+        this.coordinatesPerRide = coordinatesPerRide;
     }
 
     //Getters

@@ -5,4 +5,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jdom:jdom:2.0.2'
     compile 'org.json:json:20160212'
+    compile project(path: ':common')
 }

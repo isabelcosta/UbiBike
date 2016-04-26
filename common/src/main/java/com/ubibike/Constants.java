@@ -1,4 +1,5 @@
-package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
+package com.ubibike;
+
 
 /**
  * Created by vicente on 08-Apr-16.
@@ -11,9 +12,9 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
      */
 
     public static final int SERVER_PORT = 4432;
-                                 // genymotion
+                                // genymotion
 //    public static final String SERVER_IP = "10.0.3.2";
-                                 // AVD
+                                // AVD
     public static final String SERVER_IP = "10.0.2.2";
 
 
@@ -38,6 +39,17 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
     public static final String RESERVE_BIKE = "reserve bike";
 
 
+    // maps
+
+    public static final int MAPS_ZOOM_LEVEL_STATION = 16;
+
+        // maps intents
+        public static final String INTENT_LOCATION_MESSAGE = "locationMessage";
+        public static final String INTENT_LATITUDE = "latitude";
+        public static final String INTENT_LONGITUDE = "longitude";
+
+
+
 
     // info for the request
     public static final String CLIENT_NAME = "client name";
@@ -48,38 +60,47 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
     public static final String POINTS_HISTORY = "points history";
     public static final String STATION_NAME = "station name";
 
+
     // server responses
     public static final String IS_RIDING_YES = "yes";
     public static final String POINTS_ADDED = "Points added";
     public static final String BIKE_STATIONS_LIST = "bike stations";
+
 
     // reserve bike
     public static final int NO_BIKE_ID = 999;
     public static final int BIKE_RESERVED = 1;
     public static final int BIKE_NOT_RESERVED_HAS_RESERVE = 2;
     public static final int BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE = 3;
+    public static final String BIKE_RESERVED_TOAST_MSG = "Bike successfully reserved!";
+    public static final String BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG = "You already have a bike reserved!";
+    public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG = "There are currently no bikes available at this station";
+
 
     // tests
     public static final String ADD_POINTS_TEST_125_ORIGIN = "Gained 125 points during 11/02/16 ride #1";
     public static final String ADD_POINTS_TEST_125 = "125";
 
     public static final boolean BYPASS_CREDENTIAL_CHECK = true;
-    public static final boolean ACCEPT_BIKE_RESERVE_PICOAS = false;
+    public static final boolean ACCEPT_BIKE_RESERVE_PICOAS = true;
 
     public static final String TEST_CLIENT_USERNAME = "v";
     public static final String TEST_CLIENT_PASSWORD = "123123";
 
-//    public static final String BIKE_STATION_COORDINATES
 
-    /**
-     *
-     *   Bike Stations
-     *
-     * */
+    // WIFI DIRECT
 
-    public static final double TEST_STATION_ONE_LATITUDE = 123;
-    public static final double TEST_STATION_ONE_LONGITUDE = 123;
+    public static final String COMMUNICATION_TYPE_WIFI = "communication";
 
+    public static final String GIVE_POINTS_WIFI = "give points";
+    public static final String SEND_MESSAGE_WIFI = "send message";
+    public static final String SEND_INFO_WIFI = "send info";
+
+
+    public static final String MESSAGE_WIFI = "wifi message";
+    public static final String POINTS_WIFI = "wifi points";
+    public static final String USER_WIFI = "user wifi";
+    public static final String NAME_WIFI = "name wifi";
 
 
 
@@ -89,7 +110,7 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server.Common;
      *
      */
 
-    public static final String MY_PREFS = "myPrefs";
+    public static final String MY_PREFS = "UbibikeSP";
 
     public static final String PREF_BIKER_SCORE = "biker_score";
     public static final String PREF_BIKER_SCORE_DEFAULT = "0";

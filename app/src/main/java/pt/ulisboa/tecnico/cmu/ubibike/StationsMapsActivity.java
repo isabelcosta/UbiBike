@@ -27,27 +27,8 @@ import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.ADD_POINTS_TEST_125_ORIGIN;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_NOT_RESERVED_HAS_RESERVE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_RESERVED;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.BIKE_RESERVED_TOAST_MSG;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_NAME;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.CLIENT_POINTS;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LOCATION_MESSAGE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LATITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.INTENT_LONGITUDE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.MAPS_ZOOM_LEVEL_STATION;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.POINTS_ORIGIN;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.REQUEST_TYPE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.RESERVE_BIKE;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_IP;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.SERVER_PORT;
-import static pt.ulisboa.tecnico.cmu.ubibike.common.Constants.STATION_NAME;
+import static com.ubibike.Constants.*;
+
 
 public class StationsMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
 
