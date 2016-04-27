@@ -34,6 +34,14 @@ public class UserDashboard extends CommonWithButtons {
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+//        unregisterReceiver(mReceiver);
+
+    }
+
+    @Override
     public void launchClick(View v) {
 
         Intent intent = null;

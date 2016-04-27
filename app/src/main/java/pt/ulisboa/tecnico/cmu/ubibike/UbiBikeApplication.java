@@ -4,11 +4,30 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Messenger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.PointsTransfer;
 
 import static com.ubibike.Constants.*;
 
@@ -20,6 +39,107 @@ public class UbiBikeApplication extends Application {
     private boolean _status;
     private SharedPreferences prefs;
     private Editor editor;
+
+    /**
+     *
+     * WIFI DIRECT
+     */
+
+
+    public SharedPreferences getPrefs() {
+        return prefs;
+    }
+
+    public void setPrefs(SharedPreferences prefs) {
+        this.prefs = prefs;
+    }
+
+    public Editor getEditor() {
+        return editor;
+    }
+
+    public void setEditor(Editor editor) {
+        this.editor = editor;
+    }
+
+    public SimWifiP2pManager getmManager() {
+        return mManager;
+    }
+
+    public void setmManager(SimWifiP2pManager mManager) {
+        this.mManager = mManager;
+    }
+
+    public SimWifiP2pManager.Channel getmChannel() {
+        return mChannel;
+    }
+
+    public void setmChannel(SimWifiP2pManager.Channel mChannel) {
+        this.mChannel = mChannel;
+    }
+
+    public Messenger getmService() {
+        return mService;
+    }
+
+    public void setmService(Messenger mService) {
+        this.mService = mService;
+    }
+
+    public SimWifiP2pSocketServer getmSrvSocket() {
+        return mSrvSocket;
+    }
+
+    public void setmSrvSocket(SimWifiP2pSocketServer mSrvSocket) {
+        this.mSrvSocket = mSrvSocket;
+    }
+
+    public SimWifiP2pSocket getmCliSocket() {
+        return mCliSocket;
+    }
+
+    public void setmCliSocket(SimWifiP2pSocket mCliSocket) {
+        this.mCliSocket = mCliSocket;
+    }
+
+    public UbiconnectActivity.ReceiveCommTask getmComm() {
+        return mComm;
+    }
+
+    public void setmComm(UbiconnectActivity.ReceiveCommTask mComm) {
+        this.mComm = mComm;
+    }
+
+    private SimWifiP2pManager mManager = null;
+    private SimWifiP2pManager.Channel mChannel = null;
+    private Messenger mService = null;
+    private boolean mBound = false;
+    private SimWifiP2pSocketServer mSrvSocket = null;
+    private SimWifiP2pSocket mCliSocket = null;
+    private UbiconnectActivity.ReceiveCommTask mComm = null;
+
+    /**
+     *
+     *
+     * @return
+     */
+
+
+    public boolean isContinueIncommingTask() {
+        return continueIncommingTask;
+    }
+
+    public void setContinueIncommingTask(boolean continueIncommingTask) {
+        this.continueIncommingTask = continueIncommingTask;
+    }
+
+    private boolean continueIncommingTask = true;
+
+    public boolean ismBound() {return mBound;}
+
+    public void setmBound(boolean mBound) {this.mBound = mBound;}
+
+    private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
 
 
     // <lat, long>
@@ -103,6 +223,15 @@ public class UbiBikeApplication extends Application {
 
     }
 
+
+    public ArrayList<PointsTransfer> getPointsExchange() {
+        return pointsExchange;
+    }
+
+    public void setPointsExchange(ArrayList<PointsTransfer> pointsExchange) {
+        this.pointsExchange = pointsExchange;
+    }
+
     public void logout() {
         SharedPreferences pref = getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -172,12 +301,23 @@ public class UbiBikeApplication extends Application {
 
             prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
 
-        String bikerScore = prefs.getString(PREF_BIKER_SCORE, PREF_BIKER_SCORE_DEFAULT);
+        String bikerScore = prefs.getString(PREF_BIKER_SCORE, _bikerScore);
 
         return bikerScore;
         }
         else
         {
+
+            GetPoints getPointsTask = new GetPoints();
+            // task.execute().get() is used to wait for the task to be executed
+            // so we can update the user score and score history
+            try {
+                getPointsTask.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
             return _bikerScore;
         }
     }
@@ -222,51 +362,143 @@ public class UbiBikeApplication extends Application {
         editor.commit();
     }
 
-/*
-    /**
-     * Gets username of logged user from Shared Preferences
-     * @return username
-     */
-/*
-    public String getUsernameFromSP(){
-        // creating an shared Preference file for the information to be stored
-        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
-        String username = prefs.getString(SP_USERNAME, null);
-        return username;
+        private class GetPoints extends AsyncTask<Void, Void, Void> {
+            private DataOutputStream dataOutputStream;
+            private DataInputStream dataInputStream;
+            private JSONObject json;
+            private Socket socket;
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+
+                try {
+                    socket = new Socket();
+                    InetAddress[] iNetAddress = InetAddress.getAllByName(SERVER_IP);
+                    SocketAddress address = new InetSocketAddress(iNetAddress[0], SERVER_PORT);
+
+                    socket.setSoTimeout(5000); //timeout for all other I/O operations, 10s for example
+                    socket.connect(address, 10000); //timeout for attempting connection, 20 s
+
+//                    socket = new Socket(SERVER_IP, SERVER_PORT);
+                } catch (IOException e) {
+                    return null;
+                }
+
+                try {
+                    json = new JSONObject();
+                    json.put(REQUEST_TYPE, GET_POINTS);
+                    json.put(CLIENT_NAME, _username);
+
+
+                    dataOutputStream = new DataOutputStream(
+                            socket.getOutputStream());
+
+                    dataInputStream = new DataInputStream(
+                            socket.getInputStream());
+
+                    // transfer JSONObject as String to the server
+                    dataOutputStream.writeUTF(json.toString());
+
+                    // Thread will wait till server replies
+                    String response = dataInputStream.readUTF();
+
+
+                    final JSONObject jsondata;
+                    jsondata = new JSONObject(response);
+
+                    _bikerScore = jsondata.getString(POINTS);
+
+
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+
+                    // close socket
+                    if (socket != null) {
+                        try {
+                            System.out.print("closing the socket");
+                            socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // close input stream
+                    if (dataInputStream != null) {
+                        try {
+                            dataInputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // close output stream
+                    if (dataOutputStream != null) {
+                        try {
+                            dataOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            return null;
+        }
     }
-*/
-/*
-    public void bottomMenuClickAction(Activity activity){
-        if(!(activity.getClass().isInstance(UserDashboard.class))){
-            Button homeBtn = (Button) activity.findViewById(R.id.menu_bottom_home);
-            homeBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), UserDashboard.class);
-                    startActivity(intent);
-                }
-            });
-        }
 
-        if(!(activity.getClass().isInstance(Chat.class))){
-            Button chatBtn = (Button) activity.findViewById(R.id.menu_bottom_messenger);
-            chatBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), Chat.class);
-                    startActivity(intent);
-                }
-            });
-        }
 
-        if(!(activity.getClass().isInstance(OptionsMenu.class))){
-            Button optionsBtn = (Button) activity.findViewById(R.id.menu_bottom_options);
-            optionsBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), OptionsMenu.class);
-                    startActivity(intent);
-                }
-            });
-        }
-    }*/
+
+///*
+//    /**
+//     * Gets username of logged user from Shared Preferences
+//     * @return username
+//     */
+///*
+//    public String getUsernameFromSP(){
+//        // creating an shared Preference file for the information to be stored
+//        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
+//        String username = prefs.getString(SP_USERNAME, null);
+//        return username;
+//    }
+//*/
+///*
+//    public void bottomMenuClickAction(Activity activity){
+//        if(!(activity.getClass().isInstance(UserDashboard.class))){
+//            Button homeBtn = (Button) activity.findViewById(R.id.menu_bottom_home);
+//            homeBtn.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getApplicationContext(), UserDashboard.class);
+//                    startActivity(intent);
+//                }
+//            });
+//        }
+//
+//        if(!(activity.getClass().isInstance(Chat.class))){
+//            Button chatBtn = (Button) activity.findViewById(R.id.menu_bottom_messenger);
+//            chatBtn.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getApplicationContext(), Chat.class);
+//                    startActivity(intent);
+//                }
+//            });
+//        }
+//
+//        if(!(activity.getClass().isInstance(OptionsMenu.class))){
+//            Button optionsBtn = (Button) activity.findViewById(R.id.menu_bottom_options);
+//            optionsBtn.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getApplicationContext(), OptionsMenu.class);
+//                    startActivity(intent);
+//                }
+//            });
+//        }
+//    }*/
 
 
 }

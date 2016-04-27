@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -179,9 +180,11 @@ public class ScoreHistory extends CommonWithButtons {
 
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, ADD_POINTS);
-                json.put(CLIENT_POINTS, ADD_POINTS_TEST_125);
-                json.put(POINTS_ORIGIN, ADD_POINTS_TEST_125_ORIGIN);
+                json.put(POINTS_TO_ADD, ADD_POINTS_TEST_10);
+                json.put(POINTS_ORIGIN, ADD_POINTS_TEST_10_ORIGIN);
                 json.put(CLIENT_NAME, bikerName);
+                // TODO: 27-Apr-16 so funciona quando é a joana a querer adicionar
+                json.put(USER_WIFI, "joao");
 
 
                 dataOutputStream = new DataOutputStream(
@@ -194,12 +197,14 @@ public class ScoreHistory extends CommonWithButtons {
                 dataOutputStream.writeUTF(json.toString());
 
                 // Thread will wait till server replies
-                String response = dataInputStream.readUTF();
-
-//                Toast.makeText(ScoreHistory.this, response,
-//                        Toast.LENGTH_LONG).show();
+                final String response = dataInputStream.readUTF();
 
 
+                ScoreHistory.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(ScoreHistory.this, response, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 //                new BufferedWriter(new OutputStreamWriter(mySocketOutputStream, "UTF-8")));
 

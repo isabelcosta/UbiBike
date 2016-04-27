@@ -29,6 +29,7 @@ package com.ubibike;
 
     public static final String GET_POINTS = "get points";
     public static final String ADD_POINTS = "add points";
+    public static final String REMOVE_POINTS = "remove points";
     public static final String GET_POINTS_HISTORY = "get points history";
     public static final String REGISTER_CLIENT = "register client";
     public static final String LOGIN_CLIENT = "login client";
@@ -56,6 +57,8 @@ package com.ubibike;
     public static final String CLIENT_PASSWORD = "client password";
     public static final String POINTS = "points";
     public static final String CLIENT_POINTS = "client points";
+    public static final String POINTS_TO_DECREASE= "points to decrease";
+    public static final String POINTS_TO_ADD = "points to add";
     public static final String POINTS_ORIGIN = "points origin";
     public static final String POINTS_HISTORY = "points history";
     public static final String STATION_NAME = "station name";
@@ -64,6 +67,9 @@ package com.ubibike;
     // server responses
     public static final String IS_RIDING_YES = "yes";
     public static final String POINTS_ADDED = "Points added";
+    public static final String POINTS_NOT_ADDED = "Points not added";
+    public static final String POINTS_REMOVED = "Points removed";
+    public static final String POINTS_NOT_REMOVED = "Points not removed";
     public static final String BIKE_STATIONS_LIST = "bike stations";
 
 
@@ -78,14 +84,17 @@ package com.ubibike;
 
 
     // tests
-    public static final String ADD_POINTS_TEST_125_ORIGIN = "Gained 125 points during 11/02/16 ride #1";
-    public static final String ADD_POINTS_TEST_125 = "125";
+    public static final String ADD_POINTS_TEST_10 = "10";
+    public static final String ADD_POINTS_TEST_10_ORIGIN = "Received " + ADD_POINTS_TEST_10 + " points from joao";
 
-    public static final boolean BYPASS_CREDENTIAL_CHECK = true;
-    public static final boolean ACCEPT_BIKE_RESERVE_PICOAS = true;
+    public static final boolean BYPASS_CREDENTIAL_CHECK = false;
+    public static final boolean ACCEPT_BIKE_RESERVE_PICOAS = false;
 
-    public static final String TEST_CLIENT_USERNAME = "v";
+    public static final String TEST_CLIENT_USERNAME = "joao";
     public static final String TEST_CLIENT_PASSWORD = "123123";
+
+    public static final String TEST_CLIENT_USERNAME_2 = "joana";
+    public static final String TEST_CLIENT_PASSWORD_2 = "123123";
 
 
     // WIFI DIRECT
@@ -103,6 +112,9 @@ package com.ubibike;
     public static final String NAME_WIFI = "name wifi";
 
 
+    // Location Listener
+    public static final int GPS_CHECKING_PERIOD = 2000;
+    public static final int GPS_CHECKING_DISTANCE = 10;
 
     /**
      *

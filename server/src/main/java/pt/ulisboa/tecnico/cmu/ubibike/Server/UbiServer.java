@@ -27,7 +27,7 @@ import static com.ubibike.Constants.*;
  * from the Android mobile phone and show it on the console.
  * Author by Lak J Comspace
  */
-public class SimpleTextServer {
+public class UbiServer {
 
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
@@ -142,11 +142,34 @@ public class SimpleTextServer {
                         (ADD_POINTS))
                 {
                     // call function that adds points to the client
-                    addPoints(jsondata);
+                    if(!addPoints(jsondata)) {
+                            // send message to clients confirming that the points were NOT added
+                        String messageToClient = POINTS_NOT_ADDED;
+                        dataOutputStream.writeUTF(messageToClient);
 
-                    // send message to clients confirming that the points were added
-                    String messageToClient = POINTS_ADDED;
-                    dataOutputStream.writeUTF(messageToClient);
+                    } else {
+                        // send message to clients confirming that the points were added
+                        String messageToClient = POINTS_ADDED;
+                        dataOutputStream.writeUTF(messageToClient);
+                    }
+
+                }
+                else if (type.equals
+                        (REMOVE_POINTS))
+                {
+                    String messageToClient;
+
+                        // call function that decreases points to the client
+                    if (!decreasePoints(jsondata)) {
+                            // send message to clients confirming that the points were NOT removed
+                        messageToClient = POINTS_NOT_REMOVED;
+                        dataOutputStream.writeUTF(messageToClient);
+                    } else {
+                            // send message to clients confirming that the points were removed
+                        messageToClient = POINTS_REMOVED;
+                        dataOutputStream.writeUTF(messageToClient);
+                    }
+
                 }
                 else if (type.equals
                         (GET_POINTS))
@@ -290,11 +313,51 @@ public class SimpleTextServer {
     }
 
 
-    private static void addPoints(JSONObject jsondata) throws JSONException {
+    private static boolean addPoints(JSONObject jsondata) throws JSONException {
+
+
+            // get client points from jsondata
+        String toAddPoints = jsondata.getString(POINTS_TO_ADD);
+        System.out.println("Points to add " + toAddPoints);
+
+            //get sender name from jsondata
+        String senderName = jsondata.getString(USER_WIFI);
+            // get client points from server data
+        int senderPoints = clientsList.get(senderName).getPoints();
+            // check if the sender has enough points to send
+        System.out.println(senderPoints + " send points");
+        System.out.println(toAddPoints + " toAddPoints");
+
+
+
+        if (senderPoints - Integer.parseInt(toAddPoints) < 0) {return false;}
+
+        clientsList.get(senderName).setPoints(senderPoints - Integer.parseInt(toAddPoints));
+
+
+        //get client name from jsondata
+        String clientName = jsondata.getString(CLIENT_NAME);
+
+            // get client points from server data
+        int currentPoints = clientsList.get(clientName).getPoints();
+
+            // update client points with the received points
+        clientsList.get(clientName).setPoints(currentPoints + Integer.parseInt(toAddPoints));
+
+            // get client points history
+        ArrayList<String> pointsOrigin = clientsList.get(clientName).getPointsHistory();
+
+            // add new points to the history and update on server
+        pointsOrigin.add(jsondata.getString(POINTS_ORIGIN));
+        clientsList.get(clientName).setPointsHistory(pointsOrigin);
+
+        return true;
+    }
+    private static boolean decreasePoints(JSONObject jsondata) throws JSONException {
 
         // get client points from jsondata
-        String toAddPoints = jsondata.getString(CLIENT_POINTS);
-        System.out.println("Points " + toAddPoints);
+        String toRemovePoints = jsondata.getString(POINTS_TO_DECREASE);
+        System.out.println("Points to decrease " + toRemovePoints);
 
         //get client name form jsondata
         String clientName = jsondata.getString(CLIENT_NAME);
@@ -302,8 +365,11 @@ public class SimpleTextServer {
         // get client points from server data
         int currentPoints = clientsList.get(clientName).getPoints();
 
-        // update client points with the received points
-        clientsList.get(clientName).setPoints(currentPoints + Integer.parseInt(toAddPoints));
+            // if the user doesn't have enough points it wont update
+        if (currentPoints - Integer.parseInt(toRemovePoints) < 0) {return false;}
+
+        // update client points with the decreased points
+        clientsList.get(clientName).setPoints(currentPoints - Integer.parseInt(toRemovePoints));
 
         // get client points history
         ArrayList<String> pointsOrigin = clientsList.get(clientName).getPointsHistory();
@@ -311,6 +377,8 @@ public class SimpleTextServer {
         // add new points to the history and update on server
         pointsOrigin.add(jsondata.getString(POINTS_ORIGIN));
         clientsList.get(clientName).setPointsHistory(pointsOrigin);
+
+        return true;
     }
 
     private static JSONObject getPoints(JSONObject jsondata) throws JSONException {
@@ -406,23 +474,44 @@ public class SimpleTextServer {
      */
 
     public static void createTestClient () {
-        UbiClient client1 = new UbiClient(TEST_CLIENT_USERNAME);
-        client1.setPoints(100);
+
+        /**
+         *  Client Joao
+         */
+        UbiClient clientJoao = new UbiClient(TEST_CLIENT_USERNAME);
+        clientJoao.setPoints(100);
         ArrayList<String> pointsHistory = new ArrayList<>();
-        if (client1.getPointsHistory() == null) {
-            client1.setPointsHistory(pointsHistory);
+        if (clientJoao.getPointsHistory() == null) {
+            clientJoao.setPointsHistory(pointsHistory);
         } else {
-            pointsHistory = client1.getPointsHistory();
+            pointsHistory = clientJoao.getPointsHistory();
         }
 
-        pointsHistory.add("received 50 points from michael");
-        pointsHistory.add("received 50 points from john");
+        pointsHistory.add("received 50 points from joana");
+        pointsHistory.add("received 50 points from joana");
 
-        client1.setPointsHistory(pointsHistory);
-        client1.setPassword(TEST_CLIENT_PASSWORD);
-        clientsList.put(TEST_CLIENT_USERNAME, client1);
+        clientJoao.setPointsHistory(pointsHistory);
+        clientJoao.setPassword(TEST_CLIENT_PASSWORD);
+        clientsList.put(TEST_CLIENT_USERNAME, clientJoao);
+
+
+        // client joana
+        UbiClient clientJoana= new UbiClient(TEST_CLIENT_USERNAME_2);
+        clientJoana.setPoints(100);
+        pointsHistory = new ArrayList<>();
+        if (clientJoana.getPointsHistory() == null) {
+            clientJoana.setPointsHistory(pointsHistory);
+        } else {
+            pointsHistory = clientJoana.getPointsHistory();
+        }
+
+        pointsHistory.add("received 50 points from joao");
+        pointsHistory.add("received 50 points from joao");
+
+        clientJoana.setPointsHistory(pointsHistory);
+        clientJoana.setPassword(TEST_CLIENT_PASSWORD_2);
+        clientsList.put(TEST_CLIENT_USERNAME_2, clientJoana);
     }
-
 
 
     private static void createBikeStations() {

@@ -1,24 +1,24 @@
 package pt.ulisboa.tecnico.cmu.ubibike.common;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmu.ubibike.UbiconnectActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu;
@@ -39,31 +39,30 @@ public class CommonWithButtons extends AppCompatActivity {
     protected Button pointsButton;
     protected TextView bikersNameTextView;
     protected Handler handler = new Handler();
-    private Socket socket;
+    HashMap<String, String> coordinatesPerRide = null;
+    protected MyLocationListener locationListener;
+    protected LocationManager lm;
+    protected UbiBikeApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_history);
 
+        app = ((UbiBikeApplication) getApplication());
 
         // HEADER
         // biker name
-        bikerName = ((UbiBikeApplication) getApplication()).getUsername();
+        bikerName = app.getUsername();
 
 
         // Restore preferences
-
-        UbiBikeApplication app = ((UbiBikeApplication) getApplication());
         bikerScore = app.getBikerScore(true);
-
-
+        coordinatesPerRide = app.getCoordinatesPerRide();
 
         // Views
-
         pointsButton = (Button) findViewById(R.id.biker_score);
-        bikersNameTextView = (TextView)findViewById(R.id.biker_name);
-
+        bikersNameTextView = (TextView) findViewById(R.id.biker_name);
 
 
         // Sets
@@ -72,35 +71,28 @@ public class CommonWithButtons extends AppCompatActivity {
 
 
         // Get user current points and refresh Views
-        // TODO: 09-Apr-16 make UbiBikeApplication check score periodically
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
+        // TODO: 09-Apr-16 make UbiBikeApplication check score
+        handler.postAtTime(requestScoreTask, SystemClock.uptimeMillis() + 100);
+
+
+        // get location updates
+        getLocationUpdates();
 
 
     }
 
-    private Runnable timeTask = new Runnable() {
+    private Runnable requestScoreTask = new Runnable() {
         public void run() {
 
-          /*  GetPoints getClientsTask = new GetPoints();
-            // task.execute().get() is used to wait for the task to be executed
-            // so we can update the user score and score history
-            try {
-                getClientsTask.execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }*/
 
-//            UbiBikeApplication app = ((UbiBikeApplication) getApplication());
-//            bikerScore = app.getBikerScore(false);
+            bikerScore = app.getBikerScore(false);
 
             pointsButton = (Button) findViewById(R.id.biker_score);
             pointsButton.setText(bikerScore);
 
             // every 5 minutes calls the server to check for updates
-            // todo perguntar ao prof opiniao sobre isto (se ha maneira/vantagem em ser o server a iniciar a comunicacao
-//            handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 300000 );
+            // todo perguntar ao prof opiniao sobre isto (se ha maneira/vantagem em ser o server a iniciar a comunicacao)
+//            handler.postAtTime(requestScoreTask, SystemClock.uptimeMillis() + 18000 );
 
 
         }
@@ -236,6 +228,55 @@ public class CommonWithButtons extends AppCompatActivity {
         if (execute){
             startActivityForResult(intent, 0);
         }
+    }
+    private final class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            // called when the listener is notified with a location update from the GPS
+            String lat = String.valueOf(location.getLatitude());    // latitude
+            String lng = String.valueOf(location.getLongitude());   // longitude
+
+            coordinatesPerRide.put(lat, lng);
+            Log.d("latitude maps ", lat);
+            Log.d("longitude maps ", lng);
+
+            // FIXME: 26-Apr-16 not sure if we can directly change coordinatesPerRide without a set
+            app.setCoordinatesPerRide(coordinatesPerRide);
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // called when the GPS provider is turned off (user turning off the GPS on the phone)
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // called when the GPS provider is turned on (user turning on the GPS on the phone)
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // called when the status of the GPS provider changes
+        }
+    }
+
+    private void getLocationUpdates() {
+        locationListener = new MyLocationListener();
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // check permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_CHECKING_PERIOD, GPS_CHECKING_DISTANCE, locationListener);
     }
 
 }

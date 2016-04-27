@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,12 +25,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
@@ -43,6 +49,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+import pt.ulisboa.tecnico.cmu.ubibike.domain.PointsTransfer;
 
 
 import static com.ubibike.Constants.*;
@@ -80,12 +87,16 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
     // clientID, messages
     private HashMap<String, ArrayList<String>> exchangedMessagesPerClient = new HashMap<>();
-    // TODO: 24-Apr-16 get personName from Wifi-Direct
     private String personName;
-    // TODO: 24-Apr-16 get myName from Wifi-Direct
     private String myName;
     private Handler handler = new Handler();
+    private String connectedUser;
+    private boolean decreasePointsResult;
+    private boolean addPointsResult;
 
+
+    private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
+    private boolean continueIncommingTask = true;
 
     public SimWifiP2pManager getManager() {
         return mManager;
@@ -105,6 +116,30 @@ public class UbiconnectActivity extends CommonWithButtons implements
         setContentView(R.layout.activity_list_users);
         guiSetButtonListeners();
         guiUpdateInitState();
+
+        app = ((UbiBikeApplication) getApplication());
+
+        mBound = app.ismBound();
+        continueIncommingTask = app.isContinueIncommingTask();
+
+
+        /**
+         *  get common variables WIFI DIRECT
+         *
+         */
+
+                mManager = app.getmManager();
+                mChannel = app.getmChannel();
+                mService = app.getmService();
+                mBound = app.ismBound();
+                mSrvSocket = app.getmSrvSocket();
+                mCliSocket = app.getmCliSocket();
+                mComm = app.getmComm();
+
+        /**
+         *
+         *
+         */
 
 
         //      Change color to current menu
@@ -138,7 +173,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
         registerReceiver(mReceiver, filter);
 
         personView = (TextView)findViewById(R.id.person_name);
-
+        personView.setText("");
         peersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -156,11 +191,16 @@ public class UbiconnectActivity extends CommonWithButtons implements
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         personIp);
 
+                    // disable clickability for the list
+                peersList.setClickable(false);
+
 
                 // person name
-                String displayMessage = personName + " - " + personIp;
+//                String displayMessage = personName + " - " + personIp;
+                String displayMessage = personName;
 
-                personView.setText(displayMessage);
+                personView.setText("Connected to - " + displayMessage);
+                connectedUser = personName;
                 // if person exists on chat history, get exchanged messages
                 if (exchangedMessagesPerClient.containsKey(personName) ){
                     // get all the messages exhanged with client personName
@@ -177,6 +217,11 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 }
                 peersAdapter.notifyDataSetChanged();
 
+                // activate text input
+                mTextInput.setEnabled(true);
+                mTextInput.setHint("Type a message..");
+                findViewById(R.id.idSendPointsButton).setEnabled(true);
+
             }
         });
 
@@ -190,8 +235,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
         public void run() {
 
             Intent intent = new Intent(UbiconnectActivity.this, SimWifiP2pService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            mBound = true;
+            if(!app.ismBound()) {
+                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+                mBound = true;
+                app.setmBound(mBound);
+
+            }
 
             // spawn the chat server background task
             new IncommingCommTask().executeOnExecutor(
@@ -206,7 +255,47 @@ public class UbiconnectActivity extends CommonWithButtons implements
     @Override
     public void onPause() {
         super.onPause();
+
+        // TODO: 27-Apr-16 quando o WIFI-DIRECT estiver em todas as actividades, nao queremos fazer unbind
+
+        if (mCliSocket != null) {
+            try {
+                mCliSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        mCliSocket = null;
+
+        if (mSrvSocket != null) {
+            try {
+                mSrvSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        mSrvSocket = null;
+
+        continueIncommingTask = false;
+        app.setContinueIncommingTask(continueIncommingTask);
+
+        app.setmManager(mManager);
+        app.setmChannel(mChannel);
+        app.setmService(mService);
+        app.setmBound(mBound);
+        app.setmSrvSocket(mSrvSocket);
+        app.setmCliSocket(mCliSocket);
+        app.setmComm(mComm);
+
+
+
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
         unregisterReceiver(mReceiver);
+
     }
 
 
@@ -238,7 +327,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 unbindService(mConnection);
                 mBound = false;
                 guiUpdateInitState();
+
+                // clear list
+                allPeersArray.clear();
+                peersAdapter.notifyDataSetChanged();
             }
+
         }
     };
 
@@ -265,21 +359,36 @@ public class UbiconnectActivity extends CommonWithButtons implements
             String points = mTextInput.getText().toString();
 
             try {
-                Log.d("sent points ", points);
-                // get text user wrote in the text box
+
+                    // check if the user can send the points (checks with the server (if it's online))
                 if (!checkPoints(points)) {
                     return;
                 }
+                String pointsOriginMessageToReceiver = "received " + points + " points from " + myName;
+                String pointsOriginMessageToMe = "sent " + points + " points to " + connectedUser;
+                    // invoke the async task that connects to the server and decreases the points
+
+                // TODO: 27-Apr-16 move this code to after the server lost connection
+//                decreasePoints(Integer.parseInt(points),pointsOriginMessageToMe);
+
+
 
                 JSONObject json = new JSONObject();
                 // indicate that the user is sending a message (and it is not giving points)
                 json.put(COMMUNICATION_TYPE_WIFI, GIVE_POINTS_WIFI);
                 json.put(POINTS_WIFI, points);
-                json.put(USER_WIFI, "Ze To");
+                json.put(USER_WIFI, myName);
+                json.put(POINTS_ORIGIN, pointsOriginMessageToReceiver);
+
+                    // create an PointsTransfer object that contains the transaction
+                PointsTransfer pts = new PointsTransfer(PointsTransfer.SENT_TO_A_PEER, Integer.parseInt(points), connectedUser, json);
+                    // add the transaction to the pointsExchange log
+                pointsExchange.add(pts);
 
                 // set as text the json created
                 mCliSocket.getOutputStream().write((json.toString()+"\n").getBytes());
 
+                Log.d("sent points ", points);
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -294,6 +403,13 @@ public class UbiconnectActivity extends CommonWithButtons implements
         }
     };
 
+    private boolean checkAvailablePoints(int pointsToGive) {
+            // assim ele vai perguntar ao server pelos pontos, se o server estiver offline, usa a "cache"
+//        int points = Integer.parseInt(app.getBikerScore(false));
+        int points = Integer.parseInt(bikerScore);
+
+        return (points - pointsToGive) >= 0;
+    }
 
 
     private View.OnClickListener listenerSendButton = new View.OnClickListener() {
@@ -392,7 +508,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            while (!Thread.currentThread().isInterrupted()) {
+            while ((!Thread.currentThread().isInterrupted()) && continueIncommingTask) {
                 try {
                     SimWifiP2pSocket sock = mSrvSocket.accept();
                     if (mCliSocket != null && mCliSocket.isClosed()) {
@@ -416,6 +532,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
         @Override
         protected void onProgressUpdate(SimWifiP2pSocket... values) {
             mCliSocket = values[0];
+
+            // TODO: 27-Apr-16 ANOTHER USER HAS STARTED A CONVERSATION WITH YOU (ISABEL, vê isto)
             mComm = new ReceiveCommTask();
 
             mComm.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mCliSocket);
@@ -508,9 +626,15 @@ public class UbiconnectActivity extends CommonWithButtons implements
             findViewById(R.id.idSendButton).setEnabled(true);
             findViewById(R.id.idDisconnectButton).setEnabled(true);
 //            findViewById(R.id.idConnectButton).setEnabled(false);
-            mTextInput.setHint("");
-            mTextInput.setText("");
 
+            // activate text input
+            mTextInput.setEnabled(true);
+            mTextInput.setHint("Type a message..");
+            findViewById(R.id.idSendPointsButton).setEnabled(true);
+
+            // clear list
+            allPeersArray.clear();
+            peersAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -525,6 +649,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 exchangedMessagesPerClient.get(personName).add(mMessage);
                 peersAdapter.notifyDataSetChanged();
             }
+            Log.d("esta no prog ", "progress");
 
         }
 
@@ -628,8 +753,15 @@ public class UbiconnectActivity extends CommonWithButtons implements
     private void guiUpdateInitState() {
 
         mTextInput = (TextView) findViewById(R.id.editText1);
-        mTextInput.setHint("Type a message..");
+        mTextInput.setHint("");
         mTextInput.setEnabled(false);
+
+        bikerName = app.getUsername();
+        pointsButton = (Button) findViewById(R.id.biker_score);
+
+
+        bikersNameTextView  = (TextView) findViewById(R.id.biker_name);
+        bikersNameTextView.setText(bikerName);
 
 //        mTextOutput = (TextView) findViewById(R.id.editText2);
 //        mTextOutput.setEnabled(false);
@@ -646,10 +778,10 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
     private void guiUpdateDisconnectedState() {
 
-        mTextInput.setEnabled(true);
-        mTextInput.setHint("Type a message..");
 //        mTextOutput.setEnabled(true);
 //        mTextOutput.setText("");
+        mTextInput.setHint("");
+        mTextInput.setEnabled(false);
 
         findViewById(R.id.idSendButton).setEnabled(false);
 //        findViewById(R.id.idConnectButton).setEnabled(true);
@@ -665,6 +797,9 @@ public class UbiconnectActivity extends CommonWithButtons implements
         peersAdapter.notifyDataSetChanged();
         // remove connected user name
         personView.setText("");
+
+        peersList.setClickable(false);
+
     }
 
     /**
@@ -690,21 +825,22 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 // if the type is a give points, connect to the server and update my points
             } else if (type.equals(GIVE_POINTS_WIFI)) {
                 // TODO: 22-Apr-16 implement this with chains
-                // get the points received
+                    // get the points received
                 String points = jsondata.getString(POINTS_WIFI);
-                // get the user that send the points
-                String origin = jsondata.getString(USER_WIFI);
-                // put the pair <points,origin> on the mPoints that keeps the history of the score
-                mPoints.put(points,origin);
+                // TODO: 27-Apr-16 user points sender when using digital signatures
+                    // get the user that send the points
+                String pointsSender = jsondata.getString(USER_WIFI);
+                    // get the origin of the received points
+                String origin = jsondata.getString(POINTS_ORIGIN);
+                    // put the pair <points,origin> on the mPoints that keeps the history of the score
+
+                applyReceivedPoints(points, origin, pointsSender, jsondata);
                 Log.d("received pts ", points);
 
-                // // TODO: 24-Apr-16 change applyReceivedPoints
-                applyReceivedPoints(points);
                 return false;
             } else if (type.equals(SEND_INFO_WIFI)) {
                 personName = jsondata.getString(NAME_WIFI);
 
-                // TODO: 24-Apr-16 show messages only when user A chooses to see messages from B
                 if (exchangedMessagesPerClient.containsKey(personName) ){
                     // get all the messages exhanged with client personName
                     for (String msg :
@@ -731,8 +867,14 @@ public class UbiconnectActivity extends CommonWithButtons implements
     }
 
 
-    private void applyReceivedPoints(String points) {
-        personView.setText(points);
+    private void applyReceivedPoints(String points, String pointsOrigin, String pointsSender, JSONObject json) {
+        // TODO: 27-Apr-16 move this line to after the connection with the peer is terminated
+//        addPoints(Integer.parseInt(points), pointsOrigin, pointsSender);
+
+            // create an PointsTransfer object that contains the transaction
+        PointsTransfer pts = new PointsTransfer(PointsTransfer.EARNED_FROM_A_PEER, Integer.parseInt(points), connectedUser, json);
+            // add the transaction to the pointsExchange log
+        pointsExchange.add(pts);
     }
 
 
@@ -745,16 +887,288 @@ public class UbiconnectActivity extends CommonWithButtons implements
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-        // TODO: 24-Apr-16 check user's points
-        boolean hasPoints = true;
+            // check if the user has enough points to give
+        boolean hasPoints = checkAvailablePoints(pointsInt);
 
-        if (pointsInt > 100) {
+        if (!hasPoints) {
             Toast.makeText(UbiconnectActivity.this, "Not enough points available!!",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        Toast.makeText(UbiconnectActivity.this, "Seems to have enough points..",
+                Toast.LENGTH_SHORT).show();
+
         return true;
+    }
+
+    private void decreasePoints(int points, String pointsOrigin) {
+
+        DecreasePoints decreasePointsTask = new DecreasePoints(points, pointsOrigin);
+        // task.execute().get() is used to wait for the task to be executed
+        // so we can update the user score and score history
+        try {
+//            decreasePointsTask.execute().get();
+            decreasePointsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class DecreasePoints extends AsyncTask<Void, Void, Void> {
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private JSONObject json;
+        private Socket socket;
+        private int points;
+        private String pointsOrigin;
+
+        public DecreasePoints(int points, String pointsOrigin) {
+            this.points = points;
+            this.pointsOrigin = pointsOrigin;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+            try {
+                Log.d("cheio disto", "cheio disto");
+                socket = new Socket();
+                InetAddress[] iNetAddress = InetAddress.getAllByName(SERVER_IP);
+                SocketAddress address = new InetSocketAddress(iNetAddress[0], SERVER_PORT);
+
+                socket.setSoTimeout(5000); //timeout for all other I/O operations, 10s for example
+                Log.d("cheio disto", "cheio disto2");
+                socket.connect(address, 10000); //timeout for attempting connection, 20 s
+                Log.d("cheio disto", "cheio disto3");
+
+//                    socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
+                json = new JSONObject();
+                json.put(REQUEST_TYPE, REMOVE_POINTS);
+                json.put(CLIENT_NAME, myName);
+                json.put(POINTS_TO_DECREASE, String.valueOf(points));
+                json.put(POINTS_ORIGIN, pointsOrigin);
+
+                dataOutputStream = new DataOutputStream(
+                        socket.getOutputStream());
+
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
+
+                // transfer JSONObject as String to the server
+                dataOutputStream.writeUTF(json.toString());
+
+                // Thread will wait till server replies
+                String response = dataInputStream.readUTF();
+
+                if (!response.equals(POINTS_REMOVED)) {
+                    decreasePointsResult = false;
+                } else {
+                    decreasePointsResult = true;
+                }
+
+                // TODO: 27-Apr-16 should we waint for the server response?
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+
+                // close socket
+                if (socket != null) {
+                    try {
+                        System.out.print("closing the socket");
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close input stream
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close output stream
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if(decreasePointsResult) {
+                pointsButton.setText(app.getBikerScore(false));
+
+                Toast.makeText(UbiconnectActivity.this, "Points decreased",
+                        Toast.LENGTH_SHORT).show();
+            } else
+            {
+                Toast.makeText(UbiconnectActivity.this, "Could NOT decrease the points",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
+
+
+private void addPoints(int points, String pointsOrigin, String senderOfPoints) {
+
+        AddPoints addPointsTask = new AddPoints(points, pointsOrigin, senderOfPoints);
+        // task.execute().get() is used to wait for the task to be executed
+        // so we can update the user score and score history
+        try {
+            addPointsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class AddPoints extends AsyncTask<Void, Void, Void> {
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private JSONObject json;
+        private Socket socket;
+        private int points;
+        private String pointsOrigin;
+        private String senderOfPoints;
+
+        public AddPoints(int points, String pointsOrigin, String senderOfPoints) {
+            this.points = points;
+            this.pointsOrigin = pointsOrigin;
+            this.senderOfPoints = senderOfPoints;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+            try {
+                socket = new Socket();
+                InetAddress[] iNetAddress = InetAddress.getAllByName(SERVER_IP);
+                SocketAddress address = new InetSocketAddress(iNetAddress[0], SERVER_PORT);
+
+                socket.setSoTimeout(5000); //timeout for all other I/O operations, 10s for example
+                socket.connect(address, 10000); //timeout for attempting connection, 20 s
+
+//                    socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
+                json = new JSONObject();
+                json.put(REQUEST_TYPE, ADD_POINTS);
+                json.put(CLIENT_NAME, myName);
+                json.put(POINTS_TO_ADD, points);
+                json.put(POINTS_ORIGIN, pointsOrigin);
+                json.put(USER_WIFI, senderOfPoints);
+
+                dataOutputStream = new DataOutputStream(
+                        socket.getOutputStream());
+
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
+
+                // transfer JSONObject as String to the server
+                dataOutputStream.writeUTF(json.toString());
+
+                // Thread will wait till server replies
+                String response = dataInputStream.readUTF();
+                if (!response.equals(POINTS_ADDED)) {
+                    addPointsResult = false;
+                } else {
+                    mPoints.put(String.valueOf(points), pointsOrigin);
+
+                    addPointsResult = true;
+                }
+                // TODO: 27-Apr-16 should we waint for the server response?
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+
+                // close socket
+                if (socket != null) {
+                    try {
+                        System.out.print("closing the socket");
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close input stream
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close output stream
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if(addPointsResult) {
+                pointsButton.setText(app.getBikerScore(false));
+
+                Toast.makeText(UbiconnectActivity.this, "Points added",
+                        Toast.LENGTH_SHORT).show();
+            } else
+            {
+                Toast.makeText(UbiconnectActivity.this, "Could NOT add the points",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
     }
 
 }

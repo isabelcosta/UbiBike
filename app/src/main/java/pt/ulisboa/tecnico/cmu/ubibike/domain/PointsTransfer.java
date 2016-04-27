@@ -1,25 +1,29 @@
 package pt.ulisboa.tecnico.cmu.ubibike.domain;
 
+import org.json.JSONObject;
+
 /**
  * This class represents all the data related to points lost and earned
  */
-public class PointsTranfer {
+public class PointsTransfer {
 
     private int mode;
     private int points;
     private String peerUsername;
-    private String date;
+
+
+    private JSONObject json;
 
     //Constants
-    private static final int EARNED_FROM_A_PEER = 1;
-    private static final int EARNED_FROM_A_RIDE = 2;
-    private static final int SENT_TO_A_PEER = 3;
+    public static final int EARNED_FROM_A_PEER = 1;
+    public static final int EARNED_FROM_A_RIDE = 2;
+    public static final int SENT_TO_A_PEER = 3;
 
-    public PointsTranfer (int mode, int points, String peerUsername, String date) {
+    public PointsTransfer(int mode, int points, String peerUsername, JSONObject json) {
         this.mode = mode;
         this.points = points;
         this.peerUsername = peerUsername;
-        this.date = date;
+        this.json = json;
     }
 
     public int getMode() {
@@ -46,11 +50,13 @@ public class PointsTranfer {
         this.peerUsername = peerUsername;
     }
 
-    public String getDate() {
-        return date;
+
+    public JSONObject getJson() {
+        return json;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setJson(JSONObject json) {
+        this.json = json;
     }
+
 }

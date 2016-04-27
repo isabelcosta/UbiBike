@@ -25,7 +25,7 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
 
     private GoogleMap mMap;
         // <lat, long>
-    HashMap<String, String> coordinatesPerRide = ((UbiBikeApplication) getApplication()).getCoordinatesPerRide();
+    HashMap<String, String> coordinatesPerRide = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,8 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
 
         TextView bikerNameTextView = (TextView) findViewById(R.id.biker_name);
         bikerNameTextView.setText(bikerName);
+
+        coordinatesPerRide = ((UbiBikeApplication) getApplication()).getCoordinatesPerRide();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -68,15 +70,18 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
                 CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
                 mMap.moveCamera(center);
                 mMap.animateCamera(zoom);
-                coordinatesPerRide.put(String.valueOf(location.getLatitude()), // latitude
-                                        String.valueOf(location.getLongitude())); // longitude
-                Log.d("latitude maps ", location.getLatitude()+"");
-                Log.d("longitude maps ", location.getLongitude()+"");
-
-                // FIXME: 26-Apr-16 not sure if we can directly change coordinatesPerRide whitout a set
-                ((UbiBikeApplication) getApplication()).setCoordinatesPerRide(coordinatesPerRide);
-                // TODO: 26-Apr-16 tratar das verificações dos beacons aqui
-                // TODO: 26-Apr-16 por agora temos que criar uma ligação WIFI-DIRECT por activity
+                /**
+                 * moved to CommonWithButtons
+                 */
+//                coordinatesPerRide.put(String.valueOf(location.getLatitude()), // latitude
+//                                        String.valueOf(location.getLongitude())); // longitude
+//                Log.d("latitude maps ", location.getLatitude()+"");
+//                Log.d("longitude maps ", location.getLongitude()+"");
+//
+//                // FIXME: 26-Apr-16 not sure if we can directly change coordinatesPerRide without a set
+//                ((UbiBikeApplication) getApplication()).setCoordinatesPerRide(coordinatesPerRide);
+//                // TODO: 26-Apr-16 tratar das verificações dos beacons aqui
+//                // TODO: 26-Apr-16 por agora temos que criar uma ligação WIFI-DIRECT por activity
 
             }
         });
