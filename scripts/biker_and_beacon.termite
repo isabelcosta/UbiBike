@@ -1,33 +1,29 @@
 # create two virtual devices (two emulators)
 newdevice Joana
-newdevice Joao
+newdevice bike1
+newdevice bike2
 
 # lists emulators
 list emus
 
 # assign network addresses to each emulator
 assignaddr e1
-assignaddr e2
 
 # bind emulators to each virtual device
 binddevice Joana e1
-binddevice Joao e2
 
 # verify if nodes are online
 ping
 
 # creates a movement event
-# moves Joana close to Joao
-move Joana (Joao)
+# moves A1 close to A2
+move Joana (bike1)
 
 list neighbors
 
 # propagates the network topology
 commit
 
-# creates a group with Joana as group owner
-creategroup Joana (Joao)
+wait 5
 
-list groups
-
-commit
+list neighbors
