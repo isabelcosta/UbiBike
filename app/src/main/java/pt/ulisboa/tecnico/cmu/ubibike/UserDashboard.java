@@ -8,7 +8,8 @@ import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class UserDashboard extends CommonWithButtons {
+//public class UserDashboard extends WifiDirectActivity {
+public class UserDashboard extends WifiDirectActivity {
 
     private String bikerName;
 
@@ -39,6 +40,12 @@ public class UserDashboard extends CommonWithButtons {
 
 //        unregisterReceiver(mReceiver);
 
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override

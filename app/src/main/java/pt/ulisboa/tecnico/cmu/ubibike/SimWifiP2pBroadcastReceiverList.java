@@ -7,12 +7,13 @@ import android.widget.Toast;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
+import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
 public class SimWifiP2pBroadcastReceiverList extends BroadcastReceiver {
 
-    private UbiconnectActivity mActivity;
+    private CommonWithButtons mActivity;
 
-    public SimWifiP2pBroadcastReceiverList(UbiconnectActivity activity) {
+    public SimWifiP2pBroadcastReceiverList(CommonWithButtons activity) {
         super();
         this.mActivity = activity;
     }

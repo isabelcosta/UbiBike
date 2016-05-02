@@ -44,8 +44,8 @@
             android:id="@+id/editText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
             <requestFocus />
+
         </EditText>
 
         <LinearLayout
@@ -60,18 +60,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sendButton" />
 
-            <Button
-                android:id="@+id/idSendPointsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sendPointsButton" />
-
-            <Button
-                android:id="@+id/idDisconnectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/disconnectButton" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -80,17 +68,12 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <Button
-                android:id="@+id/idWifiOnButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/serviceButton" />
 
             <Button
-                android:id="@+id/idWifiOffButton"
+                android:id="@+id/idSendPointsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancelButton" />
+                android:text="@string/sendPointsButton" />
 
             <Button
                 android:id="@+id/idListPeersButton"
@@ -98,6 +81,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/peersListButton" />
 
+
+            <Button
+                android:id="@+id/idDisconnectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/disconnectButton" />
         </LinearLayout>
 
         <include layout="@layout/dashboard_footer"

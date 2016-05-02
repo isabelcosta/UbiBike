@@ -61,16 +61,18 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
     public static final String TAG = "msgsender";
 
-    private SimWifiP2pManager mManager = null;
-    private SimWifiP2pManager.Channel mChannel = null;
-    private Messenger mService = null;
-    private boolean mBound = false;
-    private SimWifiP2pSocketServer mSrvSocket = null;
-    private SimWifiP2pSocket mCliSocket = null;
-    private ReceiveCommTask mComm = null;
+    // Wifi Direct Common Variables
+    protected SimWifiP2pManager mManager = null;
+    protected SimWifiP2pManager.Channel mChannel = null;
+    protected Messenger mService = null;
+    protected boolean mBound = false;
+    protected SimWifiP2pSocketServer mSrvSocket = null;
+    protected SimWifiP2pSocket mCliSocket = null;
+    protected SimWifiP2pBroadcastReceiverList mReceiver;
+    protected ReceiveCommTask mComm = null;
+
     private TextView mTextInput;
     //    private TextView mTextOutput;
-    private SimWifiP2pBroadcastReceiverList mReceiver;
 
     private String mMessage = "";
     // <points, origin>
@@ -96,7 +98,6 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
 
     private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
-    private boolean continueIncommingTask = true;
 
     public SimWifiP2pManager getManager() {
         return mManager;
@@ -119,10 +120,6 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
         app = ((UbiBikeApplication) getApplication());
 
-        mBound = app.ismBound();
-        continueIncommingTask = app.isContinueIncommingTask();
-
-
         /**
          *  get common variables WIFI DIRECT
          *
@@ -134,7 +131,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 mBound = app.ismBound();
                 mSrvSocket = app.getmSrvSocket();
                 mCliSocket = app.getmCliSocket();
-                mComm = app.getmComm();
+//                mComm = app.getmComm();
 
         /**
          *
@@ -201,56 +198,54 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
                 personView.setText("Connected to - " + displayMessage);
                 connectedUser = personName;
-                // if person exists on chat history, get exchanged messages
-                if (exchangedMessagesPerClient.containsKey(personName) ){
-                    // get all the messages exhanged with client personName
-                    for (String msg :
-                            exchangedMessagesPerClient.get(personName)) {
-                        Message m = new Message();
-                        m.setBody(msg);
-                        m.setUserId(personName);
-                        allPeersArray.add(m);
-                    }
-                    // if person is new, create an entry in exchangedMessagesPerClient
-                } else {
-                    exchangedMessagesPerClient.put(personName ,new ArrayList<String>());
-                }
+
                 peersAdapter.notifyDataSetChanged();
 
-                // activate text input
-                mTextInput.setEnabled(true);
-                mTextInput.setHint("Type a message..");
-                findViewById(R.id.idSendPointsButton).setEnabled(true);
+//                // activate text input
+//                mTextInput.setEnabled(true);
+//                mTextInput.setHint("Type a message..");
+//                findViewById(R.id.idSendPointsButton).setEnabled(true);
 
             }
         });
 
 
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 2000);
+        // spawn the chat server background task
+        new IncommingCommTask().executeOnExecutor(
+                AsyncTask.THREAD_POOL_EXECUTOR);
 
+        guiUpdateDisconnectedState();
+
+//        runTimeTask();
 
     }
-
-    private Runnable timeTask = new Runnable() {
-        public void run() {
-
-            Intent intent = new Intent(UbiconnectActivity.this, SimWifiP2pService.class);
-            if(!app.ismBound()) {
-                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-                mBound = true;
-                app.setmBound(mBound);
-
-            }
-
-            // spawn the chat server background task
-            new IncommingCommTask().executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR);
-
-            guiUpdateDisconnectedState();
-
-
-        }
-    };
+//
+////    @Override
+//    protected void runTimeTask() {
+//        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 2000);
+//    }
+//
+//
+//    private Runnable timeTask = new Runnable() {
+//        public void run() {
+//
+////            Intent intent = new Intent(UbiconnectActivity.this, SimWifiP2pService.class);
+////            if(!app.ismBound()) {
+////                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+////                mBound = true;
+////                app.setmBound(mBound);
+////
+////            }
+//
+//            // spawn the chat server background task
+//            new IncommingCommTask().executeOnExecutor(
+//                    AsyncTask.THREAD_POOL_EXECUTOR);
+//
+//            guiUpdateDisconnectedState();
+//
+//
+//        }
+//    };
 
     @Override
     public void onPause() {
@@ -276,8 +271,10 @@ public class UbiconnectActivity extends CommonWithButtons implements
         }
         mSrvSocket = null;
 
-        continueIncommingTask = false;
-        app.setContinueIncommingTask(continueIncommingTask);
+//        if (mBound) {
+//            unbindService(mConnection);
+//            mBound = false;
+//        }
 
         app.setmManager(mManager);
         app.setmChannel(mChannel);
@@ -285,7 +282,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
         app.setmBound(mBound);
         app.setmSrvSocket(mSrvSocket);
         app.setmCliSocket(mCliSocket);
-        app.setmComm(mComm);
+//        app.setmComm(mComm);
 
 
 
@@ -299,42 +296,39 @@ public class UbiconnectActivity extends CommonWithButtons implements
     }
 
 
-
-
-
 	/*
 	 * Listeners associated to buttons
 	 */
+//
+//    private View.OnClickListener listenerWifiOnButton = new View.OnClickListener() {
+//        public void onClick(View v){
+//
+//            Intent intent = new Intent(v.getContext(), SimWifiP2pService.class);
+//            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//            mBound = true;
+//
+//            // spawn the chat server background task
+//            new IncommingCommTask().executeOnExecutor(
+//                    AsyncTask.THREAD_POOL_EXECUTOR);
+//
+//            guiUpdateDisconnectedState();
+//        }
+//    };
 
-    private View.OnClickListener listenerWifiOnButton = new View.OnClickListener() {
-        public void onClick(View v){
-
-            Intent intent = new Intent(v.getContext(), SimWifiP2pService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            mBound = true;
-
-            // spawn the chat server background task
-            new IncommingCommTask().executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR);
-
-            guiUpdateDisconnectedState();
-        }
-    };
-
-    private View.OnClickListener listenerWifiOffButton = new View.OnClickListener() {
-        public void onClick(View v){
-            if (mBound) {
-                unbindService(mConnection);
-                mBound = false;
-                guiUpdateInitState();
-
-                // clear list
-                allPeersArray.clear();
-                peersAdapter.notifyDataSetChanged();
-            }
-
-        }
-    };
+//    private View.OnClickListener listenerWifiOffButton = new View.OnClickListener() {
+//        public void onClick(View v){
+//            if (mBound) {
+//                unbindService(mConnection);
+//                mBound = false;
+//                guiUpdateInitState();
+//
+//                // clear list
+//                allPeersArray.clear();
+//                peersAdapter.notifyDataSetChanged();
+//            }
+//
+//        }
+//    };
 
     private View.OnClickListener listenerListPeersButton = new View.OnClickListener() {
         public void onClick(View v){
@@ -384,7 +378,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 PointsTransfer pts = new PointsTransfer(PointsTransfer.SENT_TO_A_PEER, Integer.parseInt(points), connectedUser, json);
                     // add the transaction to the pointsExchange log
                 pointsExchange.add(pts);
-
+                Log.d("mCliSocket", mCliSocket.toString());
                 // set as text the json created
                 mCliSocket.getOutputStream().write((json.toString()+"\n").getBytes());
 
@@ -502,22 +496,27 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
             Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
 
-            try {
-                mSrvSocket = new SimWifiP2pSocketServer(
-                        Integer.parseInt(getString(R.string.port)));
-            } catch (IOException e) {
-                e.printStackTrace();
+            mSrvSocket = app.getmSrvSocket();
+            if (mSrvSocket == null) {
+                try {
+                    mSrvSocket = new SimWifiP2pSocketServer(
+                            Integer.parseInt(getString(R.string.port)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            while ((!Thread.currentThread().isInterrupted()) && continueIncommingTask) {
+            while ((!Thread.currentThread().isInterrupted())) {
                 try {
                     SimWifiP2pSocket sock = mSrvSocket.accept();
                     if (mCliSocket != null && mCliSocket.isClosed()) {
                         mCliSocket = null;
+                        Log.d("esta fechado" ,"fechado");
                     }
                     if (mCliSocket != null) {
                         Log.d(TAG, "Closing accepted socket because mCliSocket still active.");
                         sock.close();
                     } else {
+                        Log.d("publicou o pro Inc","fd");
                         publishProgress(sock);
                     }
                 } catch (IOException e) {
@@ -545,12 +544,24 @@ public class UbiconnectActivity extends CommonWithButtons implements
         @Override
         protected void onPreExecute() {
 //            mTextOutput.setText("Connecting...");
+            if(app.getUnreadMessages().containsKey(connectedUser)) {
+                for (Message m :
+                        app.getUnreadMessages().get(connectedUser)) {
+                    allPeersArray.add(m);
+                }
+
+            }
+            peersAdapter.notifyDataSetChanged();
+
+            Toast.makeText(UbiconnectActivity.this, "Connecting..",
+                    Toast.LENGTH_SHORT).show();
 
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
+                Log.d("mCliSocket Out","10001");
                 mCliSocket = new SimWifiP2pSocket(params[0],
                         Integer.parseInt(getString(R.string.port)));
             } catch (UnknownHostException e) {
@@ -632,9 +643,9 @@ public class UbiconnectActivity extends CommonWithButtons implements
             mTextInput.setHint("Type a message..");
             findViewById(R.id.idSendPointsButton).setEnabled(true);
 
-            // clear list
-            allPeersArray.clear();
-            peersAdapter.notifyDataSetChanged();
+//            // clear list
+//            allPeersArray.clear();
+//            peersAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -744,8 +755,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
 //        findViewById(R.id.idConnectButton).setOnClickListener(listenerConnectButton);
         findViewById(R.id.idDisconnectButton).setOnClickListener(listenerDisconnectButton);
         findViewById(R.id.idSendButton).setOnClickListener(listenerSendButton);
-        findViewById(R.id.idWifiOnButton).setOnClickListener(listenerWifiOnButton);
-        findViewById(R.id.idWifiOffButton).setOnClickListener(listenerWifiOffButton);
+//        findViewById(R.id.idWifiOnButton).setOnClickListener(listenerWifiOnButton);
+//        findViewById(R.id.idWifiOffButton).setOnClickListener(listenerWifiOffButton);
         findViewById(R.id.idListPeersButton).setOnClickListener(listenerListPeersButton);
         findViewById(R.id.idSendPointsButton).setOnClickListener(listenerSendPointsButton);
     }
@@ -770,8 +781,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
 //        findViewById(R.id.idConnectButton).setEnabled(false);
         findViewById(R.id.idDisconnectButton).setEnabled(false);
         findViewById(R.id.idSendButton).setEnabled(false);
-        findViewById(R.id.idWifiOnButton).setEnabled(true);
-        findViewById(R.id.idWifiOffButton).setEnabled(false);
+//        findViewById(R.id.idWifiOnButton).setEnabled(true);
+//        findViewById(R.id.idWifiOffButton).setEnabled(false);
         findViewById(R.id.idListPeersButton).setEnabled(false);
         findViewById(R.id.idSendPointsButton).setEnabled(false);
     }
@@ -786,8 +797,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
         findViewById(R.id.idSendButton).setEnabled(false);
 //        findViewById(R.id.idConnectButton).setEnabled(true);
         findViewById(R.id.idDisconnectButton).setEnabled(false);
-        findViewById(R.id.idWifiOnButton).setEnabled(false);
-        findViewById(R.id.idWifiOffButton).setEnabled(true);
+//        findViewById(R.id.idWifiOnButton).setEnabled(false);
+//        findViewById(R.id.idWifiOffButton).setEnabled(true);
         findViewById(R.id.idListPeersButton).setEnabled(true);
         findViewById(R.id.idSendPointsButton).setEnabled(false);
 
@@ -809,7 +820,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
      * @return	true - message
      * 			false - points
      */
-    private boolean isMessageExchange(String receivedMessage) {
+//    @Override
+    protected boolean isMessageExchange(String receivedMessage) {
         // create the json object from the String
         JSONObject jsondata = null;
         try {
@@ -866,8 +878,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
         return false;
     }
 
-
-    private void applyReceivedPoints(String points, String pointsOrigin, String pointsSender, JSONObject json) {
+//    @Override
+    protected void applyReceivedPoints(String points, String pointsOrigin, String pointsSender, JSONObject json) {
         // TODO: 27-Apr-16 move this line to after the connection with the peer is terminated
 //        addPoints(Integer.parseInt(points), pointsOrigin, pointsSender);
 
@@ -1037,7 +1049,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
     }
 
 
-private void addPoints(int points, String pointsOrigin, String senderOfPoints) {
+protected void addPoints(int points, String pointsOrigin, String senderOfPoints) {
 
         AddPoints addPointsTask = new AddPoints(points, pointsOrigin, senderOfPoints);
         // task.execute().get() is used to wait for the task to be executed

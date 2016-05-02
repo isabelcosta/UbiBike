@@ -102,11 +102,11 @@ public class UbiBikeApplication extends Application {
         this.mCliSocket = mCliSocket;
     }
 
-    public UbiconnectActivity.ReceiveCommTask getmComm() {
+    public WifiDirectActivity.ReceiveCommTask getmComm() {
         return mComm;
     }
 
-    public void setmComm(UbiconnectActivity.ReceiveCommTask mComm) {
+    public void setmComm(WifiDirectActivity.ReceiveCommTask mComm) {
         this.mComm = mComm;
     }
 
@@ -116,24 +116,25 @@ public class UbiBikeApplication extends Application {
     private boolean mBound = false;
     private SimWifiP2pSocketServer mSrvSocket = null;
     private SimWifiP2pSocket mCliSocket = null;
-    private UbiconnectActivity.ReceiveCommTask mComm = null;
+    private WifiDirectActivity.ReceiveCommTask mComm = null;
+    private SimWifiP2pBroadcastReceiverList mReceiver;
+
+
+    public HashMap<String, ArrayList<Message>> getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public void setUnreadMessages(HashMap<String, ArrayList<Message>> unreadMessages) {
+        this.unreadMessages = unreadMessages;
+    }
 
     /**
      *
+     *  Unread Messages
      *
-     * @return
      */
+    public HashMap<String, ArrayList<Message>> unreadMessages = new HashMap<>();
 
-
-    public boolean isContinueIncommingTask() {
-        return continueIncommingTask;
-    }
-
-    public void setContinueIncommingTask(boolean continueIncommingTask) {
-        this.continueIncommingTask = continueIncommingTask;
-    }
-
-    private boolean continueIncommingTask = true;
 
     public boolean ismBound() {return mBound;}
 
@@ -362,7 +363,15 @@ public class UbiBikeApplication extends Application {
         editor.commit();
     }
 
-        private class GetPoints extends AsyncTask<Void, Void, Void> {
+    public SimWifiP2pBroadcastReceiverList getmReceiver() {
+        return mReceiver;
+    }
+
+    public void setmReceiver(SimWifiP2pBroadcastReceiverList mReceiver) {
+        this.mReceiver = mReceiver;
+    }
+
+    private class GetPoints extends AsyncTask<Void, Void, Void> {
             private DataOutputStream dataOutputStream;
             private DataInputStream dataInputStream;
             private JSONObject json;
