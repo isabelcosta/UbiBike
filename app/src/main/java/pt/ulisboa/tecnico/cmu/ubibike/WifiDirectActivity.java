@@ -177,12 +177,14 @@ public class WifiDirectActivity extends CommonWithButtons implements
             }
         }
         mSrvSocket = null;
-
+// TODO: 02-May-16 maybe replace client socket instead of settign a nulll.... have  aclient socket of the application so it does not closes when switching apps
 
         app.setmManager(mManager);
         app.setmChannel(mChannel);
         app.setmService(mService);
-        app.setmBound(mBound);
+        // TODO: 02-May-16 tem que estar a true
+        Log.d("isBound", mBound+"");
+//        app.setmBound(mBound);
         app.setmSrvSocket(mSrvSocket);
         app.setmCliSocket(mCliSocket);
         app.setmComm(mComm);
@@ -322,7 +324,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 Log.d("URM size", unreadMessages.size()+"");
                 Toast.makeText(WifiDirectActivity.this, "New Message from " + personName,
                         Toast.LENGTH_SHORT).show();
-
+                // TODO: 02-May-16 size is always 1
                 String ubiconnectText = "UBICONNECT (" + unreadMessages.size() + ")";
                 ubiconnectButtonView = (Button) findViewById(R.id.menu_bottom_ubiconnect);
 

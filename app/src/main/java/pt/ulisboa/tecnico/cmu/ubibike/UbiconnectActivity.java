@@ -279,7 +279,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
         app.setmManager(mManager);
         app.setmChannel(mChannel);
         app.setmService(mService);
-        app.setmBound(mBound);
+//        app.setmBound(mBound);
         app.setmSrvSocket(mSrvSocket);
         app.setmCliSocket(mCliSocket);
 //        app.setmComm(mComm);
@@ -291,7 +291,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
     public void onDestroy(){
         super.onDestroy();
 
-        unregisterReceiver(mReceiver);
+//        unregisterReceiver(mReceiver);
 
     }
 
@@ -544,11 +544,15 @@ public class UbiconnectActivity extends CommonWithButtons implements
         @Override
         protected void onPreExecute() {
 //            mTextOutput.setText("Connecting...");
+            // TODO: 02-May-16 nao consegue por as mensagens por nao ler
             if(app.getUnreadMessages().containsKey(connectedUser)) {
                 for (Message m :
                         app.getUnreadMessages().get(connectedUser)) {
                     allPeersArray.add(m);
                 }
+
+                // todo clear the UnreadMessages() list
+                // todo updated the Ubiconnect button
 
             }
             peersAdapter.notifyDataSetChanged();
