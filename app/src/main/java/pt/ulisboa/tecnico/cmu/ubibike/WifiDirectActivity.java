@@ -568,7 +568,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, ADD_POINTS);
                 json.put(CLIENT_NAME, bikerName);
-                json.put(POINTS_TO_ADD, points);
+                json.put(POINTS_TO_ADD, String.valueOf(points));
                 json.put(POINTS_ORIGIN, pointsOrigin);
                 json.put(USER_WIFI, senderOfPoints);
 
