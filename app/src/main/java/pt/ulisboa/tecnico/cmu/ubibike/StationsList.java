@@ -36,13 +36,13 @@ import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 import static com.ubibike.Constants.*;
 
 
-public class StationsList extends CommonWithButtons {
+public class StationsList extends WifiDirectActivity {
 
     private ListView trajectoryList;
     private ArrayAdapter<String> arraylistAdapter;
     private String bikerName;
     private List<String> trajectoriesArray;
-    private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
+    private HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
 
 
     @Override

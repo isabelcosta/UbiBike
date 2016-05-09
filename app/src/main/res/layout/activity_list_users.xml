@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        <include layout="@layout/dashboard_header" />
+        <include layout="@layout/dashboard_header" android:id="@+id/header_layout"/>
 
         <TextView
         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
 
         <include layout="@layout/dashboard_footer"
             android:layout_height="50dp"
-            android:layout_width="fill_parent" />
+            android:layout_width="fill_parent" android:id="@+id/footer_layout"/>
 
     </LinearLayout>
 

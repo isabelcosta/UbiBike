@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-public class OptionsMenu extends CommonWithButtons {
+public class OptionsMenu extends WifiDirectActivity {
 
     private String bikerName;
 

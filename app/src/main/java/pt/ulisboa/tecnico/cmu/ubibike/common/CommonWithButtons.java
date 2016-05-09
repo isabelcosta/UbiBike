@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -16,9 +17,31 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.LatLng;
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.UbiconnectActivity;
 import pt.ulisboa.tecnico.cmu.ubibike.OptionsMenu;
@@ -39,10 +62,12 @@ public class CommonWithButtons extends AppCompatActivity {
     protected Button pointsButton;
     protected TextView bikersNameTextView;
     protected Handler handler = new Handler();
-    HashMap<String, String> coordinatesPerRide = null;
+    private Handler handler2 = new Handler();
+    ArrayList<LatLng> coordinatesPerRide = null;
     protected MyLocationListener locationListener;
     protected LocationManager lm;
     protected UbiBikeApplication app;
+    private LatLng previewsCoord = new LatLng(0,0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +105,33 @@ public class CommonWithButtons extends AppCompatActivity {
 
 
     }
+    protected void setBikerScore(int points) {
+        String pts = String.valueOf(points);
+        pointsButton.setText(pts);
+        bikerScore = pts;
+
+    }
+
+    protected void setUbiconnectText(int unreadMessages) {
+
+        Button ubiconnectButtonView = (Button) findViewById(R.id.menu_bottom_ubiconnect);
+
+        String ubiconnectText = "UBICONNECT";
+
+        if (unreadMessages > 0) {
+            ubiconnectText += "(" + app.getNumberOfUnreadMessages() + ")";
+        }
+
+        ubiconnectButtonView.setText(ubiconnectText);
+
+    }
 
     private Runnable requestScoreTask = new Runnable() {
         public void run() {
 
 
             bikerScore = app.getBikerScore(false);
+            setUbiconnectText(app.getNumberOfUnreadMessages());
 
             pointsButton = (Button) findViewById(R.id.biker_score);
             pointsButton.setText(bikerScore);
@@ -231,18 +277,44 @@ public class CommonWithButtons extends AppCompatActivity {
     }
     private final class MyLocationListener implements LocationListener {
 
+
         @Override
         public void onLocationChanged(Location location) {
             // called when the listener is notified with a location update from the GPS
-            String lat = String.valueOf(location.getLatitude());    // latitude
-            String lng = String.valueOf(location.getLongitude());   // longitude
+            Double lat = location.getLatitude();    // latitude
+            Double lng = location.getLongitude();   // longitude
 
-            coordinatesPerRide.put(lat, lng);
-            Log.d("latitude maps ", lat);
-            Log.d("longitude maps ", lng);
+            coordinatesPerRide = app.getCoordinatesPerRide();
+            if (lat != previewsCoord.latitude && lng != previewsCoord.longitude) {
+                coordinatesPerRide.add(new LatLng(lat, lng));
+                Log.d("latitude maps ", lat+"");
+                Log.d("longitude maps ", lng+"");
 
-            // FIXME: 26-Apr-16 not sure if we can directly change coordinatesPerRide without a set
-            app.setCoordinatesPerRide(coordinatesPerRide);
+                app.setCoordinatesPerRide(coordinatesPerRide);
+
+                for (LatLng pt :
+                        coordinatesPerRide) {
+                    Log.d("pt", pt+"");
+                }
+                if (coordinatesPerRide.size() == 6) {
+
+                    SendNewRide sendNewRideTask = new SendNewRide();
+
+                    // task.execute().get() is used to wait for the task to be executed
+                    // so we can update the user score and score history
+                    try {
+                        sendNewRideTask.execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+            previewsCoord = new LatLng(lat, lng);
+
+
 
         }
 
@@ -262,6 +334,26 @@ public class CommonWithButtons extends AppCompatActivity {
         }
     }
 
+
+    private Runnable timeTask2 = new Runnable() {
+        public void run() {
+
+            SendNewRide sendNewRideTask = new SendNewRide();
+
+            // task.execute().get() is used to wait for the task to be executed
+            // so we can update the user score and score history
+            try {
+                sendNewRideTask.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    };
+
     private void getLocationUpdates() {
         locationListener = new MyLocationListener();
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -279,4 +371,120 @@ public class CommonWithButtons extends AppCompatActivity {
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_CHECKING_PERIOD, GPS_CHECKING_DISTANCE, locationListener);
     }
 
+
+
+
+    private class SendNewRide extends AsyncTask<Void, Void, Void> {
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private JSONObject json;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Socket socket;
+            try {
+                socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
+                json = new JSONObject();
+                json.put(REQUEST_TYPE, ADD_RIDE);
+                json.put(CLIENT_NAME, bikerName);
+
+                // create XML representing the bike stations
+                Element ridesHistoryXML = new Element("newRide");
+                Document doc = new Document(ridesHistoryXML);
+
+                ArrayList<LatLng> trajectory = app.getCoordinatesPerRide();
+
+
+                int i = 0;
+                for (LatLng ride:
+                        trajectory) {
+
+                    Element coordinates = new Element("coordinate");
+                    coordinates.setAttribute(new Attribute("id", String.valueOf(i)));
+
+                    coordinates.addContent(new Element("latitude")
+                            .setText(String.valueOf(ride.latitude)));
+                    coordinates.addContent(new Element("longitude")
+                            .setText(String.valueOf(ride.longitude)));
+
+
+                    doc.getRootElement().addContent(coordinates);
+
+                    i++;
+
+                }
+
+                // create a string from the xml
+                XMLOutputter xmlOutput = new XMLOutputter();
+                String rideString = xmlOutput.outputString(doc);
+                System.out.println("rides of " + bikerName);
+                System.out.println("ride " + rideString);
+                // put the xml with the bike stations on the json object
+                json.put(RIDE_INFO, rideString);
+
+
+                dataOutputStream = new DataOutputStream(
+                        socket.getOutputStream());
+
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
+
+                // transfer JSONObject as String to the server
+                dataOutputStream.writeUTF(json.toString());
+
+                // Thread will wait till server replies
+                final String response = dataInputStream.readUTF();
+
+                // clean the trajectory
+                app.setCoordinatesPerRide(new ArrayList<LatLng>());
+
+                socket.close();
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+
+                // close socket
+                if (socket != null) {
+                    try {
+                        Log.i("close", "closing the socket");
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close input stream
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close output stream
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+
+        }
+    }
 }

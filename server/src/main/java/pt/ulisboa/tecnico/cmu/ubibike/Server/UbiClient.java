@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static com.ubibike.Constants.*;
@@ -20,7 +21,7 @@ public class UbiClient {
 	private int _points;
 	private ArrayList<String> _pointsHistory;
 
-	private HashMap<String, String> _trajectories;
+	private HashMap<String, ArrayList<MapsCoordinates>> _trajectories;
 
 	private int _holdingBikeID;
 
@@ -33,7 +34,7 @@ public class UbiClient {
 	 */
 	public UbiClient(String name) {
 		_name = name;
-		setTrajectories(new HashMap<String, String>());
+		setTrajectories(new HashMap<String, ArrayList<MapsCoordinates>>());
 		_holdingBikeID = NO_BIKE_ID;
 	}
 
@@ -51,11 +52,11 @@ public class UbiClient {
 		_points = points;
 	}
 
-	public HashMap<String, String> getTrajectories() {
+	public HashMap<String, ArrayList<MapsCoordinates>> getTrajectories() {
 		return _trajectories;
 	}
 
-	public void setTrajectories(HashMap<String, String> trajectories) {
+	public void setTrajectories(HashMap<String, ArrayList<MapsCoordinates>> trajectories) {
 		_trajectories = trajectories;
 	}
 

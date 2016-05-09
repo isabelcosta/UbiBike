@@ -73,7 +73,6 @@ public class WifiDirectActivity extends CommonWithButtons implements
     private String personName;
     private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
     private HashMap<String, String> mPoints;
-    private Button ubiconnectButtonView;
 
 
     public SimWifiP2pManager getManager() {
@@ -89,7 +88,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
         super.onCreate(savedInstanceState);
 
         // initialize the UI
-        setContentView(R.layout.activity_wifi_direct);
+        setContentView(R.layout.activity_score_history);
 
         app = ((UbiBikeApplication) getApplication());
 
@@ -126,25 +125,27 @@ public class WifiDirectActivity extends CommonWithButtons implements
         mReceiver = new SimWifiP2pBroadcastReceiverList(this);
         registerReceiver(mReceiver, filter);
 
-        ubiconnectButtonView = (Button) findViewById(R.id.menu_bottom_ubiconnect);
-
+        setUbiconnectText(app.getNumberOfUnreadMessages());
 
         runTimeTask();
 
+
     }
 
+
     protected void runTimeTask() {
-        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 2000);
+        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
     }
 
     private Runnable timeTask = new Runnable() {
         public void run() {
+            setUbiconnectText(app.getNumberOfUnreadMessages());
 
             Intent intent = new Intent(getApplicationContext(), SimWifiP2pService.class);
             if(!app.ismBound()) {
                 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
                 mBound = true;
-                app.setmBound(mBound);
+                app.setmBound(true);
             }
 
             // spawn the chat server background task
@@ -177,7 +178,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
             }
         }
         mSrvSocket = null;
-// TODO: 02-May-16 maybe replace client socket instead of settign a nulll.... have  aclient socket of the application so it does not closes when switching apps
+// TODO: 02-May-16 maybe replace client socket instead of setting a null.... have  a client socket of the application so it does not closes when switching apps
 
         app.setmManager(mManager);
         app.setmChannel(mChannel);
@@ -234,12 +235,16 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
             Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
 
-            try {
-                mSrvSocket = new SimWifiP2pSocketServer(
-                        Integer.parseInt(getString(R.string.port)));
-                app.setmSrvSocket(mSrvSocket);
-            } catch (IOException e) {
-                e.printStackTrace();
+            mSrvSocket = app.getmSrvSocket();
+            if (mSrvSocket == null) {
+                try {
+                    mSrvSocket = new SimWifiP2pSocketServer(
+                            Integer.parseInt(getString(R.string.port)));
+                    app.setmSrvSocket(mSrvSocket);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             while ((!Thread.currentThread().isInterrupted())) {
                 try {
@@ -266,7 +271,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
         protected void onProgressUpdate(SimWifiP2pSocket... values) {
             mCliSocket = values[0];
 
-            // TODO: 27-Apr-16 ANOTHER USER HAS STARTED A CONVERSATION WITH YOU (ISABEL, vê isto)
+            // TODO: 27-Apr-16 ANOTHER USER HAS STARTED A CONVERSATION WITH YOU
             mComm = new ReceiveCommTask();
 
             mComm.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mCliSocket);
@@ -306,29 +311,35 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 // update unread messages
                 HashMap<String, ArrayList<Message>> unreadMessages = app.getUnreadMessages();
                 // TODO: 02-May-16 trocar para try catch
+                Log.d("person name", personName);
                 if (unreadMessages.containsKey(personName)){
+                    Log.d("personName state", "contains");
                         // adicionar "m" às mensagens por ler
                     if (unreadMessages.get(personName) != null) {
+                        Log.d("personName state", "contains and not null");
                         unreadMessages.get(personName).add(m);
                     } else {
+                        Log.d("personName state", "contains but is null");
                         ArrayList<Message> msgList = new ArrayList<>();
                         msgList.add(m);
                         unreadMessages.put(personName,msgList);
                     }
                 } else {
+                    Log.d("personName state", "does NOT contain");
                     ArrayList<Message> msgList = new ArrayList<>();
                     msgList.add(m);
                     unreadMessages.put(personName,msgList);
                 }
+                    // increase the number of unread messages
+                app.increaseNumberOfUnreadMessages();
+                app.setUnreadMessages(unreadMessages);
 
-                Log.d("URM size", unreadMessages.size()+"");
+//                Log.d("UnReadMessages", unreadMessages.size()+"");
                 Toast.makeText(WifiDirectActivity.this, "New Message from " + personName,
                         Toast.LENGTH_SHORT).show();
-                // TODO: 02-May-16 size is always 1
-                String ubiconnectText = "UBICONNECT (" + unreadMessages.size() + ")";
-                ubiconnectButtonView = (Button) findViewById(R.id.menu_bottom_ubiconnect);
 
-                ubiconnectButtonView.setText(ubiconnectText);
+                setUbiconnectText(app.getNumberOfUnreadMessages());
+
             }
             Log.d("esta no prog ", "progress");
 
@@ -345,7 +356,13 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 }
             }
             s = null;
+            sendPointsExchangeToServer();
         }
+    }
+
+
+    private void sendPointsExchangeToServer() {
+// TODO: 09-May-16 implement
     }
 
 	/*
@@ -465,6 +482,8 @@ public class WifiDirectActivity extends CommonWithButtons implements
         PointsTransfer pts = new PointsTransfer(PointsTransfer.EARNED_FROM_A_PEER, Integer.parseInt(points), pointsSender, json);
         // add the transaction to the pointsExchange log
         pointsExchange.add(pts);
+        int scoreUpdate = Integer.parseInt(bikerScore) + Integer.parseInt(points);
+        setBikerScore(scoreUpdate);
     }
 
 

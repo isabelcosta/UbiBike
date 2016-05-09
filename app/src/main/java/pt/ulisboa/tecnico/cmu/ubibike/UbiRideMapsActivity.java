@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.cmu.ubibike;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -15,17 +17,47 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 
-public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
+import static com.ubibike.Constants.CLIENT_NAME;
+import static com.ubibike.Constants.GET_RIDES_HISTORY;
+import static com.ubibike.Constants.MAPS_ZOOM_LEVEL_STATION;
+import static com.ubibike.Constants.REQUEST_TYPE;
+import static com.ubibike.Constants.RIDES_HISTORY_LIST;
+import static com.ubibike.Constants.SERVER_IP;
+import static com.ubibike.Constants.SERVER_PORT;
+
+public class UbiRideMapsActivity extends WifiDirectActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
         // <lat, long>
-    HashMap<String, String> coordinatesPerRide = null;
+        ArrayList<LatLng> coordinatesPerRide = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +94,15 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
         }
         mMap.setMyLocationEnabled(true);
 
+
+
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
 
                 CameraUpdate center=CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
                 CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
-                mMap.moveCamera(center);
+//                mMap.moveCamera(center);
                 mMap.animateCamera(zoom);
                 /**
                  * moved to CommonWithButtons
@@ -87,6 +121,8 @@ public class UbiRideMapsActivity extends CommonWithButtons implements OnMapReady
         });
 
     }
+
+
 
 
 

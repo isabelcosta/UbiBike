@@ -4,18 +4,23 @@ package pt.ulisboa.tecnico.cmu.ubibike.Server;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 
 
 import static com.ubibike.Constants.*;
@@ -36,6 +41,7 @@ public class UbiServer {
     private static HashMap<String, UbiClient> clientsList = new HashMap<>();
     private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
     private static HashMap<String, HashMap<Integer, Boolean>> bikesPerStation = new HashMap<>();
+    private static HashMap<String, ArrayList<MapsCoordinates>> ridesHistory = new HashMap<>();
 
 
     public static void main(String[] args) {
@@ -208,13 +214,32 @@ public class UbiServer {
                     dataOutputStream.writeUTF(String.valueOf(reserve));
 
                 }
+                else if (type.equals
+                        (GET_RIDES_HISTORY))
+                {
+                    // invoke getStations() to get the list of stations in XML string on a JSONObject
+                    JSONObject json = getRidesHistory(jsondata);
 
+                    dataOutputStream.writeUTF(json.toString());
+
+                }
+                else if (type.equals
+                        (ADD_RIDE))
+                {
+                    // invoke getStations() to get the list of stations in XML string on a JSONObject
+                    addRide(jsondata);
+
+                    dataOutputStream.writeUTF("ride added");
+
+                }
                 clientSocket.close();
 
             } catch (IOException ex) {
                 System.out.println("Problem in message reading");
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JDOMException e) {
                 e.printStackTrace();
             }
         }
@@ -394,7 +419,7 @@ public class UbiServer {
         return json;
     }
 
-    private static JSONObject getStations () throws JSONException {
+    private static JSONObject getStations() throws JSONException {
         JSONObject json = new JSONObject();
 
 
@@ -430,6 +455,7 @@ public class UbiServer {
         // create a string from the xml
         XMLOutputter xmlOutput = new XMLOutputter();
         String bikeStationsString = xmlOutput.outputString(doc);
+        System.out.println(bikeStationsString);
 
         // put the xml with the bike stations on the json object
         json.put(BIKE_STATIONS_LIST,bikeStationsString);
@@ -437,6 +463,124 @@ public class UbiServer {
         return json;
     }
 
+
+ private static JSONObject getRidesHistory(JSONObject jsondata) throws JSONException {
+        JSONObject json = new JSONObject();
+
+        String clientName = jsondata.getString(CLIENT_NAME);
+
+
+        // create XML representing the bike stations
+        Element ridesHistoryXML = new Element("ridesHistory");
+        Document doc = new Document(ridesHistoryXML);
+//        doc.setRootElement(bikeStationsXML);
+
+        HashMap<String, ArrayList<MapsCoordinates>> clientTrajectories = clientsList.get(clientName).getTrajectories();
+
+
+        int i = 0;
+        // for each station, add latitude, longitude and marker text
+        for (String ride:
+                clientTrajectories.keySet()) {
+
+            ArrayList<MapsCoordinates> coords = clientTrajectories.get(ride);
+
+            Element rides = new Element("rides");
+            rides.setAttribute(new Attribute("id", String.valueOf(i)));
+
+//            Element coordinates = new Element("rides");
+//            coordinates.setAttribute(new Attribute("id", String.valueOf(i)));
+//
+//
+//            coordinates.addContent(new Element("latitude").
+//                    setText(String.valueOf(coor.getLatitude())));
+//            coordinates.addContent(new Element("longitude")
+//                    .setText(String.valueOf(coor.getLongitude())));
+//            coordinates.addContent(new Element("marker")
+//                    .setText(markerID));
+//
+//            doc.getRootElement().addContent(coordinates);
+
+            int a = 0;
+            for (MapsCoordinates coor:
+                    coords) {
+                Element coordinates = new Element("coordinates");
+                coordinates.setAttribute(new Attribute("id", String.valueOf(a)));
+
+                coordinates.addContent(new Element("latitude")
+                        .setText(String.valueOf(coor.getLatitude())));
+                coordinates.addContent(new Element("longitude")
+                        .setText(String.valueOf(coor.getLongitude())));
+
+                rides.addContent(coordinates);
+                a++;
+            }
+
+            doc.getRootElement().addContent(rides);
+
+            i++;
+
+        }
+
+        // create a string from the xml
+        XMLOutputter xmlOutput = new XMLOutputter();
+        String ridesHistoryString = xmlOutput.outputString(doc);
+        System.out.println("rides history of " + clientName);
+        System.out.println(ridesHistoryString);
+        // put the xml with the bike stations on the json object
+        json.put(RIDES_HISTORY_LIST, ridesHistoryString);
+
+        return json;
+    }
+
+
+
+    private static void addRide(JSONObject jsondata) throws JSONException, IOException, JDOMException {
+
+        String clientName = jsondata.getString(CLIENT_NAME);
+
+        String rideString = jsondata.getString(RIDE_INFO);
+
+        // instanciate SAXBuilder to parse the String to XML
+        SAXBuilder builder = new SAXBuilder();
+        // create a stream to be converted to a JDOM document
+        InputStream stream = new ByteArrayInputStream(rideString.getBytes("UTF-8"));
+        // create JDOM document from stream
+        Document stationsList = builder.build(stream);
+
+        // get root node to travel the XML file and get each station attributes
+        Element rootNode = stationsList.getRootElement();
+        List list = rootNode.getChildren("coordinate");
+
+        ArrayList<MapsCoordinates> trajectoryPoints = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+
+            Element node = (Element) list.get(i);
+
+            double latitude = Double.parseDouble(node.getChildText("latitude"));
+            double longitude = Double.parseDouble(node.getChildText("longitude"));
+
+            trajectoryPoints.add(new MapsCoordinates(latitude,longitude));
+
+        }
+
+//        ArrayList<MapsCoordinates> trajectoryOneCoordinates = new ArrayList<>();
+//
+//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737651, -9.140756));
+//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737480, -9.140690));
+//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737288, -9.140613));
+//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737104, -9.140613));
+//        trajectoryOneCoordinates.add(new MapsCoordinates(38.736940, -9.140506));
+
+
+        UbiClient ubiClient = clientsList.get(clientName);
+
+        int numberOfRides = ubiClient.getTrajectories().size();
+
+        ubiClient.getTrajectories().put(String.valueOf(numberOfRides+1), trajectoryPoints);
+
+
+    }
 
 
     private static int reserveBike(JSONObject jsondata) throws JSONException {
@@ -511,6 +655,23 @@ public class UbiServer {
         clientJoana.setPointsHistory(pointsHistory);
         clientJoana.setPassword(TEST_CLIENT_PASSWORD_2);
         clientsList.put(TEST_CLIENT_USERNAME_2, clientJoana);
+
+
+
+        HashMap<String, ArrayList<MapsCoordinates>> joanaTrajectories = new HashMap<>();
+        ArrayList<MapsCoordinates> trajectoryOneCoordinates = new ArrayList<>();
+
+        trajectoryOneCoordinates.add(new MapsCoordinates(38.737651, -9.140756));
+        trajectoryOneCoordinates.add(new MapsCoordinates(38.737480, -9.140690));
+        trajectoryOneCoordinates.add(new MapsCoordinates(38.737288, -9.140613));
+        trajectoryOneCoordinates.add(new MapsCoordinates(38.737104, -9.140613));
+        trajectoryOneCoordinates.add(new MapsCoordinates(38.736940, -9.140506));
+
+        joanaTrajectories.put("1", trajectoryOneCoordinates);
+
+        clientJoana.setTrajectories(joanaTrajectories);
+
+
     }
 
 

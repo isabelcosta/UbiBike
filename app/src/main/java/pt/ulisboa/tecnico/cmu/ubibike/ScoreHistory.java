@@ -32,7 +32,7 @@ import static com.ubibike.Constants.*;
 
 
 
-public class ScoreHistory extends CommonWithButtons {
+public class ScoreHistory extends WifiDirectActivity {
 
     private String bikerName;
     private List<String> scoreHisArray;
@@ -353,7 +353,7 @@ public class ScoreHistory extends CommonWithButtons {
 
 
     @Override
-    protected void onPause(){
+    public void onPause(){
         super.onPause();
 
         //Set Preferences

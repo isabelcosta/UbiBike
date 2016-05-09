@@ -7,6 +7,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Messenger;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.PointsTransfer;
 
 import static com.ubibike.Constants.*;
@@ -119,6 +122,23 @@ public class UbiBikeApplication extends Application {
     private WifiDirectActivity.ReceiveCommTask mComm = null;
     private SimWifiP2pBroadcastReceiverList mReceiver;
 
+    public int getNumberOfUnreadMessages() {
+        return numberOfUnreadMessages;
+    }
+
+    public void setNumberOfUnreadMessages(int numberOfUnreadMessages) {
+        this.numberOfUnreadMessages = numberOfUnreadMessages;
+    }
+
+    public void increaseNumberOfUnreadMessages() {
+        this.numberOfUnreadMessages ++;
+    }
+
+    public void decreaseNumberOfUnreadMessages() {
+        this.numberOfUnreadMessages --;
+    }
+
+    private int numberOfUnreadMessages = 0;
 
     public HashMap<String, ArrayList<Message>> getUnreadMessages() {
         return unreadMessages;
@@ -143,8 +163,20 @@ public class UbiBikeApplication extends Application {
     private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
 
 
+    public HashMap<String, ArrayList<MapsCoordinates>> getRidesHistory() {
+        return ridesHistory;
+    }
+
+    public void setRidesHistory(HashMap<String, ArrayList<MapsCoordinates>> ridesHistory) {
+        this.ridesHistory = ridesHistory;
+    }
+
+    private HashMap<String, ArrayList<MapsCoordinates>> ridesHistory = new HashMap<>();
+
+
+
     // <lat, long>
-    private HashMap<String, String> coordinatesPerRide = new HashMap<>();
+    private ArrayList<LatLng> coordinatesPerRide = new ArrayList<>();
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -172,11 +204,11 @@ public class UbiBikeApplication extends Application {
 
 
 
-    public HashMap<String, String> getCoordinatesPerRide() {
+    public ArrayList<LatLng> getCoordinatesPerRide() {
         return coordinatesPerRide;
     }
 
-    public void setCoordinatesPerRide(HashMap<String, String> coordinatesPerRide) {
+    public void setCoordinatesPerRide(ArrayList<LatLng> coordinatesPerRide) {
         this.coordinatesPerRide = coordinatesPerRide;
     }
 

@@ -30,7 +30,7 @@ import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 import static com.ubibike.Constants.*;
 
 
-public class StationsMapsActivity extends CommonWithButtons implements OnMapReadyCallback {
+public class StationsMapsActivity extends WifiDirectActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private String bikerName;
@@ -101,6 +101,7 @@ public class StationsMapsActivity extends CommonWithButtons implements OnMapRead
         location = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(location).title(locationMessage));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,MAPS_ZOOM_LEVEL_STATION));
+
     }
 
 

@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
 
-//public class UserDashboard extends WifiDirectActivity {
 public class UserDashboard extends WifiDirectActivity {
 
     private String bikerName;

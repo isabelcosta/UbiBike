@@ -37,6 +37,8 @@ package com.ubibike;
     public static final String GREATING = "greating";
     public static final String IS_RIDING = "is riding";
     public static final String GET_BIKE_STATIONS = "get bike stations";
+    public static final String GET_RIDES_HISTORY = "get rides history";
+    public static final String ADD_RIDE = "add ride";
     public static final String RESERVE_BIKE = "reserve bike";
 
 
@@ -48,6 +50,7 @@ package com.ubibike;
         public static final String INTENT_LOCATION_MESSAGE = "locationMessage";
         public static final String INTENT_LATITUDE = "latitude";
         public static final String INTENT_LONGITUDE = "longitude";
+        public static final String INTENT_RIDE_NUMBER = "longitude";
 
 
 
@@ -62,6 +65,8 @@ package com.ubibike;
     public static final String POINTS_ORIGIN = "points origin";
     public static final String POINTS_HISTORY = "points history";
     public static final String STATION_NAME = "station name";
+    public static final String RIDE_INFO = "ride info";
+
 
 
     // server responses
@@ -71,6 +76,7 @@ package com.ubibike;
     public static final String POINTS_REMOVED = "Points removed";
     public static final String POINTS_NOT_REMOVED = "Points not removed";
     public static final String BIKE_STATIONS_LIST = "bike stations";
+    public static final String RIDES_HISTORY_LIST = "rides history list";
 
 
     // reserve bike

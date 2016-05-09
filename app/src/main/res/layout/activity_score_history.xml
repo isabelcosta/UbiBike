@@ -14,7 +14,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_score_history" />
-    <include layout="@layout/dashboard_footer" />
-    <include layout="@layout/dashboard_header" />
+    <include layout="@layout/dashboard_footer" android:id="@+id/footer_layout"/>
+    <include layout="@layout/dashboard_header" android:id="@+id/header_layout"/>
 </android.support.design.widget.CoordinatorLayout>
 

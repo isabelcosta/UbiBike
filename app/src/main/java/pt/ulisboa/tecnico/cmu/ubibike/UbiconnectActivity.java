@@ -90,6 +90,8 @@ public class UbiconnectActivity extends CommonWithButtons implements
     // clientID, messages
     private HashMap<String, ArrayList<String>> exchangedMessagesPerClient = new HashMap<>();
     private String personName;
+//    private String bikerScore;
+    private Button pointsButton;
     private String myName;
     private Handler handler = new Handler();
     private String connectedUser;
@@ -117,6 +119,9 @@ public class UbiconnectActivity extends CommonWithButtons implements
         setContentView(R.layout.activity_list_users);
         guiSetButtonListeners();
         guiUpdateInitState();
+//        pointsButton = (Button) findViewById(R.id.biker_score);
+//        bikerScore = app.getBikerScore(true);
+
 
         app = ((UbiBikeApplication) getApplication());
 
@@ -161,6 +166,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
 
         // register broadcast receiver
+        // TODO: 09-May-16 verificar se bastas fazer isto apenas 1 vez
         IntentFilter filter = new IntentFilter();
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -188,15 +194,27 @@ public class UbiconnectActivity extends CommonWithButtons implements
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         personIp);
 
-                    // disable clickability for the list
+                    // set list to NOT clickable
                 peersList.setClickable(false);
 
 
                 // person name
 //                String displayMessage = personName + " - " + personIp;
-                String displayMessage = personName;
+//                String displayMessage = personName;
 
-                personView.setText("Connected to - " + displayMessage);
+                HashMap<String, ArrayList<Message>> unreadMessages = app.getUnreadMessages();
+
+                if (unreadMessages.containsKey(personName)){
+                    for (Message msg :
+                            unreadMessages.get(personName)) {
+                        peersAdapter.add(msg);
+                        app.decreaseNumberOfUnreadMessages();
+                    }
+                    unreadMessages.remove(personName);
+                    app.setUnreadMessages(unreadMessages);
+                }
+                String displayMsg = "Connected to - " + personName;
+                personView.setText(displayMsg);
                 connectedUser = personName;
 
                 peersAdapter.notifyDataSetChanged();
@@ -205,6 +223,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
 //                mTextInput.setEnabled(true);
 //                mTextInput.setHint("Type a message..");
 //                findViewById(R.id.idSendPointsButton).setEnabled(true);
+                setUbiconnectText(app.getNumberOfUnreadMessages());
 
             }
         });
@@ -378,6 +397,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 PointsTransfer pts = new PointsTransfer(PointsTransfer.SENT_TO_A_PEER, Integer.parseInt(points), connectedUser, json);
                     // add the transaction to the pointsExchange log
                 pointsExchange.add(pts);
+//                String bikerScore = app.getBikerScore(false);
+
+                int scoreUpdate = Integer.parseInt(bikerScore) - Integer.parseInt(points);
+
+                setBikerScore(scoreUpdate);
+
                 Log.d("mCliSocket", mCliSocket.toString());
                 // set as text the json created
                 mCliSocket.getOutputStream().write((json.toString()+"\n").getBytes());
@@ -681,10 +706,15 @@ public class UbiconnectActivity extends CommonWithButtons implements
             s = null;
             if (mBound) {
                 guiUpdateDisconnectedState();
+                sendPointsExchangeToServer();
             } else {
                 guiUpdateInitState();
             }
         }
+    }
+
+    private void sendPointsExchangeToServer() {
+        // TODO: 09-May-16 implement
     }
 
 	/*
@@ -772,8 +802,10 @@ public class UbiconnectActivity extends CommonWithButtons implements
         mTextInput.setEnabled(false);
 
         bikerName = app.getUsername();
-        pointsButton = (Button) findViewById(R.id.biker_score);
+//        pointsButton = (Button) findViewById(R.id.biker_score);
 
+        View dashView = findViewById(R.id.footer_layout);
+        pointsButton = (Button) dashView.findViewById(R.id.biker_score);
 
         bikersNameTextView  = (TextView) findViewById(R.id.biker_name);
         bikersNameTextView.setText(bikerName);
@@ -872,7 +904,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 } else {
                     exchangedMessagesPerClient.put(personName ,new ArrayList<String>());
                 }
-                personView.setText(personName);
+                personView.setText("Connected to - " + personName);
                 return false;
             }
         } catch (JSONException e) {
@@ -891,6 +923,11 @@ public class UbiconnectActivity extends CommonWithButtons implements
         PointsTransfer pts = new PointsTransfer(PointsTransfer.EARNED_FROM_A_PEER, Integer.parseInt(points), connectedUser, json);
             // add the transaction to the pointsExchange log
         pointsExchange.add(pts);
+
+        int scoreUpdate = Integer.parseInt(bikerScore) + Integer.parseInt(points);
+
+        setBikerScore(scoreUpdate);
+
     }
 
 
