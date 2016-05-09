@@ -112,6 +112,7 @@ public class CommonWithButtons extends AppCompatActivity {
 
     }
 
+
     protected void setUbiconnectText(int unreadMessages) {
 
         Button ubiconnectButtonView = (Button) findViewById(R.id.menu_bottom_ubiconnect);
@@ -398,7 +399,6 @@ public class CommonWithButtons extends AppCompatActivity {
                 Document doc = new Document(ridesHistoryXML);
 
                 ArrayList<LatLng> trajectory = app.getCoordinatesPerRide();
-
 
                 int i = 0;
                 for (LatLng ride:

@@ -356,14 +356,44 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 }
             }
             s = null;
-            sendPointsExchangeToServer();
+            try {
+                sendPointsExchangeToServer();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
-    private void sendPointsExchangeToServer() {
-// TODO: 09-May-16 implement
+    private void sendPointsExchangeToServer() throws JSONException {
+
+        /**
+         *  analisar a pointsExchange
+         *
+         *  se PointsTransfer.EARNED_FROM_A_PEER
+         *     -- invocar o addPoints
+         *  se PointsTransfer.SENT_TO_A_PEER,
+         *     -- invocar o decreasePoints
+         */
+
+        if (!pointsExchange.isEmpty()) {
+            for (PointsTransfer pts :
+                    pointsExchange) {
+                if (pts.getMode() == PointsTransfer.EARNED_FROM_A_PEER) {
+                    int points = pts.getPoints(); // get received points
+                    JSONObject json = pts.getJson(); // get json
+
+                    String pointsOrigin = json.getString(POINTS_ORIGIN); // get message to be displayed on our app
+                    String pointsSender = json.getString(USER_WIFI); // user that sent us the points
+                    // invoke the async taks to tell the server to increase our points
+                    addPoints(points, pointsOrigin, pointsSender);
+                }
+            }
+            pointsExchange.clear();
+
+        }
     }
+
 
 	/*
 	 * Listeners associated to Termite

@@ -63,6 +63,7 @@ package com.ubibike;
     public static final String POINTS_TO_DECREASE= "points to decrease";
     public static final String POINTS_TO_ADD = "points to add";
     public static final String POINTS_ORIGIN = "points origin";
+    public static final String POINTS_ORIGIN_TO_ME = "points origin to me";
     public static final String POINTS_HISTORY = "points history";
     public static final String STATION_NAME = "station name";
     public static final String RIDE_INFO = "ride info";

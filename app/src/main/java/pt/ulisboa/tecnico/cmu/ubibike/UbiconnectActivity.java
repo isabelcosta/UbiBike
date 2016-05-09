@@ -238,33 +238,6 @@ public class UbiconnectActivity extends CommonWithButtons implements
 //        runTimeTask();
 
     }
-//
-////    @Override
-//    protected void runTimeTask() {
-//        handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 2000);
-//    }
-//
-//
-//    private Runnable timeTask = new Runnable() {
-//        public void run() {
-//
-////            Intent intent = new Intent(UbiconnectActivity.this, SimWifiP2pService.class);
-////            if(!app.ismBound()) {
-////                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-////                mBound = true;
-////                app.setmBound(mBound);
-////
-////            }
-//
-//            // spawn the chat server background task
-//            new IncommingCommTask().executeOnExecutor(
-//                    AsyncTask.THREAD_POOL_EXECUTOR);
-//
-//            guiUpdateDisconnectedState();
-//
-//
-//        }
-//    };
 
     @Override
     public void onPause() {
@@ -392,6 +365,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 json.put(POINTS_WIFI, points);
                 json.put(USER_WIFI, myName);
                 json.put(POINTS_ORIGIN, pointsOriginMessageToReceiver);
+                json.put(POINTS_ORIGIN_TO_ME, pointsOriginMessageToMe);
 
                     // create an PointsTransfer object that contains the transaction
                 PointsTransfer pts = new PointsTransfer(PointsTransfer.SENT_TO_A_PEER, Integer.parseInt(points), connectedUser, json);
@@ -485,6 +459,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
             mCliSocket = null;
 
             guiUpdateDisconnectedState();
+            try {
+                sendPointsExchangeToServer();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     };
 
@@ -569,15 +549,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
         @Override
         protected void onPreExecute() {
 //            mTextOutput.setText("Connecting...");
-            // TODO: 02-May-16 nao consegue por as mensagens por nao ler
             if(app.getUnreadMessages().containsKey(connectedUser)) {
                 for (Message m :
                         app.getUnreadMessages().get(connectedUser)) {
                     allPeersArray.add(m);
                 }
 
-                // todo clear the UnreadMessages() list
-                // todo updated the Ubiconnect button
 
             }
             peersAdapter.notifyDataSetChanged();
@@ -706,15 +683,55 @@ public class UbiconnectActivity extends CommonWithButtons implements
             s = null;
             if (mBound) {
                 guiUpdateDisconnectedState();
-                sendPointsExchangeToServer();
+                try {
+                    sendPointsExchangeToServer();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } else {
                 guiUpdateInitState();
+                try {
+                    sendPointsExchangeToServer();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void sendPointsExchangeToServer() {
-        // TODO: 09-May-16 implement
+    private void sendPointsExchangeToServer() throws JSONException {
+
+        /**
+         *  analisar a pointsExchange
+         *
+         *  se PointsTransfer.EARNED_FROM_A_PEER
+         *     -- invocar o addPoints
+         *  se PointsTransfer.SENT_TO_A_PEER,
+         *     -- invocar o decreasePoints
+         */
+
+        if (!pointsExchange.isEmpty()) {
+            for (PointsTransfer pts :
+                    pointsExchange) {
+                if (pts.getMode() == PointsTransfer.SENT_TO_A_PEER) {
+                    int points = pts.getPoints(); // get sent points
+                    String pointsOriginMessageToMe = pts.getJson().getString(POINTS_ORIGIN_TO_ME); // get message to be displayed on our app
+                    // invoke the async task to tell the server to decrease our points
+                    decreasePoints(points, pointsOriginMessageToMe);
+
+                } else if (pts.getMode() == PointsTransfer.EARNED_FROM_A_PEER) {
+                    int points = pts.getPoints(); // get received points
+                    JSONObject json = pts.getJson(); // get json
+
+                    String pointsOrigin = json.getString(POINTS_ORIGIN); // get message to be displayed on our app
+                    String pointsSender = json.getString(USER_WIFI); // user that sent us the points
+                    // invoke the async taks to tell the server to increase our points
+                    addPoints(points, pointsOrigin, pointsSender);
+                }
+            }
+            pointsExchange.clear();
+
+        }
     }
 
 	/*
@@ -988,15 +1005,12 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
 
             try {
-                Log.d("cheio disto", "cheio disto");
                 socket = new Socket();
                 InetAddress[] iNetAddress = InetAddress.getAllByName(SERVER_IP);
                 SocketAddress address = new InetSocketAddress(iNetAddress[0], SERVER_PORT);
 
                 socket.setSoTimeout(5000); //timeout for all other I/O operations, 10s for example
-                Log.d("cheio disto", "cheio disto2");
                 socket.connect(address, 10000); //timeout for attempting connection, 20 s
-                Log.d("cheio disto", "cheio disto3");
 
 //                    socket = new Socket(SERVER_IP, SERVER_PORT);
             } catch (IOException e) {
@@ -1075,7 +1089,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
             super.onPostExecute(result);
 
             if(decreasePointsResult) {
-                pointsButton.setText(app.getBikerScore(false));
+                setBikerScore(Integer.parseInt(app.getBikerScore(false)));
 
                 Toast.makeText(UbiconnectActivity.this, "Points decreased",
                         Toast.LENGTH_SHORT).show();
@@ -1140,7 +1154,7 @@ protected void addPoints(int points, String pointsOrigin, String senderOfPoints)
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, ADD_POINTS);
                 json.put(CLIENT_NAME, myName);
-                json.put(POINTS_TO_ADD, points);
+                json.put(POINTS_TO_ADD, String.valueOf(points));
                 json.put(POINTS_ORIGIN, pointsOrigin);
                 json.put(USER_WIFI, senderOfPoints);
 
@@ -1210,7 +1224,7 @@ protected void addPoints(int points, String pointsOrigin, String senderOfPoints)
             super.onPostExecute(result);
 
             if(addPointsResult) {
-                pointsButton.setText(app.getBikerScore(false));
+                setBikerScore(Integer.parseInt((app.getBikerScore(false))));
 
                 Toast.makeText(UbiconnectActivity.this, "Points added",
                         Toast.LENGTH_SHORT).show();
