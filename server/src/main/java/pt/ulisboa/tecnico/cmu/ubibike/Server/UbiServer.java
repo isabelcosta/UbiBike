@@ -208,10 +208,10 @@ public class UbiServer {
                         (RESERVE_BIKE))
                 {
                     // invoke reserveBike() to get try to reserve a bike
-                    int reserve = reserveBike(jsondata);
+                    JSONObject reserve = reserveBike(jsondata);
 
                     // send reservation result to server
-                    dataOutputStream.writeUTF(String.valueOf(reserve));
+                    dataOutputStream.writeUTF(reserve.toString());
 
                 }
                 else if (type.equals
@@ -583,33 +583,40 @@ public class UbiServer {
     }
 
 
-    private static int reserveBike(JSONObject jsondata) throws JSONException {
+    private static JSONObject reserveBike(JSONObject jsondata) throws JSONException {
+
+        JSONObject json = new JSONObject();
 
         // get station name
         String station = jsondata.getString(STATION_NAME);
         // get client name
         String clientName = jsondata.getString(CLIENT_NAME);
 
-        HashMap<Integer, Boolean> clientPoints = bikesPerStation.get(station);
+        HashMap<Integer, Boolean> bikesReserved = bikesPerStation.get(station);
 
         for (Integer bikeID :
-                clientPoints.keySet()) {
+                bikesReserved.keySet()) {
             // check if bike is not reserved
-            if (!clientPoints.get(bikeID)) {
+            if (!bikesReserved.get(bikeID)) {
                 // check if user does not hold a bike reserve
                 if(clientsList.get(clientName).getHoldingBikeID() == NO_BIKE_ID) {
                     // give bike to client
                     clientsList.get(clientName).setHoldingBikeID(bikeID);
                     // mark bike as reserved
-                    clientPoints.put(bikeID, true);
-                    return BIKE_RESERVED;
+                    bikesPerStation.get(station).put(bikeID,true);
+                    bikesReserved.put(bikeID, true);
+                    json.put(BIKE_STATUS,BIKE_RESERVED);
+                    json.put(BIKE_ID, bikeID);
+
+                    return json;
                 }
-                return BIKE_NOT_RESERVED_HAS_RESERVE;
+                json.put(BIKE_STATUS,BIKE_NOT_RESERVED_HAS_RESERVE);
+                return json;
             }
         }
 
-
-        return BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE;
+        json.put(BIKE_STATUS, BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE);
+        return json;
     }
 
 

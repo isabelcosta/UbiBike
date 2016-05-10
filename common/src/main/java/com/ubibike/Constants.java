@@ -82,9 +82,11 @@ package com.ubibike;
 
     // reserve bike
     public static final int NO_BIKE_ID = 999;
-    public static final int BIKE_RESERVED = 1;
-    public static final int BIKE_NOT_RESERVED_HAS_RESERVE = 2;
-    public static final int BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE = 3;
+    public static final String BIKE_ID = "bike id";
+    public static final String BIKE_STATUS = "bike status";
+    public static final String BIKE_RESERVED = "1";
+    public static final String BIKE_NOT_RESERVED_HAS_RESERVE = "2";
+    public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE = "3";
     public static final String BIKE_RESERVED_TOAST_MSG = "Bike successfully reserved!";
     public static final String BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG = "You already have a bike reserved!";
     public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG = "There are currently no bikes available at this station";

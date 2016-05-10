@@ -174,6 +174,35 @@ public class UbiBikeApplication extends Application {
     private HashMap<String, ArrayList<MapsCoordinates>> ridesHistory = new HashMap<>();
 
 
+    public String getBikeReservedID() {
+        return bikeReservedID;
+    }
+
+    public void setBikeReservedID(String bikeReservedID) {
+        this.bikeReservedID = bikeReservedID;
+    }
+
+    private String bikeReservedID = "0";
+
+
+    public HashMap<String, MapsCoordinates> getBikeStations() {
+        return bikeStations;
+    }
+
+    private HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
+
+    public boolean isDetectingBike() {
+        return isDetectingBike;
+    }
+
+    public void setDetectingBike(boolean detectingBike) {
+        isDetectingBike = detectingBike;
+    }
+
+    private boolean isDetectingBike = false;
+
+
+
 
     // <lat, long>
     private ArrayList<LatLng> coordinatesPerRide = new ArrayList<>();
@@ -200,6 +229,26 @@ public class UbiBikeApplication extends Application {
                 "isabel:costa", "pedro:dias", "vicente:rocha"
         };
         DUMMY_CREDENTIALS = new ArrayList<>(Arrays.asList(credentialsArray));
+        String alameda = "Alameda Station";
+
+        double latitudeAlameda = 38.737104;
+        double longitudeAlameda= -9.140560;
+
+        bikeStations.put(alameda, new MapsCoordinates(latitudeAlameda,longitudeAlameda));
+        String campoPequeno = "Campo Pequeno Station";
+
+        double latitudeCampPeq = 38.743096;
+        double longitudeCampPeq = -9.148070;
+
+        bikeStations.put(campoPequeno, new MapsCoordinates(latitudeCampPeq, longitudeCampPeq));
+        String picoas = "Picoas Station";
+
+        double latitudePicoas = 38.731033;
+        double longitudePicoas = -9.147309;
+
+        bikeStations.put(picoas, new MapsCoordinates(latitudePicoas, longitudePicoas));
+
+
     }
 
 

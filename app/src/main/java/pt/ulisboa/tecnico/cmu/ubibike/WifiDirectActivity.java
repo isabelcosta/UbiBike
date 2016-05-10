@@ -1,15 +1,21 @@
 package pt.ulisboa.tecnico.cmu.ubibike;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +60,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.ubibike.common.CommonWithButtons;
+import pt.ulisboa.tecnico.cmu.ubibike.common.MapsCoordinates;
 import pt.ulisboa.tecnico.cmu.ubibike.domain.PointsTransfer;
 
 
@@ -74,6 +87,17 @@ public class WifiDirectActivity extends CommonWithButtons implements
     private ArrayList<PointsTransfer> pointsExchange = new ArrayList<>();
     private HashMap<String, String> mPoints;
 
+    private MyLocationListener locationListener;
+
+    private boolean isDetectingBike;
+    protected boolean mightBeRiding = false;
+    protected boolean mightBeEnding = false;
+    protected boolean isRiding = false;
+    protected LocationManager lm;
+
+
+    private LatLng previewsCoord = new LatLng(0, 0);
+    ArrayList<LatLng> coordinatesPerRide = null;
 
     public SimWifiP2pManager getManager() {
         return mManager;
@@ -89,9 +113,10 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
         // initialize the UI
         setContentView(R.layout.activity_score_history);
+        searchForBike();
 
         app = ((UbiBikeApplication) getApplication());
-
+        isDetectingBike = app.isDetectingBike();
 
         /**
          *  get common variables WIFI DIRECT
@@ -127,11 +152,21 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
         setUbiconnectText(app.getNumberOfUnreadMessages());
 
+        // get location updates
+        getLocationUpdates();
+        coordinatesPerRide = app.getCoordinatesPerRide();
+
+
         runTimeTask();
 
 
     }
-
+    private void resetRideVariables() {
+        isDetectingBike = false;
+        mightBeRiding = false;
+        mightBeEnding = false;
+        isRiding = false;
+    }
 
     protected void runTimeTask() {
         handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 100);
@@ -401,37 +436,23 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-
-        // TODO: 23-Apr-16 Check if repeated/deleted peers problem on the peers list comes from here
-        // clean peers arrays
-//        allPeersArray.clear();
-//        peersAdapter.clear();
-//        peersIPsArrayList.clear();
+        Log.d("requested bikes", "lel");
 
         // compile list of devices in range
-//        for (SimWifiP2pDevice device : peers.getDeviceList()) {
-//            String devstr = device.deviceName + " - " + device.getVirtIp();
-//            Message m = new Message();
-//            m.setBody(devstr);
-//            m.setUserId(device.deviceName);
-//            allPeersArray.add(m);
-//            peersNamesArrayList.add(device.deviceName);
-//            peersIPsArrayList.add(device.getVirtIp());
-//        }
+        for (SimWifiP2pDevice device : peers.getDeviceList()) {
+            String devstr = device.deviceName + " - " + device.getVirtIp();
+            String bikeNumber = device.deviceName.replace("bike","");
+            // TODO: 10-May-16 para teste, procura sempre pela bicicleta 1
+//            if (bikeNumber.equals(app.getBikeReservedID())){
+            if (bikeNumber.equals("1")){
+                isDetectingBike = true;
+                app.setDetectingBike(true);
+                return;
+            }
+        }
+        app.setDetectingBike(false);
 
-//        peersAdapter.notifyDataSetChanged();
-
-        // display list of devices in range
-//        new AlertDialog.Builder(this)
-//                .setTitle("Devices in WiFi Range")
-//                .setMessage(peersStr.toString())
-//                .setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                    }
-//                })
-//                .show();
     }
-
     @Override
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
                                      SimWifiP2pInfo groupInfo) {
@@ -654,4 +675,295 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
     }
 
+    private final class MyLocationListener implements LocationListener {
+
+
+        @Override
+        public void onLocationChanged(Location location) {
+            // called when the listener is notified with a location update from the GPS
+            Double lat = location.getLatitude();    // latitude
+            Double lng = location.getLongitude();   // longitude
+
+            coordinatesPerRide = app.getCoordinatesPerRide();
+//            if (lat != previewsCoord.latitude && lng != previewsCoord.longitude) {
+                LatLng newCoords = new LatLng(lat, lng);
+                if (isRiding) {
+                    coordinatesPerRide.add(newCoords);
+                }
+                Log.d("latitude maps ", lat+"");
+                Log.d("longitude maps ", lng+"");
+
+                app.setCoordinatesPerRide(coordinatesPerRide);
+
+                for (LatLng pt :
+                        coordinatesPerRide) {
+                    Log.d("pt", pt+"");
+                }
+                searchForBike();
+
+//                try {
+////                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+                if (isNearSomeStation(newCoords)) {
+                    Log.d("isNearSomeStation", "--");
+                    if (!isRiding) {
+                        Log.d("isNearSomeStation", "isNorRiding");
+                        if (isDetectingBike) {
+                            mightBeRiding = true;
+                            Log.d("isNearSomeStation", "isNorRiding,DetectsBike");
+                            // talvez guardar a coordenada e depois contabiliza-la se estiver eventualmente a correr
+                        } else {
+                            Log.d("isNearSomeStation", "isNorRiding NOT DetectingBike");
+                        }
+                    } else {
+                        // TODO: 10-May-16 check detects bike
+                        mightBeEnding = true;
+                        Log.d("mighBeEnding", "--");
+
+                    }
+                } else if (isRiding) {
+                    Log.d("isRiding", "");
+                    if (mightBeEnding) {
+                        Log.d("isRiding", "mighBeEnding");
+                        if (!isDetectingBike) {
+                            Log.d("isRiding", "mighBeEnding, Ended");
+                            resetRideVariables();
+                            SendNewRide sendNewRideTask = new SendNewRide();
+
+                            // task.execute().get() is used to wait for the task to be executed
+                            // so we can update the user score and score history
+                            try {
+                                sendNewRideTask.execute().get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Log.d("isRding", "mighBeEnding, detectsBike");
+                        }
+                    } else {
+                        Log.d("isRiding", "NOTmighBeEnding(DidNOTComeAcrossAnyStation");
+                    }
+                    // if the user is neither riding nor near a station, we need to check if
+                    // the user mightBeRiding (was on a station and detected the bike)
+                } else if (mightBeRiding) {
+                    Log.d("mighBeRiding", "--");
+
+                    // if it detects the bike, he is riding
+                    if (isDetectingBike) {
+                        Log.d("mighBeRiding", "NOT in STATION,isDetectingBike");
+                        isRiding = true;
+                        // TODO: 10-May-16 account trajectory
+                    } else {
+                        Log.d("mighBeRiding", "NOT in STATION,NOTDetectingBike");
+
+                        // as the user is not detecting the bike, is may not be riding
+                        mightBeRiding = false;
+                    }
+                }
+                Log.d("terminou", "loc");
+
+
+//            }
+//            previewsCoord = new LatLng(lat, lng);
+
+
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // called when the GPS provider is turned off (user turning off the GPS on the phone)
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // called when the GPS provider is turned on (user turning on the GPS on the phone)
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // called when the status of the GPS provider changes
+        }
+    }
+    protected void searchForBike() {
+        Log.d("boundSFB", mBound+"");
+        if (mBound) {
+            mManager.requestPeers(mChannel, WifiDirectActivity.this);
+        } else {
+            Toast.makeText(this, "Service not bound",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected boolean isNearSomeStation (LatLng mylocation) {
+
+        for (MapsCoordinates location :
+                app.getBikeStations().values()) {
+
+            if (distance(mylocation.latitude, mylocation.longitude,   location.getLatitude(), location.getLongitude()) < 0.1) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    /** calculates the distance between two locations*/
+    protected double distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 3958.75; // in miles, change to 6371 for kilometers
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double dist = earthRadius * c;
+
+        return dist;
+    }
+
+
+
+    private void getLocationUpdates() {
+        locationListener = new MyLocationListener();
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // check permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_CHECKING_PERIOD, GPS_CHECKING_DISTANCE, locationListener);
+    }
+
+
+
+
+    private class SendNewRide extends AsyncTask<Void, Void, Void> {
+        private DataOutputStream dataOutputStream;
+        private DataInputStream dataInputStream;
+        private JSONObject json;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Socket socket;
+            try {
+                socket = new Socket(SERVER_IP, SERVER_PORT);
+            } catch (IOException e) {
+                return null;
+            }
+
+            try {
+                json = new JSONObject();
+                json.put(REQUEST_TYPE, ADD_RIDE);
+                json.put(CLIENT_NAME, bikerName);
+
+                // create XML representing the bike stations
+                Element ridesHistoryXML = new Element("newRide");
+                Document doc = new Document(ridesHistoryXML);
+
+                ArrayList<LatLng> trajectory = app.getCoordinatesPerRide();
+
+                int i = 0;
+                for (LatLng ride:
+                        trajectory) {
+
+                    Element coordinates = new Element("coordinate");
+                    coordinates.setAttribute(new Attribute("id", String.valueOf(i)));
+
+                    coordinates.addContent(new Element("latitude")
+                            .setText(String.valueOf(ride.latitude)));
+                    coordinates.addContent(new Element("longitude")
+                            .setText(String.valueOf(ride.longitude)));
+
+
+                    doc.getRootElement().addContent(coordinates);
+
+                    i++;
+
+                }
+
+                // create a string from the xml
+                XMLOutputter xmlOutput = new XMLOutputter();
+                String rideString = xmlOutput.outputString(doc);
+                System.out.println("rides of " + bikerName);
+                System.out.println("ride " + rideString);
+                // put the xml with the bike stations on the json object
+                json.put(RIDE_INFO, rideString);
+
+
+                dataOutputStream = new DataOutputStream(
+                        socket.getOutputStream());
+
+                dataInputStream = new DataInputStream(
+                        socket.getInputStream());
+
+                // transfer JSONObject as String to the server
+                dataOutputStream.writeUTF(json.toString());
+
+                // Thread will wait till server replies
+                final String response = dataInputStream.readUTF();
+
+                // clean the trajectory
+                app.setCoordinatesPerRide(new ArrayList<LatLng>());
+
+                socket.close();
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+
+                // close socket
+                if (socket != null) {
+                    try {
+                        Log.i("close", "closing the socket");
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close input stream
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // close output stream
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+
+        }
+    }
 }

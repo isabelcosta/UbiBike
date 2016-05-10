@@ -747,7 +747,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
         allPeersArray.clear();
         peersAdapter.clear();
         peersIPsArrayList.clear();
-
+        boolean changed = false;
         // compile list of devices in range
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String devstr = device.deviceName + " - " + device.getVirtIp();
@@ -758,6 +758,16 @@ public class UbiconnectActivity extends CommonWithButtons implements
             peersNamesArrayList.add(device.deviceName);
             peersIPsArrayList.add(device.getVirtIp());
 //            peersStr.append(devstr);
+            String bikeNumber = device.deviceName.replace("bike","");
+            // TODO: 10-May-16 para teste, procura sempre pela bicicleta 1
+//            if (bikeNumber.equals(app.getBikeReservedID())){
+            if (bikeNumber.equals("1")){
+                app.setDetectingBike(true);
+                changed = true;
+            }
+        }
+        if (!changed) {
+            app.setDetectingBike(false);
         }
 
         peersAdapter.notifyDataSetChanged();

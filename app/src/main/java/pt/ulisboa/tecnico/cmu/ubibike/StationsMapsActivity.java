@@ -139,19 +139,19 @@ public class StationsMapsActivity extends WifiDirectActivity implements OnMapRea
 
                 // Thread will wait till server replies
                 String response = dataInputStream.readUTF();
+                JSONObject json = new JSONObject(response);
+                String status = json.getString(BIKE_STATUS);
 
-                switch (Integer.parseInt(response)) {
-                    case BIKE_RESERVED :
-                        toastResult = BIKE_RESERVED_TOAST_MSG;
-                        break;
+                if (status.equals(BIKE_RESERVED)) {
+                    toastResult = BIKE_RESERVED_TOAST_MSG;
+                    app.setBikeReservedID(json.getString(BIKE_ID));
 
-                    case BIKE_NOT_RESERVED_HAS_RESERVE :
-                        toastResult = BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG;
-                        break;
+                } else if (status.equals(BIKE_NOT_RESERVED_HAS_RESERVE)) {
+                    toastResult = BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG;
 
-                    case BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE :
-                        toastResult = BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG;
-                        break;
+                } else if (status.equals(BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE)) {
+                    toastResult = BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG;
+
                 }
 
 
