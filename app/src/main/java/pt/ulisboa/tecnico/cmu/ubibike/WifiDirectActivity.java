@@ -451,6 +451,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
             }
         }
         app.setDetectingBike(false);
+        isDetectingBike = false;
 
     }
     @Override
