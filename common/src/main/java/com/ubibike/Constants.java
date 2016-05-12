@@ -67,6 +67,7 @@ package com.ubibike;
     public static final String POINTS_HISTORY = "points history";
     public static final String STATION_NAME = "station name";
     public static final String RIDE_INFO = "ride info";
+    public static final String RIDE_DATE = "ride date";
 
 
 
@@ -87,9 +88,9 @@ package com.ubibike;
     public static final String BIKE_RESERVED = "1";
     public static final String BIKE_NOT_RESERVED_HAS_RESERVE = "2";
     public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE = "3";
-    public static final String BIKE_RESERVED_TOAST_MSG = "Bike successfully reserved!";
-    public static final String BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG = "You already have a bike reserved!";
-    public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG = "There are currently no bikes available at this station";
+    public static final String BIKE_RESERVED_TOAST_MSG = "Bike successfully reserved !";
+    public static final String BIKE_NOT_RESERVED_HAS_RESERVE_TOAST_MSG = "You have already reserved a bike..";
+    public static final String BIKE_NOT_RESERVED_NO_BIKES_AVAILABLE_TOAST_MSG = "There are currently no bikes available at this station..";
 
 
     // tests
@@ -122,7 +123,7 @@ package com.ubibike;
 
 
     // Location Listener
-    public static final int GPS_CHECKING_PERIOD = 2000;
+    public static final int GPS_CHECKING_PERIOD = 1000;
     public static final int GPS_CHECKING_DISTANCE = 10;
 
     /**

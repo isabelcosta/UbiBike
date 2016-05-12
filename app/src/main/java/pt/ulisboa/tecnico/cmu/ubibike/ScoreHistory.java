@@ -120,16 +120,6 @@ public class ScoreHistory extends WifiDirectActivity {
 
             public void onClick(View v) {
 
-                AddPoints addPointsTask = new AddPoints();
-                try {
-                    addPointsTask.execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-                // Get user current points and refresh Views
                 handler.postAtTime(timeTask, SystemClock.uptimeMillis() + 1000);
 
             }
@@ -179,7 +169,7 @@ public class ScoreHistory extends WifiDirectActivity {
             try {
 
                 json = new JSONObject();
-                json.put(REQUEST_TYPE, ADD_POINTS);
+                json.put(REQUEST_TYPE, GET_POINTS_HISTORY);
                 json.put(POINTS_TO_ADD, ADD_POINTS_TEST_10);
                 json.put(POINTS_ORIGIN, ADD_POINTS_TEST_10_ORIGIN);
                 json.put(CLIENT_NAME, bikerName);

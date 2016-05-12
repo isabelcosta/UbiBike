@@ -23,7 +23,26 @@ public class UbiClient {
 
 	private HashMap<String, ArrayList<MapsCoordinates>> _trajectories;
 
+	public HashMap<String, String> get_trajDates() {
+		return _trajDates;
+	}
+
+	public void set_trajDates(HashMap<String, String> _trajDates) {
+		this._trajDates = _trajDates;
+	}
+
+	private HashMap<String, String> _trajDates;
 	private int _holdingBikeID;
+
+    public String getHoldingBikeStation() {
+        return holdingBikeStation;
+    }
+
+    public void setHoldingBikeStation(String holdingBikeStation) {
+        this.holdingBikeStation = holdingBikeStation;
+    }
+
+    private String holdingBikeStation;
 
 
 	/**
@@ -35,6 +54,7 @@ public class UbiClient {
 	public UbiClient(String name) {
 		_name = name;
 		setTrajectories(new HashMap<String, ArrayList<MapsCoordinates>>());
+		set_trajDates(new HashMap<String, String>());
 		_holdingBikeID = NO_BIKE_ID;
 	}
 

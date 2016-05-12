@@ -202,7 +202,15 @@ public class UbiBikeApplication extends Application {
     private boolean isDetectingBike = false;
 
 
+    public boolean isRecevingLocation() {
+        return recevingLocation;
+    }
 
+    public void setRecevingLocation(boolean recevingLocation) {
+        this.recevingLocation = recevingLocation;
+    }
+
+    private boolean recevingLocation = false;
 
     // <lat, long>
     private ArrayList<LatLng> coordinatesPerRide = new ArrayList<>();

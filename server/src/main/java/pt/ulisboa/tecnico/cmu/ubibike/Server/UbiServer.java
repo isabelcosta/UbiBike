@@ -15,6 +15,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +24,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import static com.ubibike.Constants.*;
 
@@ -488,19 +497,6 @@ public class UbiServer {
             Element rides = new Element("rides");
             rides.setAttribute(new Attribute("id", String.valueOf(i)));
 
-//            Element coordinates = new Element("rides");
-//            coordinates.setAttribute(new Attribute("id", String.valueOf(i)));
-//
-//
-//            coordinates.addContent(new Element("latitude").
-//                    setText(String.valueOf(coor.getLatitude())));
-//            coordinates.addContent(new Element("longitude")
-//                    .setText(String.valueOf(coor.getLongitude())));
-//            coordinates.addContent(new Element("marker")
-//                    .setText(markerID));
-//
-//            doc.getRootElement().addContent(coordinates);
-
             int a = 0;
             for (MapsCoordinates coor:
                     coords) {
@@ -526,11 +522,27 @@ public class UbiServer {
         XMLOutputter xmlOutput = new XMLOutputter();
         String ridesHistoryString = xmlOutput.outputString(doc);
         System.out.println("rides history of " + clientName);
-        System.out.println(ridesHistoryString);
+        System.out.println(prettyFormat(ridesHistoryString, 2));
         // put the xml with the bike stations on the json object
         json.put(RIDES_HISTORY_LIST, ridesHistoryString);
 
         return json;
+    }
+
+    public static String prettyFormat(String input, int indent) {
+        try {
+            Source xmlInput = new StreamSource(new StringReader(input));
+            StringWriter stringWriter = new StringWriter();
+            StreamResult xmlOutput = new StreamResult(stringWriter);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute("indent-number", indent);
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(xmlInput, xmlOutput);
+            return xmlOutput.getWriter().toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e); // simple exception handling, please review it
+        }
     }
 
 
@@ -540,6 +552,8 @@ public class UbiServer {
         String clientName = jsondata.getString(CLIENT_NAME);
 
         String rideString = jsondata.getString(RIDE_INFO);
+
+        String rideDate = jsondata.getString(RIDE_DATE);
 
         // instanciate SAXBuilder to parse the String to XML
         SAXBuilder builder = new SAXBuilder();
@@ -553,6 +567,10 @@ public class UbiServer {
         List list = rootNode.getChildren("coordinate");
 
         ArrayList<MapsCoordinates> trajectoryPoints = new ArrayList<>();
+        if (list.isEmpty()) {
+            System.out.println("empty ride " + clientName + " ");
+            return;
+        }
         for (int i = 0; i < list.size(); i++) {
 
             Element node = (Element) list.get(i);
@@ -564,21 +582,45 @@ public class UbiServer {
 
         }
 
-//        ArrayList<MapsCoordinates> trajectoryOneCoordinates = new ArrayList<>();
-//
-//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737651, -9.140756));
-//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737480, -9.140690));
-//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737288, -9.140613));
-//        trajectoryOneCoordinates.add(new MapsCoordinates(38.737104, -9.140613));
-//        trajectoryOneCoordinates.add(new MapsCoordinates(38.736940, -9.140506));
-
 
         UbiClient ubiClient = clientsList.get(clientName);
 
         int numberOfRides = ubiClient.getTrajectories().size();
 
-        ubiClient.getTrajectories().put(String.valueOf(numberOfRides+1), trajectoryPoints);
+        clientsList.get(clientName).getTrajectories().put(String.valueOf(numberOfRides+1), trajectoryPoints);
+        clientsList.get(clientName).get_trajDates().put(String.valueOf(numberOfRides+1), rideDate);
 
+        int pts = clientsList.get(clientName).getPoints();
+
+        double pointsEarnedDouble = Math.ceil(calculateTraveledDistance(trajectoryPoints));
+        System.out.println("points earned double " + pointsEarnedDouble);
+        int pointsEarned = (int) pointsEarnedDouble;
+        System.out.println("points earned " + pointsEarned);
+
+        String earnedPointsMessage = "Earned " + pointsEarned + " points on ride " + (numberOfRides + 1) + " " + rideDate ;
+        // add points history message
+        clientsList.get(clientName).getPointsHistory().add(earnedPointsMessage);
+        // add points earned on this ride
+        clientsList.get(clientName).setPoints(pts + pointsEarned);
+
+        // get bikestation where the bike came from
+        String bikeStation = clientsList.get(clientName).getHoldingBikeStation();
+        // get list of bikes stations
+        HashMap<Integer, Boolean> bikesReserved = bikesPerStation.get(bikeStation);
+
+        // set bike as available
+        bikesReserved.put(clientsList.get(clientName).getHoldingBikeID(), false);
+
+        // remove bike from client
+        clientsList.get(clientName).setHoldingBikeID(0);
+
+
+
+        System.out.println("new ride added");
+        for (String r :
+                ubiClient.get_trajDates().values()) {
+            System.out.println("client " + ubiClient.getName() + " went on a ride on " + r);
+        }
 
     }
 
@@ -602,9 +644,10 @@ public class UbiServer {
                 if(clientsList.get(clientName).getHoldingBikeID() == NO_BIKE_ID) {
                     // give bike to client
                     clientsList.get(clientName).setHoldingBikeID(bikeID);
+                    clientsList.get(clientName).setHoldingBikeStation(station);
                     // mark bike as reserved
                     bikesPerStation.get(station).put(bikeID,true);
-                    bikesReserved.put(bikeID, true);
+//                    bikesReserved.put(bikeID, true);
                     json.put(BIKE_STATUS,BIKE_RESERVED);
                     json.put(BIKE_ID, bikeID);
 
@@ -753,5 +796,46 @@ public class UbiServer {
     }
 
 
+    /**
+     * auxiliary functions
+     */
+
+    private static double calculateTraveledDistance(ArrayList<MapsCoordinates> coordinates) {
+
+        double distanceTraveled = 0;
+        double distanceBetweenTwoPoints;
+        System.out.println("size of coordinates " + coordinates.size());
+        for (int i = 0; i < coordinates.size() - 1; i++) {
+
+            distanceBetweenTwoPoints = distance(
+                    coordinates.get(i).getLatitude(), coordinates.get(i).getLongitude(),
+                    coordinates.get(i+1).getLatitude(), coordinates.get(i+1).getLongitude());
+
+            distanceTraveled += distanceBetweenTwoPoints*10;
+
+        }
+        return distanceTraveled;
+    }
+
+    /** calculates the distance between two locations*/
+    protected static double distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 3958.75; // in miles, change to 6371 for kilometers
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double dist = earthRadius * c;
+
+        return dist;
+    }
 
 }

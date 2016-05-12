@@ -94,6 +94,9 @@ public class UbiRidesHistoryMapsActivity extends WifiDirectActivity implements O
                 Log.d("coord Lat Lng", coord.getLatitude() + " " + coord.getLongitude());
             }
         }
+        if (coordsList.isEmpty()) {
+            return;
+        }
         final Polyline line = mMap.addPolyline(new PolylineOptions()
                 .addAll(coordsList)
                 .width(5)
@@ -103,7 +106,7 @@ public class UbiRidesHistoryMapsActivity extends WifiDirectActivity implements O
             @Override
             public void onMapLoaded() {
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(moveToBounds(line), 30));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(moveToBounds(line), 30));
 
             }
         });

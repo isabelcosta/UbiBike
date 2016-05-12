@@ -44,8 +44,10 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.DoubleBuffer;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -98,6 +100,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
     private LatLng previewsCoord = new LatLng(0, 0);
     ArrayList<LatLng> coordinatesPerRide = null;
+    private boolean alreadySent = false;
 
     public SimWifiP2pManager getManager() {
         return mManager;
@@ -153,7 +156,11 @@ public class WifiDirectActivity extends CommonWithButtons implements
         setUbiconnectText(app.getNumberOfUnreadMessages());
 
         // get location updates
-        getLocationUpdates();
+        if (!app.isRecevingLocation()) {
+            getLocationUpdates();
+            app.setRecevingLocation(true);
+        }
+
         coordinatesPerRide = app.getCoordinatesPerRide();
 
 
@@ -166,6 +173,9 @@ public class WifiDirectActivity extends CommonWithButtons implements
         mightBeRiding = false;
         mightBeEnding = false;
         isRiding = false;
+        if(isRiding) {
+            setBikerStatus("Resting");
+        }
     }
 
     protected void runTimeTask() {
@@ -453,6 +463,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
         app.setDetectingBike(false);
         isDetectingBike = false;
 
+
     }
     @Override
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
@@ -676,31 +687,36 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
     }
 
-    private final class MyLocationListener implements LocationListener {
+    protected final class MyLocationListener implements LocationListener {
 
 
         @Override
         public void onLocationChanged(Location location) {
+            searchForBike();
             // called when the listener is notified with a location update from the GPS
             Double lat = location.getLatitude();    // latitude
             Double lng = location.getLongitude();   // longitude
 
+            isDetectingBike = app.isDetectingBike();
+
             coordinatesPerRide = app.getCoordinatesPerRide();
-//            if (lat != previewsCoord.latitude && lng != previewsCoord.longitude) {
                 LatLng newCoords = new LatLng(lat, lng);
                 if (isRiding) {
-                    coordinatesPerRide.add(newCoords);
+                    if (lat != previewsCoord.latitude && lng != previewsCoord.longitude) {
+                        coordinatesPerRide.add(newCoords);
+                    }
+                    previewsCoord = new LatLng(lat, lng);
+
                 }
                 Log.d("latitude maps ", lat+"");
                 Log.d("longitude maps ", lng+"");
 
                 app.setCoordinatesPerRide(coordinatesPerRide);
-
-                for (LatLng pt :
-                        coordinatesPerRide) {
-                    Log.d("pt", pt+"");
-                }
-                searchForBike();
+//
+//                for (LatLng pt :
+//                        coordinatesPerRide) {
+//                    Log.d("pt", pt+"");
+//                }
 
 //                try {
 ////                    Thread.sleep(1000);
@@ -711,13 +727,13 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 if (isNearSomeStation(newCoords)) {
                     Log.d("isNearSomeStation", "--");
                     if (!isRiding) {
-                        Log.d("isNearSomeStation", "isNorRiding");
+                        Log.d("isNearSomeStation", "isNotRiding");
                         if (isDetectingBike) {
                             mightBeRiding = true;
-                            Log.d("isNearSomeStation", "isNorRiding,DetectsBike");
+                            Log.d("isNearSomeStation", "isNotRiding,DetectsBike");
                             // talvez guardar a coordenada e depois contabiliza-la se estiver eventualmente a correr
                         } else {
-                            Log.d("isNearSomeStation", "isNorRiding NOT DetectingBike");
+                            Log.d("isNearSomeStation", "isNotRiding NOT DetectingBike");
                         }
                     } else {
                         // TODO: 10-May-16 check detects bike
@@ -732,14 +748,18 @@ public class WifiDirectActivity extends CommonWithButtons implements
                         if (!isDetectingBike) {
                             Log.d("isRiding", "mighBeEnding, Ended");
                             resetRideVariables();
-                            SendNewRide sendNewRideTask = new SendNewRide();
 
-                            // task.execute().get() is used to wait for the task to be executed
-                            // so we can update the user score and score history
-                            try {
-                                sendNewRideTask.execute().get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
+                            if (!alreadySent){
+                                alreadySent = true;
+                                SendNewRide sendNewRideTask = new SendNewRide();
+
+                                // task.execute().get() is used to wait for the task to be executed
+                                // so we can update the user score and score history
+                                try {
+                                    sendNewRideTask.execute().get();
+                                } catch (InterruptedException | ExecutionException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         } else {
                             Log.d("isRding", "mighBeEnding, detectsBike");
@@ -767,8 +787,6 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 Log.d("terminou", "loc");
 
 
-//            }
-//            previewsCoord = new LatLng(lat, lng);
 
 
 
@@ -789,14 +807,18 @@ public class WifiDirectActivity extends CommonWithButtons implements
             // called when the status of the GPS provider changes
         }
     }
+
     protected void searchForBike() {
-        Log.d("boundSFB", mBound+"");
+        if(isRiding) {
+            setBikerStatus("Running");
+        }
+        Log.d("boundSearchForBike", mBound+"");
         if (mBound) {
             mManager.requestPeers(mChannel, WifiDirectActivity.this);
-        } else {
+        } /*else {
             Toast.makeText(this, "Service not bound",
                     Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     protected boolean isNearSomeStation (LatLng mylocation) {
@@ -804,7 +826,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
         for (MapsCoordinates location :
                 app.getBikeStations().values()) {
 
-            if (distance(mylocation.latitude, mylocation.longitude,   location.getLatitude(), location.getLongitude()) < 0.1) {
+            if (distance(mylocation.latitude, mylocation.longitude,   location.getLatitude(), location.getLongitude()) < 0.01) {
                 return true;
             }
 
@@ -849,7 +871,8 @@ public class WifiDirectActivity extends CommonWithButtons implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_CHECKING_PERIOD, GPS_CHECKING_DISTANCE, locationListener);
+//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_CHECKING_PERIOD, GPS_CHECKING_DISTANCE, locationListener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
 
@@ -873,6 +896,7 @@ public class WifiDirectActivity extends CommonWithButtons implements
                 json = new JSONObject();
                 json.put(REQUEST_TYPE, ADD_RIDE);
                 json.put(CLIENT_NAME, bikerName);
+                json.put(RIDE_DATE, DateFormat.getTimeInstance().format(new Date()));
 
                 // create XML representing the bike stations
                 Element ridesHistoryXML = new Element("newRide");
@@ -919,10 +943,10 @@ public class WifiDirectActivity extends CommonWithButtons implements
 
                 // Thread will wait till server replies
                 final String response = dataInputStream.readUTF();
-
+                Log.d("sendNewRide response", response);
                 // clean the trajectory
                 app.setCoordinatesPerRide(new ArrayList<LatLng>());
-
+                alreadySent = false;
                 socket.close();
 
 

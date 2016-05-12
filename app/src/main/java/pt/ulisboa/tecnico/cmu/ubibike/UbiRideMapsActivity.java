@@ -93,36 +93,22 @@ public class UbiRideMapsActivity extends WifiDirectActivity implements OnMapRead
             return;
         }
         mMap.setMyLocationEnabled(true);
-//
-//
-//        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//            @Override
-//            public void onMyLocationChange(Location location) {
-//
-//                Log.i("called", "onLocationChanged");
-//
-//
-//                //when the location changes, update the map by zooming to the location
-//                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
-//                mMap.moveCamera(center);
-//
-//                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-//                mMap.animateCamera(zoom);
-//                /**
-//                 * moved to CommonWithButtons
-//                 */
-////                coordinatesPerRide.put(String.valueOf(location.getLatitude()), // latitude
-////                                        String.valueOf(location.getLongitude())); // longitude
-////                Log.d("latitude maps ", location.getLatitude()+"");
-////                Log.d("longitude maps ", location.getLongitude()+"");
-////
-////                // FIXME: 26-Apr-16 not sure if we can directly change coordinatesPerRide without a set
-////                ((UbiBikeApplication) getApplication()).setCoordinatesPerRide(coordinatesPerRide);
-////                // TODO: 26-Apr-16 tratar das verificações dos beacons aqui
-////                // TODO: 26-Apr-16 por agora temos que criar uma ligação WIFI-DIRECT por activity
-//
-//            }
-//        });
+
+
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+
+                Log.i("called URMA", "onLocationChanged");
+
+                //when the location changes, update the map by zooming to the location
+                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                mMap.moveCamera(center);
+
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                mMap.animateCamera(zoom);
+            }
+        });
 
     }
 

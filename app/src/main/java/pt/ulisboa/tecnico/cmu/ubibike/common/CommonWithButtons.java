@@ -69,8 +69,10 @@ public class CommonWithButtons extends AppCompatActivity  {
 
     protected String bikerName;
     protected String bikerScore;
+    protected String bikerStatus;
     protected Button pointsButton;
     protected TextView bikersNameTextView;
+    protected TextView bikerStatusTextView;
     protected Handler handler = new Handler();
     private Handler handler2 = new Handler();
     protected UbiBikeApplication app;
@@ -95,6 +97,7 @@ public class CommonWithButtons extends AppCompatActivity  {
         // Views
         pointsButton = (Button) findViewById(R.id.biker_score);
         bikersNameTextView = (TextView) findViewById(R.id.biker_name);
+        bikerStatusTextView = (TextView) findViewById(R.id.textView4);
 
 
         // Sets
@@ -114,6 +117,11 @@ public class CommonWithButtons extends AppCompatActivity  {
         pointsButton.setText(pts);
         bikerScore = pts;
 
+    }
+
+
+    protected void setBikerStatus(String status) {
+        bikerStatusTextView.setText(status);
     }
 
 
