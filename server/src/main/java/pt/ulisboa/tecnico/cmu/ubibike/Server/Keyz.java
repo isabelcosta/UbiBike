@@ -13,25 +13,30 @@ import java.util.ArrayList;
 public class Keyz {
 
     public static int numberOfClients;
-    private static final String path = "common/src/keys";
+//    private static final String path = "common/src/keys";
+    private static final String path = "keys";
 
-    public void SaveKeyPair(KeyPair keyPair, int i) throws IOException {
-        int client = i;
+    public void SaveKeyPair(KeyPair keyPair, String client) throws IOException {
+//        String client = i;
         String path = Keyz.path;
         PrivateKey privateKey = keyPair.getPrivate();
         PublicKey publicKey = keyPair.getPublic();
 
+//        System.out.println("Working Directory = " +
+//                System.getProperty("user.dir"));
+
+        System.out.println();
         // Store Public Key.
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
                 publicKey.getEncoded());
-        FileOutputStream fos = new FileOutputStream(path + "/public"+"_"+client+".key");
+        FileOutputStream fos = new FileOutputStream(path + "/public" + "_" + client + ".key");
         fos.write(x509EncodedKeySpec.getEncoded());
         fos.close();
 
         // Store Private Key.
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
                 privateKey.getEncoded());
-        fos = new FileOutputStream(path + "/private"+"_"+client+".key");
+        fos = new FileOutputStream(path + "/private" + "_" + client + ".key");
         fos.write(pkcs8EncodedKeySpec.getEncoded());
         fos.close();
         numberOfClients++;
@@ -97,15 +102,15 @@ public class Keyz {
     }
 
 
-    public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
-        Keyz jo = new Keyz();
-        KeyPair ii = jo.justGiveTheKeys();
-
-        for (int i = 0; i < 5; i++) {
-            ii = jo.justGiveTheKeys();
-            jo.SaveKeyPair(ii,i);
-        }
-    }
+//    public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
+//        Keyz jo = new Keyz();
+//        KeyPair ii = jo.justGiveTheKeys();
+//
+//        for (int i = 0; i < 5; i++) {
+//            ii = jo.justGiveTheKeys();
+//            jo.SaveKeyPair(ii,i);
+//        }
+//    }
 
 
 }

@@ -20,6 +20,8 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,6 +58,7 @@ public class UbiServer {
 
 
     public static void main(String[] args) {
+
         try {
             serverSocket = new ServerSocket(SERVER_PORT); // Server socket
 
@@ -71,6 +74,25 @@ public class UbiServer {
 
         // create client "v" for testing purposes
         createTestClient();
+
+        // Create public ena private keys for each user
+
+        try{
+            Keyz jo = new Keyz();
+            KeyPair ii = jo.justGiveTheKeys();
+
+//            for (int i = 0; i < 5; i++) {
+            for (String client : clientsList.keySet()) {
+                ii = jo.justGiveTheKeys();
+                try{
+                    jo.SaveKeyPair(ii, client);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
 
         // define bike stations
         createBikeStations();
@@ -401,8 +423,8 @@ public class UbiServer {
         // get client points from server data
         int currentPoints = clientsList.get(clientName).getPoints();
 
-            // if the user doesn't have enough points it wont update
-        if (currentPoints - Integer.parseInt(toRemovePoints) < 0) {return false;}
+        // if the user doesn't have enough points it wont update
+        if (currentPoints - Integer.parseInt(toRemovePoints) < 0) { return false; }
 
         // update client points with the decreased points
         clientsList.get(clientName).setPoints(currentPoints - Integer.parseInt(toRemovePoints));
@@ -524,28 +546,28 @@ public class UbiServer {
         XMLOutputter xmlOutput = new XMLOutputter();
         String ridesHistoryString = xmlOutput.outputString(doc);
         System.out.println("rides history of " + clientName);
-        System.out.println(prettyFormat(ridesHistoryString, 2));
+//        System.out.println(prettyFormat(ridesHistoryString, 2));
         // put the xml with the bike stations on the json object
         json.put(RIDES_HISTORY_LIST, ridesHistoryString);
 
         return json;
     }
 
-    public static String prettyFormat(String input, int indent) {
-        try {
-            Source xmlInput = new StreamSource(new StringReader(input));
-            StringWriter stringWriter = new StringWriter();
-            StreamResult xmlOutput = new StreamResult(stringWriter);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", indent);
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(xmlInput, xmlOutput);
-            return xmlOutput.getWriter().toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e); // simple exception handling, please review it
-        }
-    }
+//    public static String prettyFormat(String input, int indent) {
+//        try {
+//            Source xmlInput = new StreamSource(new StringReader(input));
+//            StringWriter stringWriter = new StringWriter();
+//            StreamResult xmlOutput = new StreamResult(stringWriter);
+//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//            transformerFactory.setAttribute("indent-number", indent);
+//            Transformer transformer = transformerFactory.newTransformer();
+//            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//            transformer.transform(xmlInput, xmlOutput);
+//            return xmlOutput.getWriter().toString();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e); // simple exception handling, please review it
+//        }
+//    }
 
 
 

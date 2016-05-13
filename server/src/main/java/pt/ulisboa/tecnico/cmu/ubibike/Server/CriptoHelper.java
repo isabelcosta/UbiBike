@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
-import android.util.Base64;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,11 +9,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.*;
 
 public class CriptoHelper {
 
-        private static final String path = "../common/src/keys";
+//        private static final String path = "../common/src/keys";
+        private static final String path = "./keys";
 
 
         public static byte[] convertArrayListByteToByteArray(ArrayList<byte[]> list) {
