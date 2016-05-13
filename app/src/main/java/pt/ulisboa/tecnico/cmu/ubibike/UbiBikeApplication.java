@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -44,11 +45,12 @@ public class UbiBikeApplication extends Application {
     private Editor editor;
     private static UbiBikeApplication instance;
 
+    // List containing points history
+    private LinkedList<String[]> myHistoryPointsTrace;
+
     /**
-     *
      * WIFI DIRECT
      */
-
 
     public SharedPreferences getPrefs() {
         return prefs;
@@ -242,6 +244,11 @@ public class UbiBikeApplication extends Application {
                 "isabel:costa", "pedro:dias", "vicente:rocha"
         };
         DUMMY_CREDENTIALS = new ArrayList<>(Arrays.asList(credentialsArray));
+
+        myHistoryPointsTrace = new LinkedList<>();
+
+        // Stations Initialization
+
         String alameda = "Alameda Station";
 
         double latitudeAlameda = 38.737104;
@@ -260,7 +267,6 @@ public class UbiBikeApplication extends Application {
         double longitudePicoas = -9.147309;
 
         bikeStations.put(picoas, new MapsCoordinates(latitudePicoas, longitudePicoas));
-
 
     }
 
@@ -434,6 +440,23 @@ public class UbiBikeApplication extends Application {
         editor.commit();
     }
 
+    // History transaction list related methods
+
+    public LinkedList<String[]> getMyHistoryPointsTrace() {
+        return myHistoryPointsTrace;
+    }
+
+    public void setMyHistoryPointsTrace(LinkedList<String[]> myHistoryPointsTrace) {
+        this.myHistoryPointsTrace = myHistoryPointsTrace;
+    }
+
+    public void addPointsRecordToMyHistory(String[] record){
+        myHistoryPointsTrace.add(record);
+    }
+
+    public void removePointsRecordFromMyHistory(String[] record){
+        myHistoryPointsTrace.remove(record);
+    }
 
     public String getBikerScoreHistory() {
 
@@ -556,54 +579,4 @@ public class UbiBikeApplication extends Application {
             return null;
         }
     }
-
-
-
-///*
-//    /**
-//     * Gets username of logged user from Shared Preferences
-//     * @return username
-//     */
-///*
-//    public String getUsernameFromSP(){
-//        // creating an shared Preference file for the information to be stored
-//        prefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_FILENAME, MODE_PRIVATE);
-//        String username = prefs.getString(SP_USERNAME, null);
-//        return username;
-//    }
-//*/
-///*
-//    public void bottomMenuClickAction(Activity activity){
-//        if(!(activity.getClass().isInstance(UserDashboard.class))){
-//            Button homeBtn = (Button) activity.findViewById(R.id.menu_bottom_home);
-//            homeBtn.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), UserDashboard.class);
-//                    startActivity(intent);
-//                }
-//            });
-//        }
-//
-//        if(!(activity.getClass().isInstance(Chat.class))){
-//            Button chatBtn = (Button) activity.findViewById(R.id.menu_bottom_messenger);
-//            chatBtn.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), Chat.class);
-//                    startActivity(intent);
-//                }
-//            });
-//        }
-//
-//        if(!(activity.getClass().isInstance(OptionsMenu.class))){
-//            Button optionsBtn = (Button) activity.findViewById(R.id.menu_bottom_options);
-//            optionsBtn.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), OptionsMenu.class);
-//                    startActivity(intent);
-//                }
-//            });
-//        }
-//    }*/
-
-
 }
