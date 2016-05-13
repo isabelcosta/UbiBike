@@ -94,6 +94,15 @@ dependencies {
 dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
 }
+dependencies {
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+}
+dependencies {
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
+}
+dependencies {
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+}
 repositories {
     flatDir {
         dirs 'libs'

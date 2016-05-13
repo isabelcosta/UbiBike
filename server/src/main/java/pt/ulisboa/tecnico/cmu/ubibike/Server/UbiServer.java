@@ -22,6 +22,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -51,6 +52,7 @@ public class UbiServer {
     private static HashMap<String, MapsCoordinates> bikeStations = new HashMap<>();
     private static HashMap<String, HashMap<Integer, Boolean>> bikesPerStation = new HashMap<>();
     private static HashMap<String, ArrayList<MapsCoordinates>> ridesHistory = new HashMap<>();
+    private static List<JSONObject> pointsExchangeListHistory = new LinkedList<>();
 
 
     public static void main(String[] args) {

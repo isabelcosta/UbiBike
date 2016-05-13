@@ -46,10 +46,7 @@ public class UbiBikeApplication extends Application {
     private static UbiBikeApplication instance;
 
     // List containing points history
-    private LinkedList<String[]> myHistoryPointsTrace;
-
-    // List containing points history
-    private LinkedList<String[]> myHistoryPointsTrace;
+    private LinkedList<JSONObject> myHistoryPointsTrace;
 
     /**
      * WIFI DIRECT
@@ -443,21 +440,22 @@ public class UbiBikeApplication extends Application {
         editor.commit();
     }
 
+
     // History transaction list related methods
 
-    public LinkedList<String[]> getMyHistoryPointsTrace() {
+    public LinkedList<JSONObject> getMyHistoryPointsTrace() {
         return myHistoryPointsTrace;
     }
 
-    public void setMyHistoryPointsTrace(LinkedList<String[]> myHistoryPointsTrace) {
+    public void setMyHistoryPointsTrace(LinkedList<JSONObject> myHistoryPointsTrace) {
         this.myHistoryPointsTrace = myHistoryPointsTrace;
     }
 
-    public void addPointsRecordToMyHistory(String[] record){
+    public void addPointsRecordToMyHistory(JSONObject record){
         myHistoryPointsTrace.add(record);
     }
 
-    public void removePointsRecordFromMyHistory(String[] record){
+    public void removePointsRecordFromMyHistory(JSONObject record){
         myHistoryPointsTrace.remove(record);
     }
 
@@ -493,6 +491,9 @@ public class UbiBikeApplication extends Application {
         this.mReceiver = mReceiver;
     }
 
+    /**
+     * This Asynchronous task gets the user score from the server
+     */
     private class GetPoints extends AsyncTask<Void, Void, Void> {
             private DataOutputStream dataOutputStream;
             private DataInputStream dataInputStream;

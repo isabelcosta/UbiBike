@@ -16,4 +16,5 @@ dependencies {
     compile files('lixo/java-json.jar')
     compile files('lixo/javax.json-api-1.0.jar')
     compile files('lixo/gson-2.6.2.jar')
+    compile 'org.json:org.json:chargebee-1.0'
 }

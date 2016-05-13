@@ -31,6 +31,7 @@
     <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
     <orderEntry type="library" exported="" name="jdom-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="json-20160212" level="project" />
+    <orderEntry type="library" exported="" name="org.json-chargebee-1.0" level="project" />
     <orderEntry type="library" exported="" name="jdom-2.0.6-contrib" level="project" />
     <orderEntry type="library" exported="" name="jdom-2.0.6-javadoc" level="project" />
     <orderEntry type="library" exported="" name="jdom-2.0.6-junit" level="project" />
