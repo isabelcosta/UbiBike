@@ -48,6 +48,9 @@ public class UbiBikeApplication extends Application {
     // List containing points history
     private LinkedList<String[]> myHistoryPointsTrace;
 
+    // List containing points history
+    private LinkedList<String[]> myHistoryPointsTrace;
+
     /**
      * WIFI DIRECT
      */
