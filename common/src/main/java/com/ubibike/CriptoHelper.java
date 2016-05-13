@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.ubibike.Server;
+package com.ubibike;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -386,5 +386,9 @@ public class CriptoHelper {
         keyGen.init(128);
         SecretKey key = keyGen.generateKey();
         return key;
+    }
+
+    public static String getKeyFileName(String myName, boolean isPrivate) {
+        return "keys/" + (isPrivate ? "private" : "public") + "_" + myName + ".key";
     }
 }

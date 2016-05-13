@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.SystemClock;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +21,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ubibike.CriptoHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +37,14 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
@@ -83,6 +91,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
 
     private ArrayList<String> peersNamesArrayList = new ArrayList<>();
     private ArrayList<String> peersIPsArrayList = new ArrayList<>();
+    private ArrayList<String> receivedPointsUUID = new ArrayList<>();
 
     private String userToConnectIp;
     private TextView personView;
@@ -366,6 +375,29 @@ public class UbiconnectActivity extends CommonWithButtons implements
                 json.put(USER_WIFI, myName);
                 json.put(POINTS_ORIGIN, pointsOriginMessageToReceiver);
                 json.put(POINTS_ORIGIN_TO_ME, pointsOriginMessageToMe);
+
+                // Security settings
+                try{
+                    //get Private key from file obtained using path given as argument
+                    System.out.println("Getting Private key using file...");
+                    PrivateKey privK = CriptoHelper.getPrivateKey(CriptoHelper.getKeyFileName(myName, true));
+                    UUID uuid = UUID.randomUUID();
+
+                    //get digital signature with private key from server
+                    System.out.println("Getting Digital Signature...");
+                    byte[] mDigitalSignature = CriptoHelper.makeDigitalSignature(json.toString().getBytes(), privK);
+                    byte[] uuidDigitalSignature = CriptoHelper.makeDigitalSignature(json.toString().getBytes(), privK);
+
+                    //encode in base64 string from encrypted message with private "joana" key
+                    String mDg64 = Base64.encodeToString(mDigitalSignature, 1);
+                    String uuidDg64 = Base64.encodeToString(uuidDigitalSignature, 1);
+
+                    json.put(DIGITAL_SIGNATURE_ON_MESSAGE, mDg64);
+                    json.put(POINTS_TRANSFER_UUID, uuid.toString());
+                    json.put(DIGITAL_SIGNATURE_ON_UUID, uuidDg64);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                     // create an PointsTransfer object that contains the transaction
                 PointsTransfer pts = new PointsTransfer(PointsTransfer.SENT_TO_A_PEER, Integer.parseInt(points), connectedUser, json);
@@ -909,6 +941,45 @@ public class UbiconnectActivity extends CommonWithButtons implements
                     // get the origin of the received points
                 String origin = jsondata.getString(POINTS_ORIGIN);
                     // put the pair <points,origin> on the mPoints that keeps the history of the score
+
+                // Security settings
+                try{
+                    // get uuid identifier
+                    String uuid = jsondata.getString(POINTS_TRANSFER_UUID);
+                    if(receivedPointsUUID.contains(uuid)) {
+                        Log.d(TAG, "This points were already transfered!");
+                        return false;
+                    } else {
+                        receivedPointsUUID.add(uuid);
+                    }
+
+                    // Verify non tempering of data and reply
+                    String mDg64 = jsondata.getString(DIGITAL_SIGNATURE_ON_MESSAGE);
+                    String uuidDg64 = jsondata.getString(DIGITAL_SIGNATURE_ON_UUID);
+
+                    byte[] mDigitalSignature = Base64.decode(mDg64, 1);
+                    byte[] uuidDigitalSignature = Base64.decode(uuidDg64, 1);
+
+                    PublicKey pubSenderKey = CriptoHelper.getPublicKey(CriptoHelper.getKeyFileName(myName, false));
+
+                    JSONObject jsondataCopy = new JSONObject(jsondata.toString());
+                    jsondataCopy.remove(DIGITAL_SIGNATURE_ON_MESSAGE);
+                    jsondataCopy.remove(POINTS_TRANSFER_UUID);
+                    jsondataCopy.remove(DIGITAL_SIGNATURE_ON_UUID);
+
+                    if(!CriptoHelper.verifyDigitalSignature(uuidDigitalSignature, uuid.getBytes(), pubSenderKey)){
+                        Log.d(TAG, "This points were tempered!");
+                        return false;
+                    }
+                    if(!CriptoHelper.verifyDigitalSignature(mDigitalSignature, jsondataCopy.toString().getBytes(), pubSenderKey)){
+                        Log.d(TAG, "This points were tempered!");
+                        return false;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
                 applyReceivedPoints(points, origin, pointsSender, jsondata);
                 Log.d("received pts ", points);
