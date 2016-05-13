@@ -42,6 +42,7 @@ public class UbiBikeApplication extends Application {
     private boolean _status;
     private SharedPreferences prefs;
     private Editor editor;
+    private static UbiBikeApplication instance;
 
     /**
      *
@@ -232,6 +233,10 @@ public class UbiBikeApplication extends Application {
      * Constructor
      */
     public UbiBikeApplication() {
+
+        // Singleton pattern
+        instance = this;
+
         String[] credentialsArray = {
                 "foo@example.com:hello", "bar@example.com:world",
                 "isabel:costa", "pedro:dias", "vicente:rocha"
@@ -259,7 +264,9 @@ public class UbiBikeApplication extends Application {
 
     }
 
-
+    public static UbiBikeApplication getInstance(){
+        return instance;
+    }
 
     public ArrayList<LatLng> getCoordinatesPerRide() {
         return coordinatesPerRide;
