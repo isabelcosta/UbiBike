@@ -14,17 +14,33 @@ import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
@@ -557,6 +573,98 @@ public class UbiBikeApplication extends Application {
         }
     }
 
+    // Security Encryption related methods
+
+
+    private static byte[] AsymCrypto(PrivateKey priv, byte[] msgByteArray, String encryptWay) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        if(encryptWay.equals("ENCRYPT")){
+            cipher.init(Cipher.ENCRYPT_MODE, priv);
+        }else{
+            cipher.init(Cipher.DECRYPT_MODE, priv);
+        }
+        byte[] cipherBytes = cipher.doFinal(msgByteArray);
+
+        return cipherBytes;
+    }
+
+    public static PrivateKey getPrivateKey(String privateKeyFile) throws IOException, GeneralSecurityException {
+        byte[] privEncoded = readFile(privateKeyFile);
+        PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(privEncoded);
+        KeyFactory keyFacPriv = KeyFactory.getInstance("RSA");
+        PrivateKey privKey = keyFacPriv.generatePrivate(privSpec);
+        return privKey;
+    }
+
+    private static byte[] readFile(String path)
+            throws FileNotFoundException, IOException {
+        FileInputStream fis = new FileInputStream(path);
+        byte[] content = new byte[fis.available()];
+        fis.read(content);
+        fis.close();
+        return content;
+    }
+
+    /** auxiliary method to calculate digest from text and cipher it */
+    public static byte[] makeDigitalSignature(byte[] bytes,
+                                              PrivateKey priv) throws Exception {
+
+        // get a message digest object using the MD5 algorithm
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        // calculate the digest and print it out
+        messageDigest.update(bytes);
+        byte[] digest = messageDigest.digest();
+
+        // get an RSA cipher object
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+        // encrypt the plaintext using the private key
+        cipher.init(Cipher.ENCRYPT_MODE, priv);
+        byte[] cipherDigest = cipher.doFinal(digest);
+
+        return cipherDigest;
+    }
+
+    public static boolean verifyDigitalSignature(byte[] cipherDigest,
+                                                 byte[] text) throws Exception {
+
+        // get a message digest object using the MD5 algorithm
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        // calculate the digest and print it out
+        messageDigest.update(text);
+        byte[] digest = messageDigest.digest();
+
+
+        // compare digests
+        if (digest.length != cipherDigest.length)
+            return false;
+
+        for (int i=0; i < digest.length; i++)
+            if (digest[i] != cipherDigest[i])
+                return false;
+        return true;
+    }
+
+    public static PublicKey getPublicKey(String publicKeyFile) throws IOException, GeneralSecurityException {
+        byte[] pubEncoded = readFile(publicKeyFile);
+        X509EncodedKeySpec pubSpec = new X509EncodedKeySpec(pubEncoded);
+        KeyFactory keyFacPub = KeyFactory.getInstance("RSA");
+        PublicKey pub = keyFacPub.generatePublic(pubSpec);
+        return pub;
+    }
+
+    private static byte[] AsymCrypto(PublicKey pub, byte[] msgByteArray, String encryptWay) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        if(encryptWay.equals("ENCRYPT")){
+            cipher.init(Cipher.ENCRYPT_MODE, pub);
+        }else{
+            cipher.init(Cipher.DECRYPT_MODE, pub);
+        }
+        byte[] cipherBytes = cipher.doFinal(msgByteArray);
+        return cipherBytes;
+    }
 
 
 ///*
