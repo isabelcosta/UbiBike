@@ -1,3 +1,5 @@
+package pt.ulisboa.tecnico.cmu.ubibike.Server;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,9 +10,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 
-/**
- * Created by boss on 09/03/16.
- */
 public class Keyz {
 
     public static int numberOfClients;
@@ -55,21 +54,22 @@ public class Keyz {
         return keylist;
     }
 
-    public KeyPair LoadKeyPair( int client)
+    public KeyPair LoadKeyPair(String client)
             throws IOException, NoSuchAlgorithmException,
             InvalidKeySpecException {
 //        int client = Keyz.numberOfClients;
         String path = Keyz.path;
+
         // Read Public Key.
-        File filePublicKey = new File(path + "/public"+"_"+client+".key");
-        FileInputStream fis = new FileInputStream(path + "/public"+"_"+client+".key");
+        File filePublicKey = new File(path + "/public/" + client + ".key");
+        FileInputStream fis = new FileInputStream(path + "/public/" + client + ".key");
         byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
         fis.read(encodedPublicKey);
         fis.close();
 
         // Read Private Key.
-        File filePrivateKey = new File(path + "/private"+"_"+client+".key");
-        fis = new FileInputStream(path + "/private"+"_"+client+".key");
+        File filePrivateKey = new File(path + "/private/" + client + ".key");
+        fis = new FileInputStream(path + "/private/" + client + ".key");
         byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
         fis.read(encodedPrivateKey);
         fis.close();
@@ -97,15 +97,11 @@ public class Keyz {
     }
 
 
-//    public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
-//        Keyz jo = new Keyz();
-//        KeyPair ii = jo.justGiveTheKeys();
-
     public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
         Keyz jo = new Keyz();
         KeyPair ii = jo.justGiveTheKeys();
 
-        for(int i=0;i<5;i++){
+        for (int i = 0; i < 5; i++) {
             ii = jo.justGiveTheKeys();
             jo.SaveKeyPair(ii,i);
         }

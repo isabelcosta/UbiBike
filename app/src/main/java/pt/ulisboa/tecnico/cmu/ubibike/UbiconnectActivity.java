@@ -729,6 +729,7 @@ public class UbiconnectActivity extends CommonWithButtons implements
                     addPoints(points, pointsOrigin, pointsSender);
                 }
             }
+            // TODO: 13/05/2016 enviar para a application as transacoes
             pointsExchange.clear();
 
         }

@@ -1,9 +1,8 @@
 package pt.ulisboa.tecnico.cmu.ubibike.Server;
 
-//import Exceptions.FalseSignatureException;
 import android.util.Base64;
-
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.*;
@@ -13,9 +12,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.*;
 
-/**
- * Created by Isabel on 13/05/2016.
- */
 public class CriptoHelper {
 
         private static final String path = "../common/src/keys";
@@ -35,33 +31,33 @@ public class CriptoHelper {
             }
             return baos.toByteArray();
         }
+//
+//        public static Pk_t priKeyToPk (PrivateKey priv) {
+//            return new Pk_t(priv.getEncoded());
+//        }
+//
+//        public static Pk_t pubKeyToPk (PublicKey pub) {
+//            return new Pk_t(pub.getEncoded());
+//        }
+//
+//
+//        public static byte[] sign(byte[] privateKey, byte[] blockPayload) throws NoSuchAlgorithmException, SignatureException, InvalidKeySpecException, InvalidKeyException {
+//
+//            PrivateKey pkey = convertPrivateFromByteArray(privateKey.getPayload());
+//
+//            Signature signature = Signature.getInstance("SHA1withDSA");
+//            signature.initSign(pkey);
+//            signature.update(blockPayload);
+//            return signature.sign();
+//
+//        }
 
-        public static Pk_t priKeyToPk (PrivateKey priv) {
-            return new Pk_t(priv.getEncoded());
-        }
-
-        public static Pk_t pubKeyToPk (PublicKey pub) {
-            return new Pk_t(pub.getEncoded());
-        }
-
-
-        public static byte[] sign(Pk_t privateKey, byte[] blockPayload) throws NoSuchAlgorithmException, SignatureException, InvalidKeySpecException, InvalidKeyException {
-
-            PrivateKey pkey = convertPrivateFromByteArray(privateKey.getPayload());
-
-            Signature signature = Signature.getInstance("SHA1withDSA");
-            signature.initSign(pkey);
-            signature.update(blockPayload);
-            return signature.sign();
-
-        }
-
-        public static boolean verifySignature(Pk_t publicKey, byte[] blockPayload, byte[] signature) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, SignatureException, FalseSignatureException {
+        public static boolean verifySignature(byte[] publicKey, byte[] blockPayload, byte[] signature) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, SignatureException {
 
 
             byte[] digitalSignature = signature;
 
-            PublicKey pubKey = convertPublicFromByteArray(publicKey.getPayload());
+            PublicKey pubKey = convertPublicFromByteArray(publicKey);
             Signature sig = Signature.getInstance("SHA1withDSA");
             sig.initVerify(pubKey);
 
@@ -70,7 +66,9 @@ public class CriptoHelper {
 
             if (!sig.verify(digitalSignature))
             {
-                throw new FalseSignatureException("Blocks were tempered with!");
+                System.out.println("Blocks were tempered with!");
+                return false;
+//                throw new FalseSignatureException("Blocks were tempered with!");
             } else
                 return true;
         }
@@ -91,26 +89,26 @@ public class CriptoHelper {
 //        cipher.init(Cipher.DECRYPT_MODE, secretKey);
 //        return cipher.doFinal(Base64.getDecoder().decode(strToDecrypt));
 //    }
-
-        public static String encryptByteArrayWithPub(byte[] array, PublicKey pubKey) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-            // specify mode and padding instead of relying on defaults (use OAEP if available!)
-            Cipher encrypt=Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            // init with the *public key*!
-            encrypt.init(Cipher.ENCRYPT_MODE, pubKey);
-            // encrypt with known character encoding, you should probably use hybrid cryptography instead
-//        byte[] encryptedMessage = encrypt.doFinal(msg.getBytes(StandardCharsets.UTF_8));
-            String encryptedString = Base64.getEncoder().encodeToString(encrypt.doFinal(array));
-
-            return encryptedString;
-        }
-
-        public static byte[] decryptByteArrayWithPriv(String strToDecrypt, PrivateKey privKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-            SecretKeySpec secretKey = new SecretKeySpec(privKey.getEncoded(), "AES");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
-            return cipher.doFinal(Base64.getDecoder().decode(strToDecrypt));
-        }
+//
+//        public static String encryptByteArrayWithPub(byte[] array, PublicKey pubKey) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
+//            // specify mode and padding instead of relying on defaults (use OAEP if available!)
+//            Cipher encrypt=Cipher.getInstance("RSA/ECB/PKCS1Padding");
+//            // init with the *public key*!
+//            encrypt.init(Cipher.ENCRYPT_MODE, pubKey);
+//            // encrypt with known character encoding, you should probably use hybrid cryptography instead
+////        byte[] encryptedMessage = encrypt.doFinal(msg.getBytes(StandardCharsets.UTF_8));
+//            String encryptedString = Base64.encodeToString(encrypt.doFinal(array),1);
+//
+//            return encryptedString;
+//        }
+//
+//        public static byte[] decryptByteArrayWithPriv(String strToDecrypt, PrivateKey privKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+//            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+//            SecretKeySpec secretKey = new SecretKeySpec(privKey.getEncoded(), "AES");
+//            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+//
+//            return cipher.doFinal(Base64.decode(strToDecrypt, 1));
+//        }
 
 
 //    public static boolean verifyMetadataSignature(Pk_t publicKey, ArrayList<byte[]> blockPayload, byte[] signature) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, SignatureException {
@@ -152,22 +150,22 @@ public class CriptoHelper {
             return kf.generatePublic(ks);
         }
 
-        public static String encode64(byte[] bytes) {
-
-//        byte[] encoded = Base64.getEncoder().encode(bytes);
-// encode with padding
-            String encoded = Base64.getEncoder().encodeToString(bytes);
-
-            return(new String(encoded));
-
-        }
-
-        public static byte[] decode64 (String str) {
-
-            byte[] decoded = Base64.getDecoder().decode(str.getBytes());
-
-            return decoded;
-        }
+//        public static String encode64(byte[] bytes) {
+//
+////        byte[] encoded = Base64.getEncoder().encode(bytes);
+//// encode with padding
+//            String encoded = Base64.encodeToString(bytes,1);
+//
+//            return(new String(encoded));
+//
+//        }
+//
+//        public static byte[] decode64 (String str) {
+//
+//            byte[] decoded = Base64.decode(str.getBytes(), 1);
+//
+//            return decoded;
+//        }
 
         // TODO: 05/05/16 gerar chaves antes, implementar funçoes depois
         public static byte[] getMac(int timeStamp, byte[] sharedKey) throws UnsupportedEncodingException {
@@ -242,33 +240,152 @@ public class CriptoHelper {
 
             return simKeyByte;
         }
+//
+//    public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, SignatureException, InvalidKeyException, NoSuchProviderException {
+//        Keyz keyPair = new Keyz();
+//        KeyPair pair = keyPair.LoadKeyPair("Joana");
+//
+//        byte[] data = new byte[1024];
+//        for(int i=0;i<1024;i++){
+//            char k= (char) ('A'+i);
+//            data[i]= (byte) k;
+//        }
+//
+//        PublicKey pubKey = pair.getPublic();
+//        PrivateKey privKey = pair.getPrivate();
+////
+////        Pk_t priv = priKeyToPk(privKey);
+////        Pk_t pub = pubKeyToPk(pubKey);
+////
+////        Tests convertPrivate and Pub from Byte array funcs
+//        PrivateKey newPrivKey = convertPrivateFromByteArray(privKey.getEncoded());
+//        System.out.println(privKey.equals(newPrivKey));
+//
+//        PublicKey newPubKey = convertPublicFromByteArray(pubKey.getEncoded());
+//        System.out.println(pubKey.equals(newPubKey));
+//
+//
+//        byte[] signature = sign(privKey.getEncoded(),data);
+//        System.out.println(verifySignature(pubKey.getEncoded(),data,signature));
+//
+//    }
 
-    /*public static void main(String[] args) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, SignatureException, InvalidKeyException, NoSuchProviderException {
-        Keyz keyPair = new Keyz();
-        KeyPair pair = keyPair.LoadKeyPair(1);
 
-        byte[] data = new byte[1024];
-        for(int i=0;i<1024;i++){
-            char k= (char) ('A'+i);
-            data[i]= (byte) k;
+
+    // De Sistemas Distribuios
+
+    public static PrivateKey getPrivateKey(String privateKeyFile) throws IOException, GeneralSecurityException {
+        byte[] privEncoded = readFile(privateKeyFile);
+        PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(privEncoded);
+        KeyFactory keyFacPriv = KeyFactory.getInstance("RSA");
+        PrivateKey privKey = keyFacPriv.generatePrivate(privSpec);
+        return privKey;
+    }
+
+    public static PublicKey getPublicKey(String publicKeyFile) throws IOException, GeneralSecurityException {
+        byte[] pubEncoded = readFile(publicKeyFile);
+        X509EncodedKeySpec pubSpec = new X509EncodedKeySpec(pubEncoded);
+        KeyFactory keyFacPub = KeyFactory.getInstance("RSA");
+        PublicKey pubKey = keyFacPub.generatePublic(pubSpec);
+        return pubKey;
+    }
+
+    private static byte[] readFile(String path)	throws FileNotFoundException, IOException {
+        FileInputStream fis = new FileInputStream(path);
+        byte[] content = new byte[fis.available()];
+        fis.read(content);
+        fis.close();
+        return content;
+    }
+
+
+    // Digital Signature
+
+    public static boolean verifyDigitalSignature(byte[] cipherDigest,
+                                                 byte[] text,
+                                                 PublicKey pubKey) throws Exception {
+
+        // get a message digest object using the MD5 algorithm
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        // calculate the digest and print it out
+        messageDigest.update(text);
+        byte[] digest = messageDigest.digest();
+
+
+        // compare digests
+        if (digest.length != cipherDigest.length)
+            return false;
+
+        for (int i=0; i < digest.length; i++)
+            if (digest[i] != cipherDigest[i])
+                return false;
+        return true;
+    }
+
+    public static byte[] makeDigitalSignature(byte[] bytes,
+                                              PrivateKey priv) throws Exception {
+
+        // get a message digest object using the MD5 algorithm
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+
+        // calculate the digest and print it out
+        messageDigest.update(bytes);
+        byte[] digest = messageDigest.digest();
+
+        // get an RSA cipher object
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+        // encrypt the plaintext using the private key
+        cipher.init(Cipher.ENCRYPT_MODE, priv);
+        byte[] cipherDigest = cipher.doFinal(digest);
+
+        return cipherDigest;
+    }
+
+
+    // Assimetric Keys
+
+    private static byte[] AsymCrypto(PrivateKey priv, byte[] msgByteArray, String encryptWay) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        if(encryptWay.equals("ENCRYPT")){
+            cipher.init(Cipher.ENCRYPT_MODE, priv);
+        }else{
+            cipher.init(Cipher.DECRYPT_MODE, priv);
         }
+        byte[] cipherBytes = cipher.doFinal(msgByteArray);
+        return cipherBytes;
 
-        PublicKey pubKey = pair.getPublic();
-        PrivateKey privKey = pair.getPrivate();
+    }
 
-        Pk_t priv = priKeyToPk(privKey);
-        Pk_t pub = pubKeyToPk(pubKey);
+    private static byte[] AsymCrypto(PublicKey pub, byte[] msgByteArray, String encryptWay) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        if(encryptWay.equals("ENCRYPT")){
+            cipher.init(Cipher.ENCRYPT_MODE, pub);
+        }else{
+            cipher.init(Cipher.DECRYPT_MODE, pub);
+        }
+        byte[] cipherBytes = cipher.doFinal(msgByteArray);
+        return cipherBytes;
+    }
 
-        *//* Tests convertPrivate and Pub from Byte array funcs
-        PrivateKey newPrivKey = convertPrivateFromByteArray(priv.getPayload());
-        System.out.println(privKey.equals(newPrivKey));
+    private static byte[] SymCrypto(Key secretKey, byte[] msgByteArray, String encryptWay) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException{
+        byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        if(encryptWay.equals("ENCRYPT")){
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey,ivspec);
+        }else{
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+        }
+        byte[] cipherBytes = cipher.doFinal(msgByteArray);
+        return cipherBytes;
+    }
 
-        PublicKey newPubKey = convertPublicFromByteArray(pub.getPayload());
-        System.out.println(pubKey.equals(newPubKey));
-        *//*
-
-        byte[] signature = sign(priv,data);
-        System.out.println(verifySignature(pub,data,signature));
-
-    }*/
+    private static SecretKey generateSecretKey() throws NoSuchAlgorithmException{
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        SecretKey key = keyGen.generateKey();
+        return key;
+    }
 }
