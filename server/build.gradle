@@ -6,4 +6,14 @@ dependencies {
     compile 'org.jdom:jdom:2.0.2'
     compile 'org.json:json:20160212'
     compile project(path: ':common')
+    compile files('libs/jdom-2.0.6-contrib.jar')
+    compile files('libs/jdom-2.0.6-javadoc.jar')
+    compile files('libs/jdom-2.0.6-junit.jar')
+    compile files('libs/jdom-2.0.6-sources.jar')
+    compile files('libs/jdom-2.0.6.jar')
+    compile files('libs/javax.json-api-1.0.jar')
+    compile files('libs/gson-2.6.2.jar')
+    compile files('lixo/java-json.jar')
+    compile files('lixo/javax.json-api-1.0.jar')
+    compile files('lixo/gson-2.6.2.jar')
 }
