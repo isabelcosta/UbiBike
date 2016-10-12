@@ -10,4 +10,4 @@
 
 ## App wireframe:
 
-![App wireframe](https://github.com/isabelcosta/UbiBike/blob/master/wireframe.png)
+![App wireframe](wireframe.png)
